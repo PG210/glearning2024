@@ -1,0 +1,46 @@
+#contenedor2{
+    background: linear-gradient(to right, white, lightgray, gray);
+    border-radius: 10px;
+    box-shadow: 0 0 5px 5px rgb(98, 98, 141);
+}
+#titulo{
+    font-weight: bold;
+    padding: 2rem;
+}
+#cards-inferior {
+    display: flex;
+    bottom: 0;               /* Ubica el grupo de tarjetas en la parte inferior */
+    /*background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente opcional */
+}
+.tituloaccesorios{
+    background-color: #605BE5; 
+    padding: 5px; 
+    border-radius: 10px;
+    font-weight: bold; 
+    color: white;
+}
+.degradado {
+ background: linear-gradient(to right, #d6d5d5, #dddddd);
+}
+
+.btnsalir {
+  background-color: #FFBD03;
+  color: white;
+  font-weight: bold; 
+  box-shadow: 0 0 5px 5px rgb(47, 47, 49);
+}
+.btnaccesorios {
+  background-color: #5959D1;
+  color: white;
+  font-weight: bold; 
+  box-shadow: 0 0 2px 2px rgb(175, 175, 248);
+}
+.btnciborg {
+  background-color: #EC4857;
+  color: white;
+  font-weight: bold; 
+  box-shadow: 0 0 2px 2px rgb(252, 132, 162);
+}
+h5{
+ font-weight: bold;
+}

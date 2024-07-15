@@ -1,0 +1,2 @@
+Nombres,NOMBRES,CORREO,GENERO,Area,Posicion,Usuario,contrasenia,concontrasenia,Personaje,Grupo
+JOSE GUILLERMO,RONDON LEAL,jrondon@rbsas.co,M,15,19,jrondon@rbsas.co,FORMACION2023,FORMACION2023,9,2

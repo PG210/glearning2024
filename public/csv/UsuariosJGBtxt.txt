@@ -1,0 +1,77 @@
+﻿Nombres,Apellidos,CORREO,GENERO,Area,Posicion,Usuario,contrasenia,concontrasenia,Personaje,Grupo,cedula
+KATHERIN,ALZATE BOTERO,kalzate@jgb.com.co,F,15,19,kalzate@jgb.com.co,formacion2024,formacion2024,9,22,1010189015
+JUAN GUILLERMO,ARISTIZABAL RAMIREZ,jaristizabal@jgb.com.co,M,15,19,jaristizabal@jgb.com.co,formacion2024,formacion2024,9,22,16928618
+WILMAR                   ,ARREDONDO GUTIERREZ                     ,warredondo@jgb.com.co,M,15,19,warredondo@jgb.com.co,formacion2024,formacion2024,9,22,94191187
+OSCAR DAVID,AVILA GARZON,oavila@jgb.com.co,M,15,19,oavila@jgb.com.co,formacion2024,formacion2024,9,22,14624752
+OLGA PATRICIA,BARBOSA LARA,obarbosa@jgb.com.co,F,15,19,obarbosa@jgb.com.co,formacion2024,formacion2024,9,22,1129501381
+AXEL EDGARDO,BOHORQUEZ GARCIA,abohorquez@jgb.com.co,M,15,19,abohorquez@jgb.com.co,formacion2024,formacion2024,9,22,14399479
+ALVARO,BOLIVAR PALACIOS,abolivar@jgb.com.co,M,15,19,abolivar@jgb.com.co,formacion2024,formacion2024,9,22,79346773
+JUAN JOSE,BORJA GUILLOTT,jborja@jgb.com.co,M,15,19,jborja@jgb.com.co,formacion2024,formacion2024,9,22,1083044871
+JORGE LUIS,CALDERON CASSAB,jcalderon@jgb.com.co,M,15,19,jcalderon@jgb.com.co,formacion2024,formacion2024,9,22,94370059
+VICKY YULIETH,COLLAZOS HERNANDEZ,vcollazos@jgb.com.co,F,15,19,vcollazos@jgb.com.co,formacion2024,formacion2024,9,22,1107035708
+JULLY ANDREA,CONTRERAS GALLEGO,jcontreras@jgb.com.co,F,15,19,jcontreras@jgb.com.co,formacion2024,formacion2024,9,22,1130606438
+DANIELA,CORDOBA HURTADO,dcordoba@jgb.com.co,F,15,19,dcordoba@jgb.com.co,formacion2024,formacion2024,9,22,1144044588
+JIMMY ALEXANDER,CUBILLOS BETANCOURT,jcubillos@jgb.com.co,M,15,19,jcubillos@jgb.com.co,formacion2024,formacion2024,9,22,11201017
+DIANA CATERINE,CUNDAR BENAVIDES,dcundar@jgb.com.co,F,15,19,dcundar@jgb.com.co,formacion2024,formacion2024,9,22,1085902194
+CAMILO ANDRES,DECKERS LEWIN,cdeckers@jgb.com.co,M,15,19,cdeckers@jgb.com.co,formacion2024,formacion2024,9,22,79947199
+GUSTAVO ALBEIRO,DIAZ DIAZ,gdiaz@jgb.com.co,M,15,19,gdiaz@jgb.com.co,formacion2024,formacion2024,9,22,79687277
+ANDREA FERNANDA,DIAZ HERNANDEZ,adiaz@jgb.com.co,F,15,19,adiaz@jgb.com.co,formacion2024,formacion2024,9,22,1113641230
+DEISY LORENA,DIAZ ROJAS,dldiaz@jgb.com.co,F,15,19,dldiaz@jgb.com.co,formacion2024,formacion2024,9,22,1144089916
+JUAN JOSE,DIEZ OLANO,jdiez@jgb.com.co,M,15,19,jdiez@jgb.com.co,formacion2024,formacion2024,9,22,94532072
+MARIA DEL MAR,ECHEVERRI PELAEZ,mecheverri@jgb.com.co,F,15,19,mecheverri@jgb.com.co,formacion2024,formacion2024,9,22,53054178
+JUAN CARLOS,ESPARRAGOZA AMON,esparragoza@jgb.com.co,M,15,19,esparragoza@jgb.com.co,formacion2024,formacion2024,9,23,79131219
+HERNAN ANDRES,GARCES LEMOS,hgarces@jgb.com.co,M,15,19,hgarces@jgb.com.co,formacion2024,formacion2024,9,23,76315727
+MARGARITA MARIA,GARCES MARTINEZ,mgarces@jgb.com.co,F,15,19,mgarces@jgb.com.co,formacion2024,formacion2024,9,23,31576005
+MARIA CLEMENCIA          ,GARCIA LLANOS                           ,mgarcia@jgb.com.co,F,15,19,mgarcia@jgb.com.co,formacion2024,formacion2024,9,23,51931101
+YURANI SAUDY,GARCIA MORENO,ygarcia@jgb.com.co,F,15,19,ygarcia@jgb.com.co,formacion2024,formacion2024,9,23,38644464
+VALENTINA,GOMEZ GUERRERO,vgomez@jgb.com.co,F,15,19,vgomez@jgb.com.co,formacion2024,formacion2024,9,23,1144094212
+LEIDY ESTEFANIA,GONZALEZ PORTILLA,lgonzalez@jgb.com.co,F,15,19,lgonzalez@jgb.com.co,formacion2024,formacion2024,9,23,1193458436
+YENNY ADRIANA            ,GUERRERO GALVIS                         ,yguerrero@jgb.com.co,F,15,19,yguerrero@jgb.com.co,formacion2024,formacion2024,9,23,66955118
+KAREN PATRICIA,GUTIERREZ SALAZAR,kgutierrez@jgb.com.co,F,15,19,kgutierrez@jgb.com.co,formacion2024,formacion2024,9,23,67023810
+DIANA PATRICIA           ,HENAO OTALVARO                          ,dhenao@jgb.com.co,F,15,19,dhenao@jgb.com.co,formacion2024,formacion2024,9,23,42153276
+DAVID RICARDO,HERNANDEZ CIFUENTES,drhernandez@jgb.com.co,M,15,19,drhernandez@jgb.com.co,formacion2024,formacion2024,9,23,80092888
+CESAR AUGUSTO,HERRERA FRANCO,caherrera@jgb.com.co,M,15,19,caherrera@jgb.com.co,formacion2024,formacion2024,9,23,16783065
+KARIN DE JESUS           ,IBARRA ROJANO                           ,kibarra@jgb.com.co,M,15,19,kibarra@jgb.com.co,formacion2024,formacion2024,9,23,8532538
+CAROLINA                 ,ISAAC GONZALEZ                          ,CAROLINA.ISAAC@JGB.COM.CO,F,15,19,CAROLINA.ISAAC@JGB.COM.CO,formacion2024,formacion2024,9,23,1130589810
+LAURA,ISAACS POSADA,lisaacs@jgb.com.co,F,15,19,lisaacs@jgb.com.co,formacion2024,formacion2024,9,23,31323255
+JUAN CAMILO,LASSO REYES,jlasso@jgb.com.co,M,15,19,jlasso@jgb.com.co,formacion2024,formacion2024,9,23,1144076809
+DANIELLA,LENIS IZQUIERDO,dlenis@jgb.com.co,F,15,19,dlenis@jgb.com.co,formacion2024,formacion2024,9,23,1144053443
+PABLO EMILIO,LONDOÑO CHARRY,plondono@jgb.com.co,M,15,19,plondono@jgb.com.co,formacion2024,formacion2024,9,23,16917020
+YUDY ALEJANDRA,LONDOÑO FLOREZ,ylondono@jgb.com.co,F,15,19,ylondono@jgb.com.co,formacion2024,formacion2024,9,23,1130674803
+LUISA FERNANDA,LONDOÑO RESTREPO,lflondono@jgb.com.co,F,15,19,lflondono@jgb.com.co,formacion2024,formacion2024,9,23,1144131456
+NORMAN ALFREDO,LOPEZ SOTO,alopez@jgb.com.co,M,15,19,alopez@jgb.com.co,formacion2024,formacion2024,9,24,71740618
+DRIGELIO                 ,LOZADA RAMIREZ                          ,drigelio.lozada@jgb.com.co,M,15,19,drigelio.lozada@jgb.com.co,formacion2024,formacion2024,9,24,94305919
+RAFAEL                   ,LOZANO CARDENAS                         ,rlozano@jgb.com.co,M,15,19,rlozano@jgb.com.co,formacion2024,formacion2024,9,24,1130670316
+CARLOS ARTURO,MALDONADO GARCIA,cmaldonado@jgb.com.co,M,15,19,cmaldonado@jgb.com.co,formacion2024,formacion2024,9,24,79267724
+DIANA MARCELA            ,MENDOZA ZORRILLA                        ,dmendoza@jgb.com.co,F,15,19,dmendoza@jgb.com.co,formacion2024,formacion2024,9,24,1130598382
+DARIO,MONARES ORTIZ,dmonares@jgb.com.co,M,15,19,dmonares@jgb.com.co,formacion2024,formacion2024,9,24,76046418
+NELSON YAMID             ,MONTEZUMA CHAMORRO                      ,nmontezuma@jgb.com.co,M,15,19,nmontezuma@jgb.com.co,formacion2024,formacion2024,9,24,1004189564
+IRMA,MORENO BOLIVAR,imoreno@jgb.com.co,F,15,19,imoreno@jgb.com.co,formacion2024,formacion2024,9,24,30746831
+JULIAN DAVID,NAVARRO DIEZ,jnavarro@jgb.com.co,M,15,19,jnavarro@jgb.com.co,formacion2024,formacion2024,9,24,1151934524
+JAZMIN BERNARDA,OSSA TABARES,jossa@jgb.com.co,F,15,19,jossa@jgb.com.co,formacion2024,formacion2024,9,24,1040737611
+CARLOS ARTURO,PABON TOBON,cpabon@jgb.com.co,M,15,19,cpabon@jgb.com.co,formacion2024,formacion2024,9,24,16823607
+LINA PATRICIA            ,PALACIOS VEGA                           ,linapalacios@jgb.com.co,F,15,19,linapalacios@jgb.com.co,formacion2024,formacion2024,9,24,51938130
+INGRID BRIGITTE          ,PAYA RODRIGUEZ                          ,ipaya@jgb.com.co,F,15,19,ipaya@jgb.com.co,formacion2024,formacion2024,9,24,52491036
+DIANA CAROLINA           ,PEDREROS OCAMPO                         ,dpedreros@jgb.com.co,F,15,19,dpedreros@jgb.com.co,formacion2024,formacion2024,9,24,38794242
+JERSON ALBERTO,PRIETO GONZALEZ,jprieto@jgb.com.co,M,15,19,jprieto@jgb.com.co,formacion2024,formacion2024,9,24,80726618
+ANGELMIRO                ,PULGARIN CORREA                         ,Angelmiro.Pulgarin@jgb.com.co,M,15,19,Angelmiro.Pulgarin@jgb.com.co,formacion2024,formacion2024,9,24,4561360
+JOANA ANDREA,QUIJANO MACHADO,jquijano@jgb.com.co,F,15,19,jquijano@jgb.com.co,formacion2024,formacion2024,9,24,1113646404
+JHON JAIRO,RAMOS BURITICA,jramos@jgb.com.co,M,15,19,jramos@jgb.com.co,formacion2024,formacion2024,9,24,1007043874
+ALIRIO,REINA SALDAÑA,areina@jgb.com.co,M,15,19,areina@jgb.com.co,formacion2024,formacion2024,9,24,80099231
+ESTEBAN ROSENDO,RINCON QUIÑONEZ,erincon@jgb.com.co,M,15,19,erincon@jgb.com.co,formacion2024,formacion2024,9,24,16660523
+ALEJANDRO,RIVERA RENGIFO,arivera@jgb.com.co,M,15,19,arivera@jgb.com.co,formacion2024,formacion2024,9,25,1130605685
+SANDRA VALENTINA,RIVILLAS GARZON,srivillas@jgb.com.co,F,15,19,srivillas@jgb.com.co,formacion2024,formacion2024,9,25,39442038
+FABIAN AUGUSTO           ,ROSAS ZULUAGA                           ,frosas@jgb.com.co,M,15,19,frosas@jgb.com.co,formacion2024,formacion2024,9,25,1020397564
+ENRIQUE ALFREDO,ROYERO OLIVEROS,eroyero@jgb.com.co,M,15,19,eroyero@jgb.com.co,formacion2024,formacion2024,9,25,79777160
+GERARDO MAURICIO,SANCHEZ OCAMPO,gmso.b18@gmail.com,M,15,19,gmso.b18@gmail.com,formacion2024,formacion2024,9,25,1113650181
+CAROLINA,SANCHEZ PEREZ,casanchez@jgb.com.co,F,15,19,casanchez@jgb.com.co,formacion2024,formacion2024,9,25,31322965
+SANDRA JANNETH,SANTOS ROCHA,ssantos@jgb.com.co,F,15,19,ssantos@jgb.com.co,formacion2024,formacion2024,9,25,39758171
+LIZETH MARIA             ,SERRANO OROZCO                          ,lserrano@jgb.com.co,F,15,19,lserrano@jgb.com.co,formacion2024,formacion2024,9,25,67024764
+JULIAN FERNANDO,SOLARTE BOLAÑOS,julian.solarteb@gmail.com,M,15,19,julian.solarteb@gmail.com,formacion2024,formacion2024,9,25,1143844763
+JOHN ALEXANDER           ,SOTO MARTINEZ                           ,jsoto@jgb.com.co,M,15,19,jsoto@jgb.com.co,formacion2024,formacion2024,9,25,79432268
+JOSE OCTAVIO,TOBON RAMIREZ,jtobon@jgb.com.co,M,15,19,jtobon@jgb.com.co,formacion2024,formacion2024,9,25,16751702
+JAIRO ANDRES,TORRES DELGADO,jtorres@jgb.com.co,M,15,19,jtorres@jgb.com.co,formacion2024,formacion2024,9,25,87060663
+MARYURI LISETH,UNDA CONTRERAS,mlunda@jgb.com.co,F,15,19,mlunda@jgb.com.co,formacion2024,formacion2024,9,25,1014204174
+CAROLINA,VARGAS MUÑOZ,cvargas@jgb.com.co,F,15,19,cvargas@jgb.com.co,formacion2024,formacion2024,9,25,67023397
+CAROLINA ANDREA,VIVAS MARIN,cvivas@jgb.com.co,F,15,19,cvivas@jgb.com.co,formacion2024,formacion2024,9,25,29118755
+LUCY ELNARY              ,ZUÑIGA CARVAJAL                         ,lzuniga@jgb.com.co,F,15,19,lzuniga@jgb.com.co,formacion2024,formacion2024,9,25,66981640

@@ -1,0 +1,35 @@
+Nombres,Apellidos,Correo,Genero,Area,Posicion,Usuario,Contrasenia,Contrasenia2,Personaje,Grupo,Cedula
+ISABELA,ZULUAGA GALLEGO,zuluagaisabela021204@gmail.com,F,15,19,zuluagaisabela021204@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Brenda Valeria,Escandón Varga,bvescandonv@unal.edu.co,F,15,19,bvescandonv@unal.edu.co,FORMARTE2023,FORMARTE2023,9,15,12345678
+Lucelly ,Sanchez montoya,chiqui720@hotmail.com,F,15,19,chiqui720@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Jhon Fabio,Serna Castro,jfs417@gmail.com,M,15,19,jfs417@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Maryluz ,Restrepo Grjales,restrepogm@hotmail.com,F,15,19,restrepogm@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Andrea Melisa ,Andrade Sánche,andreasanchez0414@gmail.com,F,15,19,andreasanchez0414@gmail.com ,FORMARTE2023,FORMARTE2023,9,15,12345678
+Lina Fernanda,Naranjo Grisales,linanaranjo@hotmail.es,F,15,19,linanaranjo@hotmail.es,FORMARTE2023,FORMARTE2023,9,15,12345678
+gloria patricia ,Rendón franco,gloriapat29@hotmail.com,F,15,19,gloriapat29@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Jorge Alberto ,Jimenez Hurtado,mm.jtgt@hotmail.com,M,15,19,mm.jtgt@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Yaly Fernanda ,Rincon Trigos ,Yaferitri16@hotmail.com,F,15,19,Yaferitri16@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Pierre Anghelo,Bejarano Fiesco,pierre86_01@hotmail.com,M,15,19,pierre86_01@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Orlando,Vargas Huertas,ovargash@gmail.com,M,15,19,ovargash@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Isabela ,Zuluaga Gallego,zuluagaisabela021204@gmail.com,F,15,19,zuluagaisabela021204@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Diana Patricia,Asprilla gomez ,Dipaasgo85@hotmail.com,F,15,19,Dipaasgo85@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Sebastian Kaleth ,Lopez Payares,skalethlopezp@gmail.com,M,15,19,skalethlopezp@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Maria Mercedes,Ascuntar,maria.ascuntar@ucm.edu.co,F,15,19,maria.ascuntar@ucm.edu.co,FORMARTE2023,FORMARTE2023,9,15,12345678
+LILIAN PAOLA ,ROJAS MALDONADO,lilianpaorojas@gmail.com,F,15,19,lilianpaorojas@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Miguel Angel ,Gonzalez Montenegro ,miguelgonza1830@gmail.com,M,15,19,miguelgonza1830@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Juan Carlos ,Palau Giraldo,jcpalau17@hotmail.com,M,15,19,jcpalau17@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+LINA MARIA ,PEREZ PERILLA,linaperper01@gmail.com,F,15,19,linaperper01@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Jorge Eduardo,Solorzano Salinas,jorge-eduardo88@hotmail.com,M,15,19,jorge-eduardo88@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+INGRID VANESSA,TRILLOS ARGUELLO,ingridtrillos129@gmail.com,F,15,19,ingridtrillos129@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+JOSE LUIS ,BENAVIDES MIDEROS ,joseylinda2014@hotmail.com,M,15,19,joseylinda2014@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+SISSY KAROLINA,MONTES GONZALEZ,sissykmg@gmail.com,F,15,19,sissykmg@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Alba Fanny ,Sánchez Orejuel,fanny.jose18@otmail.com,F,15,19,fanny.jose18@otmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Samantha,Torres Fory,torresforys@gmail.com,F,15,19,torresforys@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+José Fabia,Fory,fabianfory8@gmail.com,M,15,19,fabianfory8@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+LAURA ISABEL ,FONSECA PARRA,laura.fonsecap@gmail.com,F,15,19,laura.fonsecap@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Yaneth Patricia,Cervantes Jimenez,yant1106@hotmail.com,F,15,19,yant1106@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Isabella,González Montoy,isagon.mon07@gmail.com,F,15,19,isagon.mon07@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Francisco ,Miranda ,fdmiranda@gmail.com ,M,15,19,fdmiranda@gmail.com ,FORMARTE2023,FORMARTE2023,9,15,12345678
+MARIA ANGELICA ,RAMIREZ VARGAS,maangelica9430@gmail.com,F,15,19,maangelica9430@gmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Federman ,Gómez usma,w.feder46@hotmail.com,M,15,19,w.feder46@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
+Leydi Johanna,Sanchez Usaquen,Leidisan.09@hotmail.com,F,15,19,Leidisan.09@hotmail.com,FORMARTE2023,FORMARTE2023,9,15,12345678
