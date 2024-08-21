@@ -43,9 +43,9 @@ function codeBD(){
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
-    <h1>
+   <!-- <h1>
       Bienvenido {{ Auth::user()->firstname }}
-    </h1>
+    </h1>-->
     <ol class="breadcrumb">
 
     </ol>
@@ -72,29 +72,41 @@ function codeBD(){
               <tiempos-component tiempoasignado="{{ $retos->time }}"></tiempos-component>
 
               <!-- juego ahorcado -->
-              <div class="webgl-content  hidden-xs">
-                <button class="btn btn-warning btn-lg" id="boton" onclick="senddata(palabra,modo_juego)" style="visibility: hidden; width: 50%;margin-top: 2%;margin-left: 20%;margin-right: -25%;">Empezar Juego</button>
-                
-                <div id="gameContainer" style="width: 95%; height: 580px; margin: auto"></div>
+            <div class="row">
+              <div class="col-lg-1 col-md-1 col-xs-1"></div>
+              <div class="col-lg-10 col-md-10 col-xs-10">
+                <!--formulario-->
+                  <!-- se lleva el resultado a GamesController -->
+                   <form method="POST" action="{{ route('gamesplay.unitygamesplayed', 5) }}">
+                        @csrf
+                        <input type="hidden" name="valorjuego" id="asdf" value="">
+                        <input type="hidden" name="idretoactual" value="{{ $retos->id }}">
+                        <input type="hidden" name="usuario" value="{{ Auth::user()->id }}">
+                        <div class="row">
+                         <div class="col-lg-2 col-md-2"></div>
+                          <div class="col-lg-8 col-md-8">
+                             <button class="btn btn-success btn-lg" id="boton_BD" style="visibility: hidden; width: 100%; margin-botton: 5px; position: absolute;">COMPLETAR</button>
+                          </div>
+                          <div class="col-lg-2 col-md-2"></div>
+                        </div>                
+                      </form>
+                <!--end formulario-->
+                <div class="webgl-content hidden-xs text-center">
+                    <button class="btn btn-warning btn-lg" id="boton" onclick="senddata(palabra,modo_juego)" style="visibility: hidden; width: 50%; margin-bottom:5px;">Empezar Juego</button>
+                    
+                    <div id="gameContainer" style="width: 100%; height: auto; margin: auto"></div>
 
-              <!-- se lleva el resultado a GamesController -->
-              <form method="POST" action="{{ route('gamesplay.unitygamesplayed', 5) }}">
-                @csrf
-                <input type="hidden" name="valorjuego" id="asdf" value="">
-                <input type="hidden" name="idretoactual" value="{{ $retos->id }}">
-                <input type="hidden" name="usuario" value="{{ Auth::user()->id }}">
+                  <div class="footer">             
 
-                <button class="btn btn-success btn-lg" id="boton_BD" style="visibility: hidden; width: 50%;margin-top: 2%;margin-left: 20%;margin-right: -25%;">COMPLETAR</button>                
-              </form>
-
-              <div class="footer">             
-
-                <script type="application/javascript">
-                  localStorage.setItem("gano",-1)
-                  var test = localStorage.getItem("gano");
-                </script>
+                    <script type="application/javascript">
+                      localStorage.setItem("gano",-1)
+                      var test = localStorage.getItem("gano");
+                    </script>
+                  </div>
               </div>
-            </div>
+             </div>
+               <div class="col-lg-2 col-md-2"></div>
+             </div>
               <!--aqui termina juego-->
               <!--aqui avanzar -->
                 <!--pantallas xs-->

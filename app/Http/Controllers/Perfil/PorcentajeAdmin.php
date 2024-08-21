@@ -221,14 +221,13 @@ public function unirvar($u1, $u2, $u3, $u4, $u5, $u6){ // se agrego la variable 
 return $datosunidos;
 }
 //==================================
- public function filtrar(Request $request){
+public function filtrar(Request $request){
     $idusu=auth()->id();
     $info = DB::table('grupadmin')
               ->join('grupos', 'grupadmin.idgrupo', '=', 'grupos.id')
               ->where('idusu', $idusu)
               ->select('grupos.id', 'grupos.descrip')
               ->get();
-   
     if(count($info) != 0){ //valiar que tenga datos
 
         if(is_null($request->input('idfiltro'))){
@@ -246,17 +245,14 @@ return $datosunidos;
               ->join('grupos', 'users.id_grupo', '=', 'grupos.id')
               ->where('users.id_grupo', '=', $valselect)
               ->where('users.estado', '=', 1)
-              ->select('users.id', 'email', 'grupos.id as idgrup', 'grupos.descrip')
+              ->select('users.id', 'email', 'grupos.id as idgrup', 'grupos.descrip', 'users.firstname as nombre', 'users.lastname as apellido')
               ->orderBy('users.id', 'desc')
               ->get();
       $resultados = $res;
-      //return $resultados;
       //#############################3
-     //return $resultados;
       //Obtiene el nombre del grupo
       // $nomgrupo = GruposModel::findOrFail($valselect);
       $contar = count($res);
-      //return $contar;
     //busca el total de users asociados a cada grupos 
     //foreach ($valselect as $valor2) {
         $res2 = DB::table('users')
@@ -267,7 +263,7 @@ return $datosunidos;
                 ->groupBy('grupos.id', 'grupos.descrip')
                 ->orderBy('grupos.id', 'desc')
                 ->get();
-    
+        
         $totalusergrup = $res2;
    // }
     //return $totalusergrup;
@@ -474,8 +470,7 @@ return $datosunidos;
         $var4 = $this->tarporcap($resultadosPorRango4, '51-80', '4', $contar);
         $var5 = $this->tarporcap($resultadosPorRango5, '81-99', '5', $contar);
         $var6 = $this->tarporcap($resultadosPorRango6, '100', '6', $contar);  //se agrego este caso 28/08/23
-       //return $var1;
-       
+    
         //================consultar los usuarios asociados ==============
         $u1 =  $this->usuariosbus($resultadosPorRango1, 1);
         $u2 =  $this->usuariosbus($resultadosPorRango2, 2);
@@ -547,10 +542,11 @@ return $datosunidos;
             $nomgrupo = $totPorCap = $contar = $reporusu = $resultados = $datacompleta = "";
         }
      //  return $datacompleta;
+      //return $nomgrupo;
       return view('admingrupos.vistaporcentaje',  compact('info', 'var1', 'var2', 'var3', 'var4', 'var5', 'var6', 'nomgrupo', 'totPorCap', 'contar', 'reporusu', 'resultados', 'datacompleta'));
     }
 
-    //###################################################
+//###################################################
     public function correos(Request $request, $rango){
         $correos = $request->input('correos'); // Obtener el array de correos desde la solicitud POST
        

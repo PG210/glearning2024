@@ -89,7 +89,7 @@
                 
          <!---###################################################----->
         <div class="box-tools pull-right">
-           
+           <!-- <a href="{{route('reportegeneral')}}" class="btn btn-info">Volver</a>-->
         </div>
     </div>
     <!-- /.box-header -->
@@ -98,7 +98,7 @@
           @if(isset($nomgrupo))
             <div class="col-md-12">
                 @if(isset($nomgrupo))
-                <h1>PORCENTAJE DE AVANCE GRUPO: {{$nomgrupo->descrip}}</h1>
+                <h1>PORCENTAJE DE AVANCE GRUPO: @if(!empty($nomgrupo)){{$nomgrupo->descrip}}@endif</h1>
                 @else
                 <h1>PORCENTAJE DE AVANCE </h1>
                 @endif
@@ -121,8 +121,61 @@
                               </tr>
                           </thead>
                           <tbody style="background-color:#EFF4F1; color:black;">
+                          @if(count($var1) == 0 && count($var2) == 0 && count($var3) == 0 && count($var4) == 0 && count($var5) == 0 && count($var6) == 0)
+                            <tr>
+                              <td class="text-center">1</td>
+                              <td class="text-center">{{$contar}}</td>
+                              <td class="text-center">{{$contar}}</td>
+                              <td class="text-center">0%</td>
+                              <td class="text-center">0%</td>
+                              <td class="text-center">0%</td>
+                              <td class="text-center">0%</td>
+                              <td class="text-center">0%</td>
+                              <td class="text-center">0%</td>
+                              <td>
+                                <!-- Button trigger modal -->
+                                  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalFaltantes">
+                                    Detalle
+                                  </button>
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="modalFaltantes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content" style="border-radius:20px;">
+                                        <div class="modal-header">
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                          <h4 class="modal-title" id="myModalLabel">Detalle del Capítulo</h4>
+                                        </div>
+                                        <div class="modal-body scrollable-container">
+                                          <div class="table-responsive">
+                                        <table class="table table-hover">
+                                          <tr>
+                                            <td>Nombres</td>
+                                            <td>Correo</td>
+                                          </tr>
+                                          <tbody>
+                                           @foreach( $resultados  as $us)
+                                            <tr>
+                                              <td> {{$us->nombre}}  {{$us->apellido}}</td>
+                                              <td>{{$us->email}}</td>
+                                            </tr>
+                                            @endforeach
+                                          </tbody>
+                                        </table>
+                                      </div>
+          
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-warning" data-dismiss="modal">Salir</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </td>
+                            </tr>
+                          @else
+                            <!---existen datos -->
                             @if(isset($var1) && isset($var2) && isset($var3) && isset($var4) && isset($var5) && isset($totPorCap) && isset($contar))
-                              @php
+                            @php
                                   $groupedData = [];
                                   foreach([$var1, $var2, $var3, $var4, $var5, $var6] as $data) { /*Se agrego 28-08-2023 */
                                       foreach ($data as $item) {
@@ -286,7 +339,8 @@
                                       <!---end modal-->
                                   </tr>
                               @endforeach
-                              @endif
+                             @endif
+                            @endif
                           </tbody>
                       </table>
                     <!--===============================================-->

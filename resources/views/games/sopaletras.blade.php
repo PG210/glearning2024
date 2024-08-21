@@ -51,9 +51,9 @@
 
 <div class="content-wrapper">
   <section class="content-header">
-    <h1>
+    <!--<h1>
       Bienvenido {{ Auth::user()->firstname }}
-    </h1>
+    </h1>-->
     <ol class="breadcrumb">
 
     </ol>
@@ -75,24 +75,34 @@
               <h1>COMENZANDO EL RETO - SOPA DE LETRAS</h1>
               <p style="text-align: center;">{{ $retos->description }}</p>
               
-              <p style="text-align: center;">Tienes {{ $retos->time }} minutos para terminar</p>
+              <p style="text-align: center;">Tienes 90 segundos para terminar</p>
               <tiempos-component tiempoasignado="{{ $retos->time }}"></tiempos-component>
+            
+              <div class="row">
+                <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                <div class="col-lg-10 col-md-10 col-xs-10">
 
-              <div class="webgl-content  hidden-xs">
-              
-              <button class="btn btn-warning btn-lg" id="boton" onclick="senddata(limpia,modo_juego)" style="visibility: hidden; width: 60%;margin-top: 1%;margin-left: 17%;margin-right: -25%;">Empezar Juego</button>
-              
-              <div id="unityContainer" style="width: 95%; height: 580px; margin: auto"></div>
+                 <!--formulario-->
+                 <form method="POST" action="{{ route('gamesplay.unitygamesplayed', 12) }}">
+                    @csrf
+                    <input type="hidden" name="valorjuego" id="asdf" value="">
+                    <input type="hidden" name="idretoactual" value="{{ $retos->id }}">
+                    <input type="hidden" name="usuario" value="{{ Auth::user()->id }}">
+                    <div class="row">
+                      <div class="col-lg-3 col-md-3"></div>
+                      <div class="col-lg-7 col-md-7">
+                         <button class="btn btn-success btn-lg" id="boton_BD" style="visibility: hidden; width: 80%; position: absolute;">COMPLETAR</button>                
+                       </div>
+                       <div class="col-lg-2 col-md-2"></div>
+                     </div>
+                  </form>
+                 <!--end formulario-->
 
-              <form method="POST" action="{{ route('gamesplay.unitygamesplayed', 12) }}">
-                @csrf
-                <input type="hidden" name="valorjuego" id="asdf" value="">
-                <input type="hidden" name="idretoactual" value="{{ $retos->id }}">
-                <input type="hidden" name="usuario" value="{{ Auth::user()->id }}">
+                 <div class="webgl-content hidden-xs text-center">
 
-                <button class="btn btn-success btn-lg" id="boton_BD" style="visibility: hidden; width: 50%;margin-top: 2%;margin-left: 20%;margin-right: -25%;">COMPLETAR</button>                
-
-              </form>
+                 <button class="btn btn-warning btn-lg" id="boton" onclick="senddata(limpia,modo_juego)" style="visibility: hidden; width: 50%; margin-bottom:5px;">Empezar Juego</button>
+      
+                 <div id="unityContainer" style="width: 100%; height: auto; margin: auto"></div>
 
                 <div class="footer">
                   <!-- <div class="webgl-logo"></div> -->
@@ -105,6 +115,10 @@
                 
               </div>
               </div>
+              <!---container-->
+                   </div>
+                   <div class="col-lg-1 col-md-1 col-xs-1"></div>
+                 </div>
                   <!--aqui termina el juego-->
               <!--pantallas xs-->
                <div class="visible-xs">
@@ -132,7 +146,7 @@
               <li>
                 <i class="fa fa-envelope bg-blue"></i>
                 <div class="timeline-item">
-                  <h3 class="timeline-header"><a href="#">Recurso </a>}</h3>
+                  <h3 class="timeline-header"><a href="#">Recurso </a></h3>
                   <div class="timeline-body">
                     Bienvenido a la Evolución
                   </div>
