@@ -8,16 +8,17 @@
 </aside>
 
 <!-- Content Wrapper. Contains page content -->
+ 
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">      
     <h1 style="font-size: 5rem; margin: 4% 0% 0% 0%;">
-      Bienvenido {{ Auth::user()->firstname }}
+      Bienvenido {{ Auth::user()->firstname }} 
     </h1>
     <!--mensaje-->
    @if(isset($tem))
       @if($tem == 0)
-         <div class="alert alert-warning alert-dismissible fade in" role="alert" style="padding-top:2px; padding-bottom:2px; border-radius:15px;">
+           <div class="alert alert-warning alert-dismissible fade in" role="alert" style="padding-top:2px; padding-bottom:2px; border-radius:15px;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <h3 class="text-center"> <strong>¡Felicidades!, Capítulo terminado de manera exitosa &#128522; </strong> </h3>
             </div>
@@ -29,6 +30,20 @@
             </div>
         @endif
      @endif
+     <!-- validar para continuar el capitulo validar que las tareas lleguen a cero-->
+     @if(isset($tareaspendientes) && $tareaspendientes == 0 && $capsiguiente != $cap)
+     <br>
+     <div class="alert alert-dismissible fade in" role="alert" style="padding-top:2px; padding-bottom:2px; border-radius:15px; background-color:#101C5A;">
+      <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-12 text-center">
+            <a href="/capitulos/{{$capsiguiente}}" style="white-space:normal; margin:5px;" class="btn btn-primary">
+              <span style="font-weight:900;font-size:95%;"><i class="fa fa-arrow-circle-right"></i> Siguiente Capítulo: {{$capsiguiente}}</span>
+            </a>
+          </div>
+        </div>
+     </div>
+    @endif
+    <!--- en validar capitulo--->
     <!--end mensaje-->
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Capitulo {{ $capitulos->order }}</a></li>      

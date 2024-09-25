@@ -25,9 +25,11 @@
     </style>
 </head>
 <body>
- <p class="letra">Hola {{ $nombre }},</p>
+ <p class="letra">Hola @if(isset($nombre)) {{ $nombre }} @endif,</p>
         <p class="letra">¡Te encuentras en un emocionante viaje de aprendizaje!</p>
-        <p class="letra">Tu porcentaje de avance en el capítulo {{$cap}} es: {{ $ran }}</p>
+        @if(isset($nombre))
+          <p class="letra">Tu porcentaje de avance en el capítulo {{$cap}} es: {{ $ran }}</p>
+        @endif
         <p class="letra">Recuerda que cada paso que das te acerca más a tus metas. ¡Sigue adelante con determinación y alcanzarás grandes logros en este curso!</p>
         <br>
          <p>Si presentas inconvenientes, escribe a: pedro@evolucion.co </p>

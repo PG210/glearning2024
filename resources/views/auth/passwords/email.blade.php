@@ -37,16 +37,17 @@
         <div class="formi">
             <div class="card">
                 <div class="title m-b-md">
-                    RECUPERA CONTRASEÑA en <strong>EVO</strong>LUCIÓN
+                    RECUPERA CONTRASEÑA EN <strong>G-LEARNING</strong>
                 </div>
                 <div class="card-body">
-                        @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                       @if(Session::has('errorInicio'))
+                            <div class="alert alert-success alert-dismissable" style="border-radius:15px;">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <strong>{{session('errorInicio')}}</strong> 
+                            </div>
+                        @endif
                 
-                    <form method="POST" action="{{ route('password.email') }}">
+                    <form method="POST" action="{{ url('/password/forgot') }}">
                         @csrf
 
                         <div class="form-group row">                            

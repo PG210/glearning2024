@@ -20,7 +20,7 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    //use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -70,5 +70,9 @@ class LoginController extends Controller
     //funcion 30/03/22
     public function email(){
         return 'email';
+    }
+
+    public function index(){
+        return view('auth.login');
     }
 }

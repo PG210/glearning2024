@@ -41,23 +41,8 @@
               @endif
                 <!--end mensaje-->
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ url('login') }}">
                         @csrf
-<!--
-                        <div class="form-group row">
-                            <label for="email" class="col-sm-4 col-form-label text-md-right">{{ __('Direccion E-Mail') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>-->
-
                         <div class="form-group row">
                             <label for="username" class="col-sm-4 col-form-label text-md-right">{{ __('Nombre Usuario') }}</label>
 
@@ -93,7 +78,6 @@
 
                             <div class="col-md-1">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
                             </div>
                         </div>
 
@@ -103,14 +87,11 @@
                                     {{ __('Ingresar') }}
                                 </button>
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Olvidaste tu Contraseña?') }}
-                                    </a>
-                                @endif
-                               <!-- <a class="btn btn-link" href="{{ route('usuario.create') }}">
-                                    {{ __('No tienes Cuenta?') }}
-                                </a>-->
+                              
+                               <a class="btn btn-link" href="{{ route('forgotPassword') }}">
+                                    {{ __('Olvidaste tu Contraseña?') }}
+                                </a>
+                              
                                 <a class="btn btn-link" href="{{url('/') }}">
                                     {{ __('Volver') }}
                                 </a>

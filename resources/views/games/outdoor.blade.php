@@ -61,7 +61,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                         <label for="material">Subir Imagen Evidencia</label>
-                        <input type="file" class="form-control" name="material" id="material" placeholder="Sube tu imagen" accept="image/*">
+                        <input type="file" class="form-control" name="material" id="material" placeholder="Sube tu imagen" accept="image/*" required>
                     </div>
                      <!--subir link-->
                         <div class="form-group">

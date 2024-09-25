@@ -431,7 +431,14 @@
         @else
           <div class="modal-footer header-color">
         @endif
-        <a class="btn btn-success btn-lg" href="/playerchallenge/{{ $subcapitulo }}" style="border: 2px solid white;"><b>VOLVER<b></a>
+        <!--- formulario de reto -->
+        <form action="{{ url('/playerchallenge/' . $subcapitulo) }}" method="POST">
+            @csrf
+            <input type="hidden" name="validarSiguiente" value="{{$validarSiguiente}}">
+            <input type="hidden" name="capsiguiente" value="{{$capsiguiente}}">
+            <button type="submit" class="btn btn-success btn-lg" style="border: 2px solid white;"><b>VOLVER</b></button>
+        </form>
+        <!--- end reto-->
       </div>
     </div>
   </div>

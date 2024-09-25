@@ -163,7 +163,10 @@ class PlayerChallengeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {           
+    {   
+        $validarSiguiente = 0; // validar el estado del capitulo siguiente
+        $capsiguiente = 0;
+
         $userauthid = Auth::user()->id;
         $datetime = Carbon::now();       
 
@@ -447,113 +450,23 @@ class PlayerChallengeController extends Controller
                
             }
             //====================== Actualizar RECOMPENSAS del jugador  ===============//
-            //========================================================================//
-
-
-            //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuario        
-            //obtener area del usuario   
-           /* $userareas = User::find($userauthid);        
-            foreach ($userareas->areas as $userarea) {            
-            }
-        
-            //obtener el jefe del area        
-            $jefeareas = DB::table('type_user')->where('id_areas', $userarea->id)->get();  
-                        
-            //obtener datos del jefe para crear mensaje            
-            if (!$jefeareas->isEmpty()) {                
-                //obtener puntajes de jefes para cambio de mensaje , segun el area              
-                foreach ($jefeareas as $jefe) {
-                    $puntajejefes = User::find($jefe->user_id);
-                    foreach ($puntajejefes->types as $valtype ) {                        
-                        $punajejefeg = $valtype->g_point;
-                        $punajejefei = $valtype->i_point;
-                        $messagejefe = $valtype->message;
-                        $statuson = 1;
-                        $statusoff = 0;
-
-                        $tablemessages = DB::table('messages')->where('id_user', $userauthid)->get();                      
-
-                        if ($tablemessages->count() > 0) {
-                            foreach ($tablemessages as $messagestatus) {                                
-                                if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg && $jefe->user_id != $messagestatus->id_jefe ) {
-                                    
-                                    //obtener datos del jefe para crear mensaje            
-                                    if (!$jefeareas->isEmpty()) {
-                                        foreach ($jefeareas as $jefearea) { 
-        
-                                            //guardar estados en la tabla messages para no repetir mails por usuario
-                                            DB::table('messages')->insert([
-                                                'id_jefe'     =>    $jefearea->user_id,
-                                                'id_user'     =>    $userauthid,
-                                                'status'      =>    $statuson,
-                                            ]);
-        
-                                            $datajefe = User::find($jefearea->user_id);
-                                            $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                            $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                            $contactlist = $datajefe->email; 
-                                
-                                            //objeto para enviar datos a la plantilla de correo
-                                            $mailobjeto = new \stdClass();            
-                                            $mailobjeto->nombrejugador = $nombrejugador;
-                                            $mailobjeto->nombrelider = $nombrelider;
-                                            $mailobjeto->messagejefe = $messagejefe;
-                                            Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                        }
-                                    }                    
-                                }
-                            }                            
-                        } else {                       
-                            if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg ) {
-                                
-                                //obtener datos del jefe para crear mensaje            
-                                if (!$jefeareas->isEmpty()) {
-                                    foreach ($jefeareas as $jefearea) { 
-    
-                                        //guardar estados en la tabla messages para no repetir mails por usuario
-                                        DB::table('messages')->insert([
-                                            'id_jefe'     =>    $jefearea->user_id,
-                                            'id_user'     =>    $userauthid,
-                                            'status'      =>    $statuson,
-                                        ]);
-    
-                                        $datajefe = User::find($jefearea->user_id);
-                                        $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                        $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                        $contactlist = $datajefe->email; 
-                            
-                                        //objeto para enviar datos a la plantilla de correo
-                                        $mailobjeto = new \stdClass();            
-                                        $mailobjeto->nombrejugador = $nombrejugador;
-                                        $mailobjeto->nombrelider = $nombrelider;
-                                        $mailobjeto->messagejefe = $messagejefe;
-                                        Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                    }
-                                }                    
-                            }
-                        }
-                     
-                    }            
-                }
-                
-            }*/           
             
             //====================POPUP al terminar ultimo reto del tema:
             //verificar si esta en el ultimo RETO del TEMA al que le pertenece
             $subcapitulo_reto = DB::table('subchapters')
-            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
-            ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
-            ->where('subchapters.id', $subchapter_id) 
-            ->groupBy('subchapter_id')
-            ->first();
+                            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
+                            ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
+                            ->where('subchapters.id', $subchapter_id) 
+                            ->groupBy('subchapter_id')
+                            ->first();
             $guar = $subcapitulo_reto->cantidad_retos_tema;
             $subcapitulo_reto = DB::table('subchapters')
-            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
-            ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
-            ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
-            ->where('subchapters.id', $subchapter_id)
-            ->where('challenge_user.user_id', $userauthid) 
-            ->first();
+                            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
+                            ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
+                            ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
+                            ->where('subchapters.id', $subchapter_id)
+                            ->where('challenge_user.user_id', $userauthid) 
+                            ->first();
 
             $n = $subcapitulo_reto->cantidad_retos_terminados;
 
@@ -575,6 +488,11 @@ class PlayerChallengeController extends Controller
                 }
             //#################################
             $mensajefinal = $this->mensaje($cap, $userauthid);
+            
+            if($guar == $n){
+                $validarSiguiente = 1;
+                $capsiguiente = $cap + 1; //sumar un valor al capitulo
+            }
 
             return view('player.finishquiz')->with('puntos_s', $pt_s)
                                             ->with('puntos_i', $i_point)
@@ -592,6 +510,8 @@ class PlayerChallengeController extends Controller
                                             ->with('recompensanamewon', $recompensanamewon)
                                             ->with('inscap', $rinsignia)
                                             ->with('mensaje', $mensajefinal)
+                                            ->with('validarSiguiente', $validarSiguiente)
+                                            ->with('capsiguiente', $capsiguiente)
                                             ->with('cap', $cap); 
         }else{
             //validar reto

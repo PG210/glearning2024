@@ -315,7 +315,7 @@
                                                          <!--===================-->
                                                             <div class="row">
                                                                 <div class="col-xs-8 col-sm-6">
-                                                                <img src="{{ asset('/storage/gameoutdoor/' .$sal->img) }}"  class="img-responsive" alt="Responsive image">
+                                                                <img src="{{ asset('imgoutdoor/' .$sal->img) }}"  class="img-thumbnail" alt="Responsive image" style="width:200px;">
                                                                 </div>
                                                                 <div class="col-xs-4 col-sm-6">
                                                                 @if(!empty($sal->video))
@@ -583,7 +583,7 @@
                                                          <!--===================-->
                                                          <div class="row">
                                                                 <div class="col-xs-8 col-sm-6">
-                                                                <img src="{{ asset('/storage/gamefoto/' .$q->img) }}"   class="img-responsive" alt="Responsive image">
+                                                                <img src="{{ asset('imgoutdoor/' .$q->img) }}"   class="img-thumbnail" alt="Responsive image" style="width:200px;">
                                                                 </div>
                                                                 <div class="col-xs-4 col-sm-6">
                                                                 @if(!empty($q->video))
