@@ -54,14 +54,17 @@ class PlayerChaptersController extends Controller
     }
 
     //FUNCION INVOCADA AL SELECCIONAR UN SUBCAPITULO 
-    public function pasarchallenge($id)
+    public function pasarchallenge(Request $request, $id)
     {
+        /*Capturar las variables para validar si es el capitulo final */
+        $validarSiguiente = 0;// validar el estado del capitulo siguiente
+       
         $userauthid = Auth::user()->id;
     
         //obtener subcapitulos con el chapter_id del subcapitulo
         $subcapitulos = Subchapter::where('id', $id)->first();
         $capitulos = Chapter::find($subcapitulos->chapter_id);
-        
+
         //obtener retos del subcapitulo por parametro
         $retos = Challenge::where('subchapter_id', $id)
                             ->where('gametype', 1)->get();
@@ -77,9 +80,10 @@ class PlayerChaptersController extends Controller
                         ->whereNull('q.challenge_id')
                         ->first();
                         // dd($retospending);
-        $retospendientes = $retospending;
+       $retospendientes = $retospending;
        $retp = $retospending; 
-                
+       
+               
         //==== Retos que YA HAN SIDO jugados
         $retosfinish = DB::table('challenge_user')
                         ->join('challenges', 'challenge_user.challenge_id', '=', 'challenges.id')
@@ -96,14 +100,29 @@ class PlayerChaptersController extends Controller
                     ->where('challenge_user.user_id', '=', $userauthid)
                     ->selectRaw('subchapters.chapter_id as cap, challenges.id as idt, challenges.name')
                     ->get();
+           //return $tareasusu->count(); //total de tareas echas
            $tareacap = DB::table('challenges')
                     ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
                     ->where('subchapters.chapter_id', $capitulos->id)
                     ->selectRaw('subchapters.chapter_id as cap, challenges.id as idt, challenges.name')
                     ->get();
-              $v = $subcapitulos->name;
+           // return $tareacap->count(); //total de tareas por capitulo
+
+        $v = $subcapitulos->name;
              //fin retos pendientes
-             $cap = $capitulos->id;
+        $cap = $capitulos->id;
+        $capsiguiente = $cap; //controlar los capitulos que aumenten siempre y cuando no sobre pase los asignados
+
+        //total de tareas pendientes
+        $tareaspendientes = $tareacap->count() - $tareasusu->count();
+
+         //obtener el grado de capitulo mas alto asignado
+         $capmax = DB::table('subchapter_user')->where('user_id', $userauthid)->max('chapter_id');
+         
+        if($tareaspendientes == 0 && $capsiguiente < $capmax){
+            $capsiguiente = $cap + 1;
+        }
+      
         return view('player.capitulos')->with('retos', $retos)
                                         ->with('capitulos', $capitulos)
                                         ->with('subcapitulos', $subcapitulos)
@@ -114,6 +133,8 @@ class PlayerChaptersController extends Controller
                                         ->with('retp', $retp)
                                         ->with('v', $v)
                                         ->with('cap', $cap)
+                                        ->with('capsiguiente', $capsiguiente)
+                                        ->with('tareaspendientes', $tareaspendientes)
                                         ->with('tareacap', $tareacap);
     }
 

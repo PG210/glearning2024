@@ -62,7 +62,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                         <label for="image">Subir Foto</label>
-                        <input type="file" class="form-control" name="image" id="image" placeholder="Sube tu imagen" accept="image/*">
+                        <input type="file" class="form-control" name="image" id="image" placeholder="Sube tu imagen" accept="image/*" required>
                     </div>
                     <!--agregar link-->
                       <div class="form-group">

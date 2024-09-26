@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tincan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://projecttincan.com/tincan.xsd">
+	<activities>
+		<activity id="urn:articulate:storyline:6UX01C77lde" type="http://adlnet.gov/expapi/activities/course">
+			<name lang="und">G-Learning Cápsula 1</name>
+			<description lang="und" />
+			<launch lang="und">index_lms.html</launch>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/5g0NLBnSEKd" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">Untitled Slide</name>
+			<description lang="und">Untitled Slide</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/5oenyxGsF0k" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">D1</name>
+			<description lang="und">D1</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/63g8QJErrlx" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">D1</name>
+			<description lang="und">D1</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/6JtH1LsuaSh" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">D1</name>
+			<description lang="und">D1</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/5VhXpbtq49z" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">D1</name>
+			<description lang="und">D1</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/5lK231OoknO" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">D1</name>
+			<description lang="und">D1</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/6po6jv0VdeR" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">D1</name>
+			<description lang="und">D1</description>
+		</activity>
+		<activity id="urn:articulate:storyline:6UX01C77lde/5XqwoT3JsMe" type="http://adlnet.gov/expapi/activities/module">
+			<name lang="und">Untitled Slide</name>
+			<description lang="und">Untitled Slide</description>
+		</activity>
+	</activities>
+</tincan>

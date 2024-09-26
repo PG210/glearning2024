@@ -12,6 +12,9 @@ use App\Http\Controllers\Carga\GruposInsignias;//se agrego este controlador
 use App\Http\Controllers\Carga\PorcentajeController;//se agrego este controlador
 use App\Http\Controllers\Perfil\Administrador;//se agrego este controlador
 use App\Http\Controllers\Perfil\PorcentajeAdmin;//se agrego este controlador
+use App\Http\Controllers\RegController\SesController;
+use App\Http\Controllers\CapsulaController\Capsula;
+use App\Http\Controllers\MailController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +31,19 @@ Route::get('/', function () {
    return redirect('/login');
 });
 
-Auth::routes();
+//Auth::routes();
+Route::get('login',  [SesController::class, 'index'])->name('login');
+Route::post('login',  [SesController::class, 'login']);
+
+Route::post('logout', [SesController::class, 'logout'])->name('logout');
+
+Route::get('/password/forgot', [SesController::class, 'forgotPassword'])->name('forgotPassword');
+
+Route::post('/password/forgot',  [SesController::class, 'sendemail']); 
+Route::get('/password/reset/{id}', [SesController::class, 'resetPassword']);
+Route::post('/password/update',  [SesController::class, 'passupdate'])->name('password.update');
+
+
 Route::get('/home', 'HomeController@index')->name('home')->middleware('redirectIfSessionExpired');
 
 //perfil cuando ingresa el usuario
@@ -50,8 +65,8 @@ Route::resource('startchallenges', 'PlayerChallengeController')->middleware('aut
 
 
 Route::get('/playerchapter/{id}', ['uses' =>'PlayerChaptersController@pasarchapter', 'as'=>'profile.pasarchapter'])->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::get('/playerchallenge/{id}', ['uses' =>'PlayerChaptersController@pasarchallenge', 'as'=>'profile.pasarchallenge'])->middleware('auth')->middleware('redirectIfSessionExpired');
-
+//se paso de tipo get a post /playerchallenge/{id}
+Route::any('/playerchallenge/{id}', ['uses' =>'PlayerChaptersController@pasarchallenge', 'as'=>'profile.pasarchallenge'])->middleware('auth')->middleware('redirectIfSessionExpired');
 
 //pasarle id reto a la pantalla de retos en el player
 Route::get('/challenge/{id}', ['uses' =>'PlayerChallengeController@challenge', 'as'=>'player.challenge'])->middleware('auth')->middleware('redirectIfSessionExpired');
@@ -368,11 +383,18 @@ Route::get('/informe/comentarios', [ReportcompletosController::class, 'vercoment
 
 Route::get('/notificacion/{id}', [ReportcompletosController::class, 'modals'])->middleware('redirectIfSessionExpired');
 
+//ruta de prueba para capsula 1
+Route::get('/capsula/{param1}', [Capsula::class, 'capsula'])->middleware('redirectIfSessionExpired');
 
+//manejo de correo corporativo
+//================== manejo de correo microsoft =================0
+Route::get('/redirect-to-microsoft', [MailController::class, 'redirectToMicrosoft']);
+Route::get('/oauth/callback', [MailController::class, 'handleMicrosoftCallback']);
+Route::post('/send-mail', [MailController::class, 'sendMail']);
 
-
-
-
+Route::get('/forprueba', function () {
+    return view('formprueba');
+});
 
 
 

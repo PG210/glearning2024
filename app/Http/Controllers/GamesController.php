@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use DB;
 use Auth;
 Use App\ModingCap; //se agrego para reg insignias por capitulo
+use Intervention\Image\Facades\Image; // optimizar las imagenes
 
 class GamesController extends Controller
 {
@@ -140,15 +141,14 @@ class GamesController extends Controller
         return view('games.outdoor')->with('retos', $retos)->with('cap', $cap);
     }
 
-
-
-
-
     //==============================================================================================================///
     //============================  GUARDAR resultados en cada juego  TERMINADO de unity  ===========================//
 
     public function unitygamesplayed(Request $request, $id){
         // dd($request->valorjuego); llega un 1 ó 0
+        $validarSiguiente = 0; // validar el estado del capitulo siguiente
+        $capsiguiente = 0;
+
         $userauthid = Auth::user()->id;
         $datetime = Carbon::now();  
         
@@ -170,12 +170,8 @@ class GamesController extends Controller
          }else{
         //validar si el reto unity se perdio o se gano 1 = win , 0 = lose
         if ($valorjuego == 1){ 
-
             //obtener el reto correspondiente:
-           
-
             // ======================= PUNTAJES EN RETOS JUGADOS vs SUBCAPITULOS ========================
-
             //cantidad puntos S en el subcapitulo
             $subchapterspoint = DB::table('subchapters')->where('id', $reto->subchapter_id)->pluck('s_point'); 
             $subchapterpoint = $subchapterspoint[0];
@@ -194,9 +190,6 @@ class GamesController extends Controller
             
             //cantidad puntos para retos
             $retospts = $subchapterpoint / $challengesin;
-                        
-            
-
             //guardar campos en la tabla pivote CHALLENGE_USER, forzando campos que no estan en el guardado inmediato anterior
             $retos = new Challenge;
             $retos->users()->attach($usuario, [
@@ -236,8 +229,6 @@ class GamesController extends Controller
                 $sum_gpoints = $sum_gpoints + $userspointi[$i];          
                 //ACTUALIZAR puntaje del jugador
             }
-            
-
             //====== DESCOMPONER puntajes ganados y puntajes actuales =====//        
             //puntos ganados
             $winpoints = ceil($sum_spoints);
@@ -266,15 +257,12 @@ class GamesController extends Controller
             }else {
                 //no ha subido de nivel
                 $leveluppopup = 0; 
-            }
-
-                      
+            }        
             // ========= actualizar puntos S, I, G del USERS:
             User::where('id', $userauthid)->update(['s_point' => $winpoints, 'i_point' => $sum_ipoints, 'g_point' => $sum_gpoints]);
             
             // ========= actualizar puntos S de CHALLENGES:
             challenge::where('id', $idretoactual)->update(['s_point' => $retospts]);        
-
 
             //========================================================================//
             //====================== Actualizar insignias del jugador  ===============//
@@ -286,25 +274,6 @@ class GamesController extends Controller
             $insigniawon = '';
             $insignianamewon = '';
             $insigniadescwon = '';
-
-            //obtener y recorrer todas las insignias:
-           /* foreach ($insignias as $insignia) {
-                if ($insigniauser->i_point >= $insignia->i_point && $insigniauser->g_point >= $insignia->g_point ) {
-                    //verificar existencia de insignias
-                    $wininsignia = DB::table('insignia_user')->where('user_id', $userauthid)->where('insignia_id', $insignia->id)->get();
-                    //guardar insignia en el insignia_user
-                    if ($wininsignia->isEmpty()) {                        
-                        $insigniauser->insignias()->attach($insignia);
-                        //una insignia nueva
-                        $insigniapopup = 1;
-                        $insigniawon = $insignia->imagen;
-                        $insignianamewon = $insignia->name;
-                        $insigniadescwon = $insignia->description;
-                    }else{
-                        $insigniapopup = 0;
-                    }
-                }
-            }*/
             //======================Validar si tiene una insignia agregada ===========//
             if($reto->id_insignia != 100){
             //tiene recompensa
@@ -344,26 +313,6 @@ class GamesController extends Controller
             $recompensawon = '';
             $recompensanamewon = '';
 
-        
-            //obtener y recorrer todas las recompensas:
-           /* foreach ($recompensas as $recompensa) {
-                if ($recompensauser->i_point >= $recompensa->i_point && $recompensauser->g_point >= $recompensa->g_point) {
-                    //verificar existencia de recompensas
-                    if ($recompensauser->avatar_id == $recompensa->avatar_id) {                       
-                        $wininsignia = DB::table('gift_user')->where('user_id', $userauthid)->where('gift_id', $recompensa->id)->get();
-                        //guardar insignia en el gift_user
-                        if ($wininsignia->isEmpty()) {                        
-                            $recompensauser->gifts()->attach($recompensa);
-                            //una insignia nueva
-                            $recompensapopup = 1;
-                            $recompensawon = $recompensa->imagen;
-                            $recompensanamewon = $recompensa->name;
-                        }else{
-                            $recompensapopup = 0;
-                        }
-                    }
-                }
-            }*/
              //======================= Verificar si tiene recompensas ===================//
              //veirifcar si el reto tiene una recompensa
              if($reto->id_grupo != 1){
@@ -399,124 +348,32 @@ class GamesController extends Controller
 
             //====================== Actualizar RECOMPENSAS del jugador  ===============//
             //========================================================================//
-
-
-
-            //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuario        
-            //obtener area del usuario   
-           /* $userareas = User::find($userauthid);        
-            foreach ($userareas->areas as $userarea) {            
-            }
-            
-            //obtener el jefe del area        
-            $jefeareas = DB::table('type_user')->where('id_areas', $userarea->id)->get();  
-                        
-            //obtener datos del jefe para crear mensaje            
-            if (!$jefeareas->isEmpty()) {                
-                //obtener puntajes de jefes para cambio de mensaje , segun el area              
-                foreach ($jefeareas as $jefe) {
-                    $puntajejefes = User::find($jefe->user_id);
-                    foreach ($puntajejefes->types as $valtype ) {                        
-                        $punajejefeg = $valtype->g_point;
-                        $punajejefei = $valtype->i_point;
-                        $messagejefe = $valtype->message;   
-                        
-                        $statuson = 1;
-                        $statusoff = 0;
-
-                        $tablemessages = DB::table('messages')->where('id_user', $userauthid)->get();
-                                        
-                    
-                        if ($tablemessages->count() > 0) {
-                            foreach ($tablemessages as $messagestatus) {
-                                if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg && $jefe->user_id != $messagestatus->id_jefe) {
-                                    //obtener datos del jefe para crear mensaje            
-                                    if (!$jefeareas->isEmpty()) {
-                                        foreach ($jefeareas as $jefearea) { 
-            
-                                            //guardar estados en la tabla messages para no repetir mails por usuario
-                                            DB::table('messages')->insert([
-                                                'id_jefe'     =>    $jefearea->user_id,
-                                                'id_user'     =>    $userauthid,
-                                                'status'      =>    $statuson,
-                                            ]);
-                                                
-                                            $datajefe = User::find($jefearea->user_id);
-                                            $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                            $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                            $contactlist = $datajefe->email; 
-                                
-                                            //objeto para enviar datos a la plantilla de correo
-                                            $mailobjeto = new \stdClass();            
-                                            $mailobjeto->nombrejugador = $nombrejugador;
-                                            $mailobjeto->nombrelider = $nombrelider;
-                                            $mailobjeto->messagejefe = $messagejefe;
-                                            Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                        }
-                                    }                
-                                }
-                            }
-                        } else {
-                            
-                            if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg) {
-                                //obtener datos del jefe para crear mensaje            
-                                if (!$jefeareas->isEmpty()) {
-                                    foreach ($jefeareas as $jefearea) { 
-        
-                                        //guardar estados en la tabla messages para no repetir mails por usuario
-                                        DB::table('messages')->insert([
-                                            'id_jefe'     =>    $jefearea->user_id,
-                                            'id_user'     =>    $userauthid,
-                                            'status'      =>    $statuson,
-                                        ]);
-                                            
-                                        $datajefe = User::find($jefearea->user_id);
-                                        $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                        $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                        $contactlist = $datajefe->email; 
-                            
-                                        //objeto para enviar datos a la plantilla de correo
-                                        $mailobjeto = new \stdClass();            
-                                        $mailobjeto->nombrejugador = $nombrejugador;
-                                        $mailobjeto->nombrelider = $nombrelider;
-                                        $mailobjeto->messagejefe = $messagejefe;
-                                        Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                    }
-                                }                
-                            }
-                        }
-                    }            
-                }                    
-            }*/                
-
-
             
             //====================POPUP al terminar ultimo reto del tema:
             //verificar si esta en el ultimo RETO del TEMA al que le pertenece
-            $subcapitulo_reto = DB::table('subchapters')
-            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
-            ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
-            ->where('subchapters.id', $reto->subchapter_id) 
-            ->groupBy('subchapter_id')
-            ->first();
 
+            $subcapitulo_reto_temas = DB::table('subchapters')
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
+                                ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
+                                ->where('subchapters.id', $reto->subchapter_id) 
+                                ->groupBy('subchapter_id')
+                                ->first();
+            
             $subcapitulo_reto = DB::table('subchapters')
-            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
-            ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
-
-            ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
-            ->where('subchapters.id', $reto->subchapter_id)
-            ->where('challenge_user.user_id', $userauthid) 
-            ->first();
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
+                                ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
+                                ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
+                                ->where('subchapters.id', $reto->subchapter_id)
+                                ->where('challenge_user.user_id', $userauthid) 
+                                ->first();
 
                 
-            if ($insigniapopup == 0 && $recompensapopup == 0 && $leveluppopup == 0) {
+            if ($insigniapopup == 0 && $recompensapopup == 0 && $leveluppopup == 0 || $subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados) {
                 $passretouppopup =  1;
             } else {
                 $passretouppopup =  0;
             }
                         
-
             $pt_s = $retospts;
             //#################################
           
@@ -529,7 +386,11 @@ class GamesController extends Controller
              }
              //validar mensaje de finalizacion 
               $mensajefinal = $this->mensaje($cap, $userauthid);
-            //##################################
+            //========== validar el numero de capitulo que sigue si este reto es el final =============
+            if($subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados){
+                $validarSiguiente = 1;
+                $capsiguiente = $cap + 1; //sumar un valor al capitulo
+            }
             return view('player.finishquiz')->with('puntos_s', $pt_s)
                                             ->with('puntos_i', $i_point)
                                             ->with('puntos_g', $g_point)
@@ -546,6 +407,8 @@ class GamesController extends Controller
                                             ->with('cap', $cap)
                                             ->with('inscap', $rinsignia)
                                             ->with('mensaje', $mensajefinal)
+                                            ->with('validarSiguiente', $validarSiguiente)
+                                            ->with('capsiguiente', $capsiguiente)
                                             ->with('recompensanamewon', $recompensanamewon);
         }else{
             $reto = Challenge::find($idretoactual);
@@ -558,6 +421,9 @@ class GamesController extends Controller
 
 
     public function playseevideos(Request $request, $id){
+        $validarSiguiente = 0; // validar el estado del capitulo siguiente
+        $capsiguiente = 0;
+
         $rules = [
             'evidence' => 'required|min:120',           
         ];         
@@ -705,25 +571,7 @@ class GamesController extends Controller
         $insignianamewon = '';
         $insigniadescwon = '';
 
-         //obtener y recorrer todas las insignias:
-       /* foreach ($insignias as $insignia) {
-            $insignia->id;
-            if ($insigniauser->i_point >= $insignia->i_point && $insigniauser->g_point >= $insignia->g_point ) {
-                //verificar existencia de insignias
-                $wininsignia = DB::table('insignia_user')->where('user_id', $userauthid)->where('insignia_id', $insignia->id)->get();
-                //guardar insignia en el insignia_user
-                if ($wininsignia->isEmpty()) {                        
-                        $insigniauser->insignias()->attach($insignia);
-                        //una insignia nueva
-                        $insigniapopup = 1;
-                        $insigniawon = $insignia->imagen;
-                        $insignianamewon = $insignia->name;
-                        $insigniadescwon = $insignia->description;
-                    }else{
-                        $insigniapopup = 0;
-                    }
-            }
-        }*/
+         //obtener y recorrer todas las insignias
          //====================================validar insignias
         if($reto->id_insignia != 100){
             //tiene recompensa
@@ -758,25 +606,6 @@ class GamesController extends Controller
             $recompensawon = '';
             $recompensanamewon = '';
 
-            //obtener y recorrer todas las recompensas:
-           /* foreach ($recompensas as $recompensa) {
-                if ($recompensauser->i_point >= $recompensa->i_point && $recompensauser->g_point >= $recompensa->g_point) {
-                    //verificar existencia de recompensas
-                    if ($recompensauser->avatar_id == $recompensa->avatar_id) {                       
-                        $wininsignia = DB::table('gift_user')->where('user_id', $userauthid)->where('gift_id', $recompensa->id)->get();
-                        //guardar insignia en el gift_user
-                        if ($wininsignia->isEmpty()) {                        
-                            $recompensauser->gifts()->attach($recompensa);
-                            //una insignia nueva
-                            $recompensapopup = 1;
-                            $recompensawon = $recompensa->imagen;
-                            $recompensanamewon = $recompensa->name;
-                        }else{
-                            $recompensapopup = 0;
-                        }
-                    }
-                }
-            }*/
             //===================== verificar si tiene insignia ===============//
              //veirifcar si el reto tiene una recompensa
              if($reto->id_grupo != 1){
@@ -812,112 +641,24 @@ class GamesController extends Controller
             //========================================================================//
         
 
-        //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuadio        
-        //obtener area del usuario   
-       /* $userareas = User::find($userauthid);        
-        foreach ($userareas->areas as $userarea) {            
-        }
-        //obtener el jefe del area        
-        $jefeareas = DB::table('type_user')->where('id_areas', $userarea->id)->get();  
-                        
-        //obtener datos del jefe para crear mensaje            
-        if (!$jefeareas->isEmpty()) {                
-            //obtener puntajes de jefes para cambio de mensaje , segun el area              
-            foreach ($jefeareas as $jefe) {
-                $puntajejefes = User::find($jefe->user_id);
-                foreach ($puntajejefes->types as $valtype ) {                        
-                    $punajejefeg = $valtype->g_point;
-                    $punajejefei = $valtype->i_point;
-                    $messagejefe = $valtype->message;
-
-                    $statuson = 1;
-                    $statusoff = 0;
-
-                    $tablemessages = DB::table('messages')->where('id_user', $userauthid)->get();
-                                        
-                    
-                    if ($tablemessages->count() > 0) {
-                        foreach ($tablemessages as $messagestatus) {
-                            if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg && $jefe->user_id != $messagestatus->id_jefe) {
-                                //obtener datos del jefe para crear mensaje            
-                                if (!$jefeareas->isEmpty()) {
-                                    foreach ($jefeareas as $jefearea) { 
-        
-                                        //guardar estados en la tabla messages para no repetir mails por usuario
-                                        DB::table('messages')->insert([
-                                            'id_jefe'     =>    $jefearea->user_id,
-                                            'id_user'     =>    $userauthid,
-                                            'status'      =>    $statuson,
-                                        ]);
-                                            
-                                        $datajefe = User::find($jefearea->user_id);
-                                        $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                        $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                        $contactlist = $datajefe->email; 
-                            
-                                        //objeto para enviar datos a la plantilla de correo
-                                        $mailobjeto = new \stdClass();            
-                                        $mailobjeto->nombrejugador = $nombrejugador;
-                                        $mailobjeto->nombrelider = $nombrelider;
-                                        $mailobjeto->messagejefe = $messagejefe;
-                                        Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                    }
-                                }                
-                            }
-                        }
-                    } else {                        
-                        if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg) {
-                            //obtener datos del jefe para crear mensaje            
-                            if (!$jefeareas->isEmpty()) {
-                                foreach ($jefeareas as $jefearea) { 
-    
-                                    //guardar estados en la tabla messages para no repetir mails por usuario
-                                    DB::table('messages')->insert([
-                                        'id_jefe'     =>    $jefearea->user_id,
-                                        'id_user'     =>    $userauthid,
-                                        'status'      =>    $statuson,
-                                    ]);
-                                        
-                                    $datajefe = User::find($jefearea->user_id);
-                                    $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                    $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                    $contactlist = $datajefe->email; 
-                        
-                                    //objeto para enviar datos a la plantilla de correo
-                                    $mailobjeto = new \stdClass();            
-                                    $mailobjeto->nombrejugador = $nombrejugador;
-                                    $mailobjeto->nombrelider = $nombrelider;
-                                    $mailobjeto->messagejefe = $messagejefe;
-                                    Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                }
-                            }                
-                        }
-                    }
-
-                }            
-            }
-
-        }*/
-    
-
-        
+        //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuadio                
         //====================POPUP al terminar ultimo reto del tema:
         //verificar si esta en el ultimo RETO del TEMA al que le pertenece
         $subcapitulo_reto_temas = DB::table('subchapters')
-            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
-            ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
-            ->where('subchapters.id', $reto->subchapter_id) 
-            ->groupBy('subchapter_id')
-            ->first();
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
+                                ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
+                                ->where('subchapters.id', $reto->subchapter_id) 
+                                ->groupBy('subchapter_id')
+                                ->first();
    
         $subcapitulo_reto = DB::table('subchapters')
-            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
-            ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
+                                ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
 
-            ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
-            ->where('subchapters.id', $reto->subchapter_id)
-            ->where('challenge_user.user_id', $userauthid) 
-            ->first();
+                                ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
+                                ->where('subchapters.id', $reto->subchapter_id)
+                                ->where('challenge_user.user_id', $userauthid) 
+                                ->first();
 
 
         if ($insigniapopup == 0 && $recompensapopup == 0 && $leveluppopup == 0 || $subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados) {
@@ -928,15 +669,21 @@ class GamesController extends Controller
 
         $pt_s = $retospts;
          //############################
-         $count = DB::table('insigniacap')->where('capitulo', $cap)->count();
+        $count = DB::table('insigniacap')->where('capitulo', $cap)->count();
            if($count != 0){
              $rinsignia = $this->valinsig($cap, $userauthid); 
            }else{
              $rinsignia = "";
            }
-         //###############################
          //validar mensaje de finalizacion 
-         $mensajefinal = $this->mensaje($cap, $userauthid);
+        $mensajefinal = $this->mensaje($cap, $userauthid);
+        
+        //========== validar el numero de capitulo que sigue si este reto es el final =============
+        if($subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados){
+            $validarSiguiente = 1;
+            $capsiguiente = $cap + 1; //sumar un valor al capitulo
+        }
+
         return view('player.finishquiz')->with('puntos_s', $pt_s)
                                         ->with('puntos_i', $i_point)
                                         ->with('puntos_g', $g_point)
@@ -953,13 +700,18 @@ class GamesController extends Controller
                                         ->with('recompensanamewon', $recompensanamewon)
                                         ->with('inscap', $rinsignia)
                                         ->with('mensaje', $mensajefinal)
-                                         ->with('cap', $cap);
+                                        ->with('validarSiguiente', $validarSiguiente)
+                                        ->with('capsiguiente', $capsiguiente)
+                                        ->with('cap', $cap);
          }
     }
 
 
 
     public function playupfotos(Request $request, $id){
+        $validarSiguiente = 0; // validar el estado del capitulo siguiente
+        $capsiguiente = 0;
+
         $rules = [
             'evidence' => 'required|min:120',           
             'image' => 'required',           
@@ -978,12 +730,32 @@ class GamesController extends Controller
         $userplayer = User::find($userauthid);
 
         //proceso guardar archivo material para el reto
-        if ($request->hasFile('image')) {            
+       /* if ($request->hasFile('image')) {            
             $thefilename = $request->file('image')->getClientOriginalName();
             $pathmaterial = $thefilename;
             $request->file('image')->storeAs('gamefoto', $thefilename);
         }else {
             $pathmaterial ="default.png";
+        }*/
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $val = "foto" . time() . "." . $file->guessExtension();
+            $ruta = public_path("imgoutdoor/" . $val);
+            // Crear una instancia de la imagen y redimensionarla si es necesario
+            $img = Image::make($file->getRealPath());
+
+            // Redimensionar la imagen si es necesario
+            $img->resize(400, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            // Optimizar la imagen ajustando la calidad (70% en este ejemplo) y manteniendo la extensión original
+            $img->encode($file->guessExtension(), 80);
+
+            // Guardar la imagen optimizada en la ruta especificada
+            $img->save($ruta);
+            $pathmaterial = $val;
         }
 
         //obtener las respuestas elegidas por el jugador
@@ -1121,29 +893,6 @@ class GamesController extends Controller
         $insignianamewon = '';
         $insigniadescwon = '';
 
-        //obtener y recorrer todas las insignias:
-       /* foreach ($insignias as $insignia) {
-            $insignia->id;
-            $insignia->s_point;
-            $insignia->i_point;
-            $insignia->g_point;
-            if ($insigniauser->i_point >= $insignia->i_point && $insigniauser->g_point >= $insignia->g_point ) {
-                //verificar existencia de insignias
-                $wininsignia = DB::table('insignia_user')->where('user_id', $userauthid)->where('insignia_id', $insignia->id)->get();
-                //guardar insignia en el insignia_user
-                if ($wininsignia->isEmpty()) {                        
-                        $insigniauser->insignias()->attach($insignia);
-                        //una insignia nueva
-                        $insigniapopup = 1;
-                        $insigniawon = $insignia->imagen;
-                        $insignianamewon = $insignia->name;
-                        $insigniadescwon = $insignia->description;
-                    }else{
-                        $insigniapopup = 0;
-                }
-            }
-        }*/
-
         //====================================insignias buscar =====================
 
          if($reto->id_insignia != 100){
@@ -1179,25 +928,6 @@ class GamesController extends Controller
             $recompensawon = '';
             $recompensanamewon = '';
 
-            //obtener y recorrer todas las recompensas:
-           /* foreach ($recompensas as $recompensa) {
-                if ($recompensauser->i_point >= $recompensa->i_point && $recompensauser->g_point >= $recompensa->g_point) {
-                    //verificar existencia de recompensas
-                    if ($recompensauser->avatar_id == $recompensa->avatar_id) {                       
-                        $wininsignia = DB::table('gift_user')->where('user_id', $userauthid)->where('gift_id', $recompensa->id)->get();
-                        //guardar insignia en el gift_user
-                        if ($wininsignia->isEmpty()) {                        
-                            $recompensauser->gifts()->attach($recompensa);
-                            //una insignia nueva
-                            $recompensapopup = 1;
-                            $recompensawon = $recompensa->imagen;
-                            $recompensanamewon = $recompensa->name;
-                        }else{
-                            $recompensapopup = 0;
-                        }
-                    }
-                }
-            }*/
              //======================Encontrar recompensa ======================//
              //veirifcar si el reto tiene una recompensa
              if($reto->id_grupo != 1){
@@ -1232,117 +962,22 @@ class GamesController extends Controller
             //====================== Actualizar RECOMPENSAS del jugador  ===============//
             //========================================================================//
 
-        
-        //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuadio        
-        //obtener area del usuario   
-       /* $userareas = User::find($userauthid);        
-        foreach ($userareas->areas as $userarea) {            
-        }
-        //obtener el jefe del area        
-            $jefeareas = DB::table('type_user')->where('id_areas', $userarea->id)->get();  
-                        
-            //obtener datos del jefe para crear mensaje            
-            if (!$jefeareas->isEmpty()) {                
-                //obtener puntajes de jefes para cambio de mensaje , segun el area              
-                foreach ($jefeareas as $jefe) {
-                    $puntajejefes = User::find($jefe->user_id);
-                    foreach ($puntajejefes->types as $valtype ) {                        
-                        $punajejefeg = $valtype->g_point;
-                        $punajejefei = $valtype->i_point;
-                        $messagejefe = $valtype->message;
-
-
-                        $statuson = 1;
-                        $statusoff = 0;
-
-                        $tablemessages = DB::table('messages')->where('id_user', $userauthid)->get();
-                                        
-                    
-                        if ($tablemessages->count() > 0) {
-                            foreach ($tablemessages as $messagestatus) {
-                                if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg && $jefe->user_id != $messagestatus->id_jefe) {
-                                    //obtener datos del jefe para crear mensaje            
-                                    if (!$jefeareas->isEmpty()) {
-                                        foreach ($jefeareas as $jefearea) { 
-            
-                                            //guardar estados en la tabla messages para no repetir mails por usuario
-                                            DB::table('messages')->insert([
-                                                'id_jefe'     =>    $jefearea->user_id,
-                                                'id_user'     =>    $userauthid,
-                                                'status'      =>    $statuson,
-                                            ]);
-                                                
-                                            $datajefe = User::find($jefearea->user_id);
-                                            $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                            $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                            $contactlist = $datajefe->email; 
-                                
-                                            //objeto para enviar datos a la plantilla de correo
-                                            $mailobjeto = new \stdClass();            
-                                            $mailobjeto->nombrejugador = $nombrejugador;
-                                            $mailobjeto->nombrelider = $nombrelider;
-                                            $mailobjeto->messagejefe = $messagejefe;
-                                            Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                        }
-                                    }                
-                                }
-                            }
-                        } else {
-                            
-                            if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg ) {
-                                //obtener datos del jefe para crear mensaje            
-                                if (!$jefeareas->isEmpty()) {
-                                    foreach ($jefeareas as $jefearea) { 
-        
-                                        //guardar estados en la tabla messages para no repetir mails por usuario
-                                        DB::table('messages')->insert([
-                                            'id_jefe'     =>    $jefearea->user_id,
-                                            'id_user'     =>    $userauthid,
-                                            'status'      =>    $statuson,
-                                        ]);
-                                            
-                                        $datajefe = User::find($jefearea->user_id);
-                                        $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                        $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                        $contactlist = $datajefe->email; 
-                            
-                                        //objeto para enviar datos a la plantilla de correo
-                                        $mailobjeto = new \stdClass();            
-                                        $mailobjeto->nombrejugador = $nombrejugador;
-                                        $mailobjeto->nombrelider = $nombrelider;
-                                        $mailobjeto->messagejefe = $messagejefe;
-                                        Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                    }
-                                }                
-                            }
-                        }
-                    }            
-                }
-
-
-        }*/
-
-
-
          //====================POPUP al terminar ultimo reto del tema:
         //verificar si esta en el ultimo RETO del TEMA al que le pertenece
         $subcapitulo_reto_temas = DB::table('subchapters')
-        ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
-        ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
-        ->where('subchapters.id', $reto->subchapter_id) 
-        ->groupBy('subchapter_id')
-        ->first();
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
+                                ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
+                                ->where('subchapters.id', $reto->subchapter_id) 
+                                ->groupBy('subchapter_id')
+                                ->first();
 
         $subcapitulo_reto = DB::table('subchapters')
-        ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
-        ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
-
-        ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
-        ->where('subchapters.id', $reto->subchapter_id)
-        ->where('challenge_user.user_id', $userauthid) 
-        ->first();
-
-
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
+                                ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
+                                ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
+                                ->where('subchapters.id', $reto->subchapter_id)
+                                ->where('challenge_user.user_id', $userauthid) 
+                                ->first();
 
         if ($insigniapopup == 0 && $recompensapopup == 0 && $leveluppopup == 0 || $subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados) {
             $passretouppopup =  1;
@@ -1362,6 +997,12 @@ class GamesController extends Controller
         //validar mensaje de finalizacion 
         $mensajefinal = $this->mensaje($cap, $userauthid);
 
+         //========== validar el numero de capitulo que sigue si este reto es el final =============
+        if($subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados){
+            $validarSiguiente = 1;
+            $capsiguiente = $cap + 1; //sumar un valor al capitulo
+        }
+
         return view('player.finishquiz')->with('puntos_s', $pt_s)
                                         ->with('puntos_i', $i_point)
                                         ->with('puntos_g', $g_point)
@@ -1378,6 +1019,8 @@ class GamesController extends Controller
                                         ->with('cap', $cap)
                                         ->with('inscap', $rinsignia)
                                         ->with('mensaje', $mensajefinal)
+                                        ->with('validarSiguiente', $validarSiguiente)
+                                        ->with('capsiguiente', $capsiguiente)
                                         ->with('recompensanamewon', $recompensanamewon);
         }
     }
@@ -1386,6 +1029,9 @@ class GamesController extends Controller
 
 
     public function playlectura(Request $request, $id){
+        $validarSiguiente = 0; // validar el estado del capitulo siguiente
+        $capsiguiente = 0;
+
         $rules = [
             'evidence' => 'required|min:120',           
         ];         
@@ -1530,25 +1176,6 @@ class GamesController extends Controller
         $insignianamewon = '';
         $insigniadescwon = '';
 
-        //obtener y recorrer todas las insignias:
-       /* foreach ($insignias as $insignia) {
-            if ($insigniauser->i_point >= $insignia->i_point && $insigniauser->g_point >= $insignia->g_point ) {
-                //verificar existencia de insignias
-                $wininsignia = DB::table('insignia_user')->where('user_id', $userauthid)->where('insignia_id', $insignia->id)->get();
-                //guardar insignia en el insignia_user
-                if ($wininsignia->isEmpty()) {                        
-                        $insigniauser->insignias()->attach($insignia);
-                        //una insignia nueva
-                        $insigniapopup = 1;
-                        $insigniawon = $insignia->imagen;
-                        $insignianamewon = $insignia->name;
-                        $insigniadescwon = $insignia->description;
-
-                    }else{
-                        $insigniapopup = 0;
-                    }
-            }
-        }*/
          //===========================================validar si tiene insignias =====================
 
          if($reto->id_insignia != 100){
@@ -1584,25 +1211,6 @@ class GamesController extends Controller
             $recompensawon = '';
             $recompensanamewon = '';
 
-            //obtener y recorrer todas las recompensas:
-           /* foreach ($recompensas as $recompensa) {
-                if ($recompensauser->i_point >= $recompensa->i_point && $recompensauser->g_point >= $recompensa->g_point) {
-                    //verificar existencia de recompensas
-                    if ($recompensauser->avatar_id == $recompensa->avatar_id) {                       
-                        $wininsignia = DB::table('gift_user')->where('user_id', $userauthid)->where('gift_id', $recompensa->id)->get();
-                        //guardar insignia en el gift_user
-                        if ($wininsignia->isEmpty()) {                        
-                            $recompensauser->gifts()->attach($recompensa);
-                            //una insignia nueva
-                            $recompensapopup = 1;
-                            $recompensawon = $recompensa->imagen;
-                            $recompensanamewon = $recompensa->name;
-                        }else{
-                            $recompensapopup = 0;
-                        }
-                    }
-                }
-            }*/
             //=======================Buscar recompensa ============================//
             //veirifcar si el reto tiene una recompensa
              if($reto->id_grupo != 1){
@@ -1634,115 +1242,23 @@ class GamesController extends Controller
                 }
                
             }
-            //====================== Actualizar RECOMPENSAS del jugador  ===============//
-            //========================================================================//
-        
-
-        //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuadio        
-        //obtener area del usuario   
-       /* $userareas = User::find($userauthid);        
-        foreach ($userareas->areas as $userarea) {            
-        }
-        //obtener el jefe del area        
-        $jefeareas = DB::table('type_user')->where('id_areas', $userarea->id)->get();  
-                        
-        //obtener datos del jefe para crear mensaje            
-        if (!$jefeareas->isEmpty()) {                
-            //obtener puntajes de jefes para cambio de mensaje , segun el area              
-            foreach ($jefeareas as $jefe) {
-                $puntajejefes = User::find($jefe->user_id);
-                foreach ($puntajejefes->types as $valtype ) {                        
-                    $punajejefeg = $valtype->g_point;
-                    $punajejefei = $valtype->i_point;
-                    $messagejefe = $valtype->message;
-
-                    $statuson = 1;
-                    $statusoff = 0;
-
-                    $tablemessages = DB::table('messages')->where('id_user', $userauthid)->get();
-                                        
-                    
-                    if ($tablemessages->count() > 0) {
-                        foreach ($tablemessages as $messagestatus) {
-                            if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg && $jefe->user_id != $messagestatus->id_jefe) {
-                                //obtener datos del jefe para crear mensaje            
-                                if (!$jefeareas->isEmpty()) {
-                                    foreach ($jefeareas as $jefearea) { 
-        
-                                        //guardar estados en la tabla messages para no repetir mails por usuario
-                                        DB::table('messages')->insert([
-                                            'id_jefe'     =>    $jefearea->user_id,
-                                            'id_user'     =>    $userauthid,
-                                            'status'      =>    $statuson,
-                                        ]);
-                                            
-                                        $datajefe = User::find($jefearea->user_id);
-                                        $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                        $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                        $contactlist = $datajefe->email; 
-                            
-                                        //objeto para enviar datos a la plantilla de correo
-                                        $mailobjeto = new \stdClass();            
-                                        $mailobjeto->nombrejugador = $nombrejugador;
-                                        $mailobjeto->nombrelider = $nombrelider;
-                                        $mailobjeto->messagejefe = $messagejefe;
-                                        Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                    }
-                                }                
-                            }
-                        }
-                    } else {
-                        
-                        if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg) {
-                            //obtener datos del jefe para crear mensaje            
-                            if (!$jefeareas->isEmpty()) {
-                                foreach ($jefeareas as $jefearea) { 
-    
-                                    //guardar estados en la tabla messages para no repetir mails por usuario
-                                    DB::table('messages')->insert([
-                                        'id_jefe'     =>    $jefearea->user_id,
-                                        'id_user'     =>    $userauthid,
-                                        'status'      =>    $statuson,
-                                    ]);
-                                        
-                                    $datajefe = User::find($jefearea->user_id);
-                                    $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                    $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                    $contactlist = $datajefe->email; 
-                        
-                                    //objeto para enviar datos a la plantilla de correo
-                                    $mailobjeto = new \stdClass();            
-                                    $mailobjeto->nombrejugador = $nombrejugador;
-                                    $mailobjeto->nombrelider = $nombrelider;
-                                    $mailobjeto->messagejefe = $messagejefe;
-                                    Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                }
-                            }                
-                        }
-                    }
-                    
-                }            
-            }
-        }*/
-
 
         //====================POPUP al terminar ultimo reto del tema:
         //verificar si esta en el ultimo RETO del TEMA al que le pertenece
         $subcapitulo_reto_temas = DB::table('subchapters')
-        ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
-        ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
-        ->where('subchapters.id', $reto->subchapter_id) 
-        ->groupBy('subchapter_id')
-        ->first();
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
+                                ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
+                                ->where('subchapters.id', $reto->subchapter_id) 
+                                ->groupBy('subchapter_id')
+                                ->first();
 
         $subcapitulo_reto = DB::table('subchapters')
-        ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
-        ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
-
-        ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
-        ->where('subchapters.id', $reto->subchapter_id)
-        ->where('challenge_user.user_id', $userauthid) 
-        ->first();
+                                ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
+                                ->join('challenge_user', 'challenges.id', '=', 'challenge_user.challenge_id')  
+                                ->select( DB::raw('COUNT(challenge_user.user_id) as cantidad_retos_terminados'))     
+                                ->where('subchapters.id', $reto->subchapter_id)
+                                ->where('challenge_user.user_id', $userauthid) 
+                                ->first();
 
 
         if ($insigniapopup == 0 && $recompensapopup == 0 && $leveluppopup == 0 || $subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados) {
@@ -1763,6 +1279,12 @@ class GamesController extends Controller
         //validar mensaje de finalizacion 
         $mensajefinal = $this->mensaje($cap, $userauthid);
 
+        //========== validar el numero de capitulo que sigue si este reto es el final =============
+        if($subcapitulo_reto_temas->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados){
+            $validarSiguiente = 1;
+            $capsiguiente = $cap + 1; //sumar un valor al capitulo
+        }
+
         return view('player.finishquiz')->with('puntos_s', $pt_s)
                                         ->with('puntos_i', $i_point)
                                         ->with('puntos_g', $g_point)
@@ -1779,6 +1301,8 @@ class GamesController extends Controller
                                         ->with('cap', $cap)
                                         ->with('inscap', $rinsignia)
                                         ->with('mensaje', $mensajefinal)
+                                        ->with('validarSiguiente', $validarSiguiente)
+                                        ->with('capsiguiente', $capsiguiente)
                                         ->with('recompensanamewon', $recompensanamewon);
         }
     }
@@ -1786,6 +1310,10 @@ class GamesController extends Controller
 
 
     public function playoutdoor(Request $request, $id){
+        //return $request;
+        $validarSiguiente = 0; // validar el estado del capitulo siguiente
+        $capsiguiente = 0;
+
         $rules = [
             'evidence' => 'required|min:120',           
         ];         
@@ -1802,12 +1330,33 @@ class GamesController extends Controller
         $userplayer = User::find($userauthid);
 
         //proceso guardar archivo material para el reto
-        if ($request->hasFile('material')) {            
+        /*if ($request->hasFile('material')) {  
+            $file = $request->file('material');         
             $thefilename = $request->file('material')->getClientOriginalName();
             $pathmaterial = $thefilename;
             $request->file('material')->storeAs('gameoutdoor', $thefilename);
-        }else {
-            $pathmaterial ="default.png";
+        }*/
+
+        if ($request->hasFile('material')) {
+            $file = $request->file('material');
+            $val = "outdoor" . time() . "." . $file->guessExtension();
+            $ruta = public_path("imgoutdoor/" . $val);
+            // Crear una instancia de la imagen y redimensionarla si es necesario
+            $img = Image::make($file->getRealPath());
+
+            // Redimensionar la imagen si es necesario
+            $img->resize(400, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            // Optimizar la imagen ajustando la calidad (70% en este ejemplo) y manteniendo la extensión original
+            $img->encode($file->guessExtension(), 80);
+
+            // Guardar la imagen optimizada en la ruta especificada
+            $img->save($ruta);
+            $pathmaterial = $val;
+
         }
 
         //obtener las respuestas elegidas por el jugador
@@ -1845,8 +1394,6 @@ class GamesController extends Controller
         //cantidad puntos para retos
         $retospts = $subchapterpoint / $challengesin;
         
-        
-
         $i_point = 0;
         $g_point = 0;
         foreach ($challenges as $challenge) {
@@ -1941,31 +1488,6 @@ class GamesController extends Controller
         $insignianamewon = '';
         $insigniadescwon = '';
 
-        //obtener y recorrer todas las insignias:
-       /* foreach ($insignias as $insignia) {
-            if ($insigniauser->i_point >= $insignia->i_point && $insigniauser->g_point >= $insignia->g_point ) {
-                //verificar existencia de insignias              
-                $wininsignia = DB::table('insignia_user')
-                ->where('user_id', '=', $userauthid)
-                ->where('insignia_id', '=', $insignia->id)
-                ->get();
-                
-                
-                //guardar insignia en el insignia_user
-                if ($wininsignia->isEmpty()) {                        
-                        $insigniauser->insignias()->attach($insignia);
-                        //una insignia nueva
-                        $insigniapopup = 1;
-                        $insigniawon = $insignia->imagen;
-                        $insignianamewon = $insignia->name;
-                        $insigniadescwon = $insignia->description;
-
-                    }else{
-                        $insigniapopup = 0;
-                    }
-            }
-        }*/
-
         //===============================validar insignia============================
          if($reto->id_insignia != 100){
             //tiene recompensa
@@ -2000,25 +1522,6 @@ class GamesController extends Controller
             $recompensawon = '';
             $recompensanamewon = '';
 
-            //obtener y recorrer todas las recompensas:
-            /*foreach ($recompensas as $recompensa) {
-                if ($recompensauser->i_point >= $recompensa->i_point && $recompensauser->g_point >= $recompensa->g_point) {
-                    //verificar existencia de recompensas
-                    if ($recompensauser->avatar_id == $recompensa->avatar_id) {                       
-                        $wininsignia = DB::table('gift_user')->where('user_id', $userauthid)->where('gift_id', $recompensa->id)->get();
-                        //guardar insignia en el gift_user
-                        if ($wininsignia->isEmpty()) {                        
-                            $recompensauser->gifts()->attach($recompensa);
-                            //una insignia nueva
-                            $recompensapopup = 1;
-                            $recompensawon = $recompensa->imagen;
-                            $recompensanamewon = $recompensa->name;
-                        }else{
-                            $recompensapopup = 0;
-                        }
-                    }
-                }
-            }*/
              //======================validar recompensa ==============================//
               //veirifcar si el reto tiene una recompensa
              if($reto->id_grupo != 1){
@@ -2052,105 +1555,14 @@ class GamesController extends Controller
             }
             //====================== Actualizar RECOMPENSAS del jugador  ===============//
             //========================================================================//
-
-        //======= Enviar confirmacion via EMAIL al jefe de area del reto terminado por el usuadio        
-        //obtener area del usuario   
-       /* $userareas = User::find($userauthid);        
-        foreach ($userareas->areas as $userarea) {            
-        }
-        
-        //obtener el jefe del area        
-        $jefeareas = DB::table('type_user')->where('id_areas', $userarea->id)->get();  
-                        
-        //obtener datos del jefe para crear mensaje            
-        if (!$jefeareas->isEmpty()) {                
-            //obtener puntajes de jefes para cambio de mensaje , segun el area              
-            foreach ($jefeareas as $jefe) {
-                $puntajejefes = User::find($jefe->user_id);
-                foreach ($puntajejefes->types as $valtype ) {                        
-                    $punajejefeg = $valtype->g_point;
-                    $punajejefei = $valtype->i_point;
-                    $messagejefe = $valtype->message;
-
-                    $statuson = 1;
-                    $statusoff = 0;
-
-                    $tablemessages = DB::table('messages')->where('id_user', $userauthid)->get();                    
-                    
-                    
-                    if ($tablemessages->count() > 0) {
-                        foreach ($tablemessages as $messagestatus) {
-                            if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg && $jefe->user_id != $messagestatus->id_jefe) {
-                
-                                //obtener datos del jefe para crear mensaje            
-                                if (!$jefeareas->isEmpty()) {
-                                    foreach ($jefeareas as $jefearea) { 
-        
-                                        //guardar estados en la tabla messages para no repetir mails por usuario
-                                            DB::table('messages')->insert([
-                                                'id_jefe'     =>    $jefearea->user_id,
-                                                'id_user'     =>    $userauthid,
-                                                'status'      =>    $statuson,
-                                            ]);
-                                        $datajefe = User::find($jefearea->user_id);
-                                            $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                            $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                            $contactlist = $datajefe->email; 
-                                
-                                            //objeto para enviar datos a la plantilla de correo
-                                            $mailobjeto = new \stdClass();            
-                                            $mailobjeto->nombrejugador = $nombrejugador;
-                                            $mailobjeto->nombrelider = $nombrelider;
-                                            $mailobjeto->messagejefe = $messagejefe;
-                                            Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                    }
-                                }
-                                
-                            }
-                        }
-                    } else {                            
-                        if ($sum_ipoints >= $punajejefei && $sum_gpoints >= $punajejefeg ) {
-            
-                            //obtener datos del jefe para crear mensaje            
-                            if (!$jefeareas->isEmpty()) {
-                                foreach ($jefeareas as $jefearea) { 
-    
-                                    //guardar estados en la tabla messages para no repetir mails por usuario
-                                        DB::table('messages')->insert([
-                                            'id_jefe'     =>    $jefearea->user_id,
-                                            'id_user'     =>    $userauthid,
-                                            'status'      =>    $statuson,
-                                        ]);
-                                    $datajefe = User::find($jefearea->user_id);
-                                        $nombrelider = $datajefe->firstname . " " . $datajefe->lastname;
-                                        $nombrejugador = Auth::user()->firstname . " " . Auth::user()->lastname;
-                                        $contactlist = $datajefe->email; 
-                            
-                                        //objeto para enviar datos a la plantilla de correo
-                                        $mailobjeto = new \stdClass();            
-                                        $mailobjeto->nombrejugador = $nombrejugador;
-                                        $mailobjeto->nombrelider = $nombrelider;
-                                        $mailobjeto->messagejefe = $messagejefe;
-                                        Mail::to($contactlist)->send( new alertaas($mailobjeto) );
-                                }
-                            }
-                            
-                        }
-                    }
-                }            
-            }
-        }*/
-
-
-
         //====================POPUP al terminar ultimo reto del tema:
         //verificar si esta en el ultimo RETO del TEMA al que le pertenece
         $subcapitulo_reto_tema = DB::table('subchapters')
-        ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
-                    ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
-                    ->where('subchapters.id', $reto->subchapter_id) 
-                    ->groupBy('subchapter_id')
-                    ->first();
+                            ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')  
+                            ->select('subchapter_id', DB::raw('COUNT(subchapter_id) as cantidad_retos_tema') )     
+                            ->where('subchapters.id', $reto->subchapter_id) 
+                            ->groupBy('subchapter_id')
+                            ->first();
 
         $subcapitulo_reto = DB::table('subchapters')
                         ->join('challenges', 'subchapters.id', '=', 'challenges.subchapter_id')
@@ -2181,6 +1593,12 @@ class GamesController extends Controller
        //validar mensaje de finalizacion 
        $mensajefinal = $this->mensaje($cap, $userauthid); 
 
+        //========== validar el numero de capitulo que sigue si este reto es el final =============
+        if($subcapitulo_reto_tema->cantidad_retos_tema == $subcapitulo_reto->cantidad_retos_terminados){
+            $validarSiguiente = 1;
+            $capsiguiente = $cap + 1; //sumar un valor al capitulo
+        }
+
         return view('player.finishquiz')->with('puntos_s', $pt_s)
                                         ->with('puntos_i', $i_point)
                                         ->with('puntos_g', $g_point)
@@ -2197,6 +1615,8 @@ class GamesController extends Controller
                                         ->with('cap', $cap)
                                         ->with('inscap', $rinsignia)
                                         ->with('mensaje', $mensajefinal)
+                                        ->with('validarSiguiente', $validarSiguiente)
+                                        ->with('capsiguiente', $capsiguiente)
                                         ->with('recompensanamewon', $recompensanamewon);
         }
     }
