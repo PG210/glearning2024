@@ -8,12 +8,39 @@ use App\User;
 use App\PosUsuModel\ComentarioCapModel;
 use Illuminate\Support\Facades\Mail;//se agrego para correo
 use App\Mail\Notificacion;//se agrego email
-use Auth;
-use DB;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+//envio de correos
+use App\Services\MicrosoftGraphService;
+use App\Models\Token;
+use App\Jobs\SendMailJob; // Importa el job
 
 class ReportcompletosController extends Controller
 {
+     /*Envio de correos desde el admin */
+     protected $graphService;
+
+     public function __construct(MicrosoftGraphService $graphService)
+      {
+        $this->graphService = $graphService;
+      }
+ 
+      /*Enviar plantilla de correo */
+      private function sendMail($destino, $nombre, $mensaje, $cap)
+      {
+          $descrip = "Notificación de Avance.";
+          // Renderiza la vista Blade con el contenido HTML
+          $content = view('mails.notifi', [
+              'nombre' => $nombre, // valores para la vista de correo
+              'mensaje' => $mensaje,
+              'cap' => $cap
+          ])->render();
+  
+          // Despacha el job a la cola
+          SendMailJob::dispatch($descrip, $content, $destino);
+          return true; 
+      }
+
     /**
      * Display a listing of the resource.
      *
@@ -454,13 +481,6 @@ class ReportcompletosController extends Controller
         $linkout = "https://glearning.com.co/storage/gameoutdoor/";
         $linkfoto = "https://glearning.com.co/storage/gamefoto/";
         //videos
-        //return $info;
-        /*for($i=0; $i<$array_num; $i++){
-            $des = preg_replace("/[\r\n|\n|\r]+/", " ", $info[$i]->descripcion);
-            $pal = preg_replace("/[\r\n|\n|\r]+/", " ", $info[$i]->palabras);
-            $vid = preg_replace("/[\r\n|\n|\r]+/", " ", $info[$i]->Evidencia_videos);
-            fwrite($ar, $info[$i]->Usuario.'-'.$info[$i]->Apellido.'*'.$info[$i]->grup.'*'.$info[$i]->nombre_reto.'*'.$des.'*'.$pal.'*'.'*'.$vid.'*'.'*'.'*'.'*'.'*'.$info[$i]->cap.PHP_EOL);
-            }*/
         //#################################
        foreach ($info as $infousu) {
             foreach ($infousu as $video) {
@@ -471,13 +491,6 @@ class ReportcompletosController extends Controller
             }
         }
         //lecturas
-        /*for($i=0; $i<count($info2); $i++){
-            $des = preg_replace("/[\r\n|\n|\r]+/", " ", $info2[$i]->descripcion);
-            $pal = preg_replace("/[\r\n|\n|\r]+/", " ", $info2[$i]->palabras);
-            $lec = preg_replace("/[\r\n|\n|\r]+/", " ", $info2[$i]->Evidencia_Lecturas);
-            //lecturas
-            fwrite($ar, $info2[$i]->Usuario.'-'.$info2[$i]->Apellido.'*'.$info[$i]->grup.'*'.$info2[$i]->nombre_reto.'*'.$des.'*'.$pal.'*'.$lec.'*'.'*'.'*'.'*'.'*'.'*'.$info2[$i]->cap.PHP_EOL);
-            }*/
         //###################################
         foreach ($info2 as $infousu1) {
             foreach ($infousu1 as $lectura) {
@@ -490,14 +503,6 @@ class ReportcompletosController extends Controller
         }
         
         //evidencia de salidas
-        /* for($i=0; $i<count($info3); $i++){
-            $des = preg_replace("/[\r\n|\n|\r]+/", " ", $info3[$i]->descripcion);
-            $pal = preg_replace("/[\r\n|\n|\r]+/", " ", $info3[$i]->palabras);
-            $sal = preg_replace("/[\r\n|\n|\r]+/", " ", $info3[$i]->evioutdoor);
-            $link = $linkout.$info3[$i]->img;
-            //lecturas
-            fwrite($ar, $info3[$i]->Usuario.'-'.$info3[$i]->Apellido.'*'.$info[$i]->grup.'*'.$info3[$i]->nombre_reto.'*'.$des.'*'.$pal.'*'.'*'.'*'.$sal.'*'.'*'.$info3[$i]->video.'*'.$link.'*'.$info3[$i]->cap.PHP_EOL);
-            }*/
         //##############################
          //evidencia de salidas
         foreach ($info3 as $infousu3) {
@@ -695,8 +700,9 @@ class ReportcompletosController extends Controller
         $nombres = $usuario->firstname . " " . $usuario->lastname;
         $capituloId = $comentario->capitulo_id;
         $comentarioText = $comentario->comentario;
-
-        Mail::to($usuario->email)->send(new Notificacion($nombres, $capituloId, $comentarioText));
+        //enviar correo al usuario
+        $respuesta = $this->sendMail($usuario->email, $nombres, $comentarioText, $capituloId); //llamar a la funcion para enviar mensajes
+        // Mail::to($usuario->email)->send(new Notificacion($nombres, $capituloId, $comentarioText));
        return back();
     }
     //============================= aqui se debe mostrar los comentarios por cada usuario ===========

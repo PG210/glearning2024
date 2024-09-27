@@ -9,12 +9,41 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;//se agrego para correo
 use App\Mail\CorreoRecordar;//se agrego email
 use DB;
+/* manejar los correo */
+use App\Services\MicrosoftGraphService;
+use App\Models\Token;
+use App\Jobs\SendMailJob; // Importa el job
 
 class PorcentajeAdmin extends Controller
 {
-  
+
+    /*Servicio de correo electronico */
+    protected $graphService;
+
+    public function __construct(MicrosoftGraphService $graphService)
+    {
+        $this->graphService = $graphService;
+    }
+
+    /*Enviar plantilla de correo */
+    private function sendMail($destino, $nombre, $ran, $cap)
+    {
+        $descrip = "Notificación de Avance.";
+        // Renderiza la vista Blade con el contenido HTML
+        $content = view('mails.avance', [
+            'nombre' => $nombre, // valores para la vista de correo
+            'ran' => $ran,
+            'cap' => $cap
+        ])->render();
+
+        // Despacha el job a la cola
+        SendMailJob::dispatch($descrip, $content, $destino);
+        return true; 
+    }
+
 //##########################################
-public function totcap($buscar, $tot){
+   public function totcap($buscar, $tot){
+    
     $num = $tot;
     $chapterCounts = array_fill(1, 10, 0); // Inicializar el array con 10 posiciones desde 1 hasta 10
 
@@ -341,10 +370,7 @@ return $datosunidos;
       $al = [];
      
     }
-      //aqui se debe validar los porcentajes por capitulos
-     /* foreach($al as $re){
-        return $al[0]['usuario'];
-      }*/
+     
       //####################################################
         // Inicializar un arreglo para almacenar los resultados agrupados
         $resultadosAgrupados = [];
@@ -583,14 +609,12 @@ return $datosunidos;
         }     
      }   
 
-       foreach ($correos as $correo) {
-       
-        Mail::to($correo['email'])->send(new CorreoRecordar($correo['nom'], $ran, $correo['cap']));
-       }
+    foreach ($correos as $correo) {
+        $respuesta = $this->sendMail($correo['email'], $correo['nom'], $ran, $correo['cap']); //envia los correos
+    }
 
-       // Mail::to($correos['email'])->send(new CorreoRecordar($correos['nom']));
-            // Lógica para enviar correos usando el array de correos
-            return response()->json(['message' => 'Correos enviados correctamente.']);
+     // Lógica para enviar correos usando el array de correos
+     return response()->json(['message' => 'Correos enviados correctamente.']);
     }
 
     //============ index inicial =============
