@@ -8,10 +8,39 @@ use App\PosUsuModel\GruposModel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail; //se agrego para correo
 use App\Mail\CorreoRecordar; //se agrego email
-use DB;
+//envio de correos
+use App\Services\MicrosoftGraphService;
+use App\Models\Token;
+use App\Jobs\SendMailJob; // Importa el job
+use Illuminate\Support\Facades\DB;
 
 class PorcentajeController extends Controller
 {
+
+    /*Envio de correos desde el admin */
+    protected $graphService;
+
+    public function __construct(MicrosoftGraphService $graphService)
+    {
+        $this->graphService = $graphService;
+    }
+
+     /*Enviar plantilla de correo */
+     private function sendMail($destino, $nombre, $ran, $cap)
+     {
+         $descrip = "Notificación de Avance.";
+         // Renderiza la vista Blade con el contenido HTML
+         $content = view('mails.avance', [
+             'nombre' => $nombre, // valores para la vista de correo
+             'ran' => $ran,
+             'cap' => $cap
+         ])->render();
+ 
+         // Despacha el job a la cola
+         SendMailJob::dispatch($descrip, $content, $destino);
+         return true; 
+     }
+
     public function index()
     {
         $info = GruposModel::all();
@@ -555,10 +584,10 @@ public function unirvar($u1, $u2, $u3, $u4, $u5, $u6){
         }     
      }  
       
-     foreach ($correos as $correo) {
-       
-        Mail::to($correo['email'])->send(new CorreoRecordar($correo['nom'], $ran, $correo['cap']));
-       }
+    foreach ($correos as $correo) {
+        $respuesta = $this->sendMail($correo['email'], $correo['nom'], $ran, $correo['cap']); //llamar a la funcion para enviar mensajes
+        //Mail::to($correo['email'])->send(new CorreoRecordar($correo['nom'], $ran, $correo['cap']));
+    }
  
      return response()->json(['message' => 'Correos enviados correctamente.']);
     }

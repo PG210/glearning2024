@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\CanResetPassword; 
 use App\Notifications\UserResetPassword;
+use App\Notifications\CustomResetPasswordNotification;
 
 
 
@@ -96,10 +97,8 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new UserResetPassword($token));
+         $this->notify(new UserResetPassword($token));
     }
-
-
 
 }
 

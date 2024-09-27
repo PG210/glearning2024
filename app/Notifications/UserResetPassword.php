@@ -7,11 +7,16 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
+use App\Services\MicrosoftGraphService;
+
 class UserResetPassword extends Notification
 {
     use Queueable;
 
     protected $token;
+
+    /* para el servicio de envio de mensaje */
+    protected $graphService;
     /**
      * Create a new notification instance.
      *
@@ -21,6 +26,7 @@ class UserResetPassword extends Notification
     {
         //
         $this->token = $token;
+        $this->graphService = app(MicrosoftGraphService::class); // Obtener la instancia del servicio
     }
 
     /**
@@ -31,7 +37,18 @@ class UserResetPassword extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+          // URL de restablecimiento
+          $resetUrl = url('/password/reset/' . $this->token);
+          $content = view('mails.reset', [
+                        'url' => $resetUrl
+                    ])->render();
+          // Enviar el correo usando el servicio graphService
+          $this->graphService->sendMail(
+              'Solicitud de Restablecimiento de Contraseña',
+              $content,
+              $notifiable->email
+          );
+        return null;
     }
 
     /**
@@ -42,13 +59,8 @@ class UserResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->subject('Reinicio de Contraseña')
-                    ->greeting('BIENVENIDO A CAMBIO DE CONTRASEÑA')
-                    ->line('Hemos recibido una peticion para cambiar contraseña.')
-                    ->action('Reiniciar Password', url('/password/reset/'.$this->token))
-                    ->line('No hagas nada si no haz realizado esta peticion!')
-                    ->salutation('Gracias');
+        
+        return null; // Esto evita que Laravel intente enviar otro correo
     }
 
     /**
