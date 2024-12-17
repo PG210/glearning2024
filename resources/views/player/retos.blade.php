@@ -31,8 +31,7 @@
             <div class="post">
 
               <div class="user-block">
-                <!-- <img class="img-circle img-bordered-sm" src="{{ asset('dist/img/char_img.png')}}" alt="user image"> -->
-                                
+                       
                   @switch($retos->challenge_type_id)
                     @case(1)
                         @foreach($quiz->quizzes as $quix )
@@ -47,19 +46,10 @@
                             </div>
                           </div>                      
 
-                          <strong>Descripcion:</strong>
+                          <h4><strong>Descripción:</strong></h4>
                           <p style="color: #730028; font-size: 16px; font-weight: 600;">
                               {{ $quix->description }}.
                           </p>                                                                                                
-                          <hr>
-                          
-                          {{-- <div style="text-align:center;">
-                            <h3>Estas listo?</h3>
-                            <p>
-                              <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                            </p> 
-                          </div> --}}
-                          
                           <hr>
                           @if( !empty($quix->material) )                              
                             <div class="col-md-12 col-sm-8 col-xs-12">
@@ -91,7 +81,6 @@
                           @else
                           @endif
 
-
                         @endforeach
                         @break
                     @case(2)                                       
@@ -105,18 +94,11 @@
                           </div>    
                         </div>    
 
-                        <strong>Descripcion:</strong>
+                        <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
-                        <hr>
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
-                        
+                  
                         <hr>
                         @if( !empty($retos->material) )                              
                           <div class="col-md-12 col-sm-8 col-xs-12">
@@ -162,18 +144,10 @@
                           </div>
                         </div>
                                         
-                        <strong>Descripcion:</strong>
+                        <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
-                        <hr>
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
-                        
                         <hr>
                         @if( !empty($retos->material) )                              
                         <div class="col-md-12 col-sm-8 col-xs-12">
@@ -219,19 +193,10 @@
                         </div>            
                       </div>            
                                     
-                        <strong>Descripcion:</strong>
+                       <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
-                        <hr>
-
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
-                        
                         <hr>
                         
                         @if( !empty($retos->material) ) 
@@ -279,19 +244,12 @@
                           </div>            
                         </div>            
                                       
-                        <strong>Descripcion:</strong>
+                        <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
                         <hr>
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
-                        
-                        <hr>
+                  
                         @if( !empty($retos->material) ) 
                         <div class="col-md-12 col-sm-8 col-xs-12">
                             <div class="info-box">
@@ -337,20 +295,12 @@
                         </div>            
                       </div>            
 
-                        <strong>Descripcion:</strong>
+                      <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
                         <hr>
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
-                        
-                        <hr>
-
+                       
                         @if( !empty($retos->material) ) 
                           <div class="col-md-12 col-sm-8 col-xs-12">
                             <div class="info-box">                              
@@ -395,20 +345,11 @@
                           </div>   
                         </div>   
 
-                        <strong>Descripcion:</strong>
+                        <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
                         <hr>
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
-                        
-                        <hr>
-
                         @if( !empty($retos->material) ) 
                           <div class="col-md-12 col-sm-8 col-xs-12">
                             <div class="info-box">                                       
@@ -459,20 +400,11 @@
                             </a>
                           </div>
                         </div>            
-                      </div>            
-
-
-                        <strong>Descripcion:</strong>
+                        </div>            
+                        <h4><strong>Descripción:</strong></h4>
                         <p style="color: #730028; font-size: 16px; font-weight: 600;">
                             {{ $retos->description }}.
                         </p>                                                                                                
-                        <hr>
-                        {{-- <div style="text-align:center;">
-                          <h3>Estas listo?</h3>
-                          <p>
-                            <strong>"Antes de comenzar el reto, ver el material"</strong> 
-                          </p> 
-                        </div> --}}
                         
                         <hr>
                         @if( !empty($retos->material) ) 
@@ -507,6 +439,24 @@
                         
                         @endif
                       @break
+                    <!---caso para los archivos tipo scorm --->
+                    @case(9)
+                    <div class="row" style="margin:4% 0% 0% 0%;text-align: -webkit-center;">
+                        <div class="col-md-12">
+                          <div class="form-group">                
+                            <a href="{{ route('games.scorm', $retos->id) }}" type="button" style="font-size: 100%; width: 50%; white-space:normal;" class="btn btn-block btn-primary">
+                              <strong> Comenzar:</strong> {{ $retos->name }}
+                            </a>
+                          </div>
+                        </div>            
+                      </div>            
+                      <h4><strong>Descripción:</strong></h4>
+                      <p style="color: #730028; font-size: 16px; font-weight: 600;">
+                            {{ $retos->description }}.
+                      </p>                                                                                                
+                      <hr>
+                    @break
+                    <!---end caso scorm--> 
                     @default
                         Default case...
                   @endswitch
@@ -531,7 +481,7 @@
   <div class="pull-right hidden-xs">
     <b>Version</b> 1.1.2
   </div>
-  <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
+  <strong>Copyright &copy; 2024 <a href="#">Evolución</a>.</strong> All rights
   reserved.
 </footer>
 

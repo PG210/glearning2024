@@ -54,12 +54,22 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="name">Nombre</label>
                     <input type="text" class="form-control" name="name" id="name" value=" {{$retos->name}} ">
                   </div>
                 </div>
+                <!---si el reto es scorm editar la ruta del archivo de arranque-->
+                @if($retos->challenge_type_id == 9)
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="name">Ruta del archivo</label>
+                    <input type="text" class="form-control" name="ruta" id="ruta" value=" {{$retos->material}} ">
+                  </div>
+                </div>
+                @endif
+                <!---end ruta -->
                 <div class="col-md-12">
                   <div id="app">
                   

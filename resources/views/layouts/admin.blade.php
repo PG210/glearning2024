@@ -202,6 +202,7 @@
                     <li><a href="{{ url('capitulos') }}"><i class="fa fa-bookmark text-yellow"></i> <span>Capitulos</span></a></li>
                     <li><a href="{{ url('quizzes') }}"><i class="fa fa-check-square text-aqua"></i> <span>Quizzes</span></a></li>
                     <li><a href="{{ url('competencias') }}"><i class="fa fa-coffee text-aqua"></i> <span>Competencias</span></a></li>
+                   {{-- <li><a href="{{ route('formularioZip') }}"><i class="fa fa-coffee text-aqua"></i> <span>Formulario</span></a></li>--}}
                 </ul>
               </li>
                <!--users-->

@@ -21,6 +21,7 @@ class challengeTypesTableSeeder extends Seeder
             ['name' => 'Subir Foto', 'description' => 'subir imagenes'],
             ['name' => 'Lecturas', 'description' => 'lecturas de algun documento'],
             ['name' => 'Salir a Hacer', 'description' => 'juego para realizar fuera de la plataforma'],
+            ['name' => 'Scorm articulate', 'description' => 'Subir archivo de formato LMS'],
         ]);
     }
 }

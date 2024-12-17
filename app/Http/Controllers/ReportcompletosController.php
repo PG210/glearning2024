@@ -785,6 +785,7 @@ class ReportcompletosController extends Controller
             ComentarioCapModel::where('id', $id)->update(['estadonot' => 1]);
         }else{
             $com = ComentarioCapModel::where('user_id', $user->id)->get();
+
         }
      return view('retroalimentacion.modals')->with('com', $com);
     }

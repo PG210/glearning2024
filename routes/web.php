@@ -230,7 +230,7 @@ Route::get('/seevideos/{id}', ['uses' =>'GamesController@seevideos', 'as'=>'game
 Route::get('/upfotos/{id}', ['uses' =>'GamesController@upfotos', 'as'=>'games.upfotos'])->middleware('auth')->middleware('redirectIfSessionExpired');
 Route::get('/lectura/{id}', ['uses' =>'GamesController@lectura', 'as'=>'games.lectura'])->middleware('auth')->middleware('redirectIfSessionExpired');
 Route::get('/outdoor/{id}', ['uses' =>'GamesController@outdoor', 'as'=>'games.outdoor'])->middleware('auth')->middleware('redirectIfSessionExpired');
-
+Route::get('/scorm/{id}', ['uses' =>'GamesController@scorm', 'as'=>'games.scorm'])->middleware('auth')->middleware('redirectIfSessionExpired');
 
 //funciones guardado resultado
 Route::post('/unitygamesplayed/{id}', ['uses' =>'GamesController@unitygamesplayed', 'as'=>'gamesplay.unitygamesplayed'])->middleware('auth')->middleware('redirectIfSessionExpired');
@@ -238,6 +238,7 @@ Route::post('/playseevideos/{id}', ['uses' =>'GamesController@playseevideos', 'a
 Route::post('/playupfotos/{id}', ['uses' =>'GamesController@playupfotos', 'as'=>'gamesplay.upfotos'])->middleware('auth')->middleware('redirectIfSessionExpired');
 Route::post('/playlectura/{id}', ['uses' =>'GamesController@playlectura', 'as'=>'gamesplay.lectura'])->middleware('auth')->middleware('redirectIfSessionExpired');
 Route::post('/playoutdoor/{id}', ['uses' =>'GamesController@playoutdoor', 'as'=>'gamesplay.outdoor'])->middleware('auth')->middleware('redirectIfSessionExpired');
+Route::post('/playscorm', ['uses' =>'GamesController@playscorm', 'as'=>'gamesplay.scorm'])->middleware('auth')->middleware('redirectIfSessionExpired');
 
 
 //funciones VUEJS para popups
@@ -395,6 +396,11 @@ Route::post('/send-mail', [MailController::class, 'sendMail']);
 Route::get('/forprueba', function () {
     return view('formprueba');
 });
+
+//======================== formulario de zip para storyline ============
+//ruta de prueba para capsula 1
+Route::get('/upload/capsule', [Capsula::class, 'formularioZip'])->name('formularioZip');
+Route::post('/upload/capsule/zip', [Capsula::class, 'subirFile'])->name('subirFile');
 
 
 

@@ -151,6 +151,8 @@
     }
 </style>
 <script>
+    import axios from 'axios'; // Importación de Axios
+    
     export default {
         data(){
             return{
@@ -185,10 +187,10 @@
                 question.answers.splice(index, 1);
             },
             addQuiz(){
-                axios.post(('https://glearning.com.co/quizzes'), {filas:this.questions, datos:this.datos} )
+                axios.post(('/quizzes'), {filas:this.questions, datos:this.datos} )
                 .then(function (response) {
                     if (response.data == "") {                        
-                        window.location = 'https://glearning.com.co/quizzes';
+                        window.location = '/quizzes';
                     } else {
                         alert(response.data);                        
                     }

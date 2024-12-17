@@ -37,26 +37,45 @@
    <div class="col-md-9">
       <div class="nav-tabs-custom">
         <div class="tab-content">
-         <!--=========================================-->
-         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            @foreach($com as $c)
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#acordeon{{$c->id}}" aria-expanded="true" aria-controls="collapseOne">
-                      Capítulo {{$c->capitulo_id}}
-                    </a>
-              </h4>
-                </div>
-                <div id="acordeon{{$c->id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
-                  {{$c->comentario}}
-                </div>
-                </div>
+        <!---======================================-->
+          <p>A continuación, puedes observar la retroalimentación organizada por actividades o por capítulo, lo que te permitirá identificar áreas de mejora específicas y fortalecer tu aprendizaje.</p>
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">Actividades</a></li>
+            <li><a href="#tab2" data-toggle="tab">Capítulos</a></li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab1">
+                <h3>Contenido Tab 1</h3>
+                <p>Este es el contenido del primer tab.</p>
             </div>
-           @endforeach
+            <div class="tab-pane fade" id="tab2">
+                <!--=========================================-->
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    @foreach($com as $c)
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#acordeon{{$c->id}}" aria-expanded="true" aria-controls="collapseOne">
+                              Capítulo {{$c->capitulo_id}}
+                            </a>
+                        </h4>
+                        </div>
+                        <div id="acordeon{{$c->id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                          {{$c->comentario}}
+                        </div>
+                        </div>
+                    </div>
+                  @endforeach
+                  </div>
+                <!---====================================-->
             </div>
-         <!---====================================-->
+      
+        </div>
+
         </div>
         <!--============================================-->
         <!-- /.tab-content -->

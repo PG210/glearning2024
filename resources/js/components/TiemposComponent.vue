@@ -5,67 +5,66 @@
         <input type="hidden" name="" id="diferencia" v-model="diff">     
 
         <div style="text-align:center;">            
-            <h1 id="time" style="color:#7b0404"><span class="fa fa-hourglass-end"></span></h1>
+            <h1 id="time" style="color:#7b0404">{{ formattedTime }}</h1>
             <h4>TIENES: {{ tiempoasignado }} Minutos para completar el Reto</h4>
         </div>
-
     </div>
-</template>    
-<script>        
-    export default {
-        data(){
-            return {
-                finalTime:null,
-                startTime:null,
-                diff: ''
+</template>
+
+<script>
+import moment from 'moment';
+
+export default {
+    props: {
+        tiempoasignado: {
+            type: Number,
+            required: true
+        }
+    },
+    data() {
+        return {
+            finalTime: null,
+            startTime: null,
+            diff: '',
+            remainingTime: null, // Para almacenar el tiempo restante
+        };
+    },
+    computed: {
+        formattedTime() {
+            const minutes = Math.floor(this.remainingTime / 60);
+            const seconds = this.remainingTime % 60;
+            return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+    },
+    mounted() {
+        this.startTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        this.remainingTime = this.tiempoasignado * 60; // Convertir minutos a segundos
+
+        // Inicia los intervalos para actualizar el tiempo restante
+        this.timerInterval = setInterval(this.updateTimer, 1000);
+    },
+    beforeDestroy() {
+        // Limpia el intervalo para evitar fugas de memoria
+        clearInterval(this.timerInterval);
+    },
+    methods: {
+        updateTimer() {
+            if (this.remainingTime > 0) {
+                this.remainingTime -= 1;
+            } else {
+                this.handleGameOver();
             }
+
+            this.finalTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            const a = moment(this.startTime);
+            const b = moment(this.finalTime);
+            this.diff = b.diff(a, 'minutes');
         },
-        mounted() {                    
-            this.startTime = moment().format('YYYY-MM-DD HH:mm:ss'); 
-            setInterval(() => this.updatefinalTime(), 1 * 1000);    
-
-            var minutes = 60 * this.tiempoasignado;
-            var display = document.querySelector('#time');
-            startTimer(minutes, display);   
-            
-            function startTimer (duration, display) {  
-                var timer = duration, minutes, seconds;
-                setInterval(function() {
-                    minutes = parseInt(timer / 60, 10)
-                    seconds = parseInt(timer % 60, 10);
-
-                    minutes = minutes < 10 ? "0" + minutes : minutes;
-                    seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                    display.textContent = minutes + ":" + seconds;
-
-                    if (--timer < 0) {
-                        timer = duration;
-                    }
-
-                }, 1000);
-            }
-
-
-        },
-        methods: {
-           updatefinalTime() {
-                this.finalTime = moment().format('YYYY-MM-DD HH:mm:ss');                       
-                const a = moment(this.startTime);
-                const b = moment(this.finalTime);
-                this.diff = b.diff(a, 'minutes');
-                
-                if (this.diff == this.tiempoasignado) {
-                    window.location.href = "https://glearning.com.co/gameover";
-                    console.log("GAME OVER");                    
-                }                                                         
-            },
-
-            
-        },
-        props: ['tiempoasignado']       
+        handleGameOver() {
+            clearInterval(this.timerInterval); // Detén el intervalo
+            window.location.href = "/gameover";
+            console.log("GAME OVER");
+        }
     }
-
+};
 </script>
-
-

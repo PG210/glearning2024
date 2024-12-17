@@ -20789,6 +20789,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['tipodereto', 'palabrasparams', 'urlvideo', 'tiemporeto'],
   data: function data() {
@@ -20796,39 +20799,42 @@ __webpack_require__.r(__webpack_exports__);
       tiposretos: [],
       encuestas: [],
       rows: [{
-        'select': 1,
-        'name': ''
+        select: 1,
+        name: ''
       }],
       key: "",
       palabra: "",
       selectedOption: "",
-      urlvideo: "",
       tiempo: 0
     };
   },
   created: function created() {
     this.key = this.tipodereto;
     this.palabra = this.palabrasparams;
-    this.urlmaterial = this.urlvideo;
     this.tiempo = this.tiemporeto;
   },
   mounted: function mounted() {
     var _this = this;
-    axios.get('https://glearning.com.co/retos').then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().get('/retos').then(function (response) {
       return _this.tiposretos = response.data;
-    }), axios.get('https://glearning.com.co/quizzesdisponible').then(function (response) {
+    })["catch"](function (error) {
+      return console.error("Error loading challenge types:", error);
+    });
+    axios__WEBPACK_IMPORTED_MODULE_0___default().get('/quizzesdisponible').then(function (response) {
       return _this.encuestas = response.data;
+    })["catch"](function (error) {
+      return console.error("Error loading surveys:", error);
     });
   },
   methods: {
     addQuestion: function addQuestion() {
       this.rows.push({
-        'select': 1,
-        'name': ''
+        select: 1,
+        name: ''
       });
     },
-    deleteRow: function deleteRow(row) {
-      this.rows.splice(row, 1);
+    deleteRow: function deleteRow(index) {
+      this.rows.splice(index, 1);
     }
   }
 });
@@ -20846,6 +20852,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+ // Importación de Axios
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -20887,12 +20897,12 @@ __webpack_require__.r(__webpack_exports__);
       question.answers.splice(index, 1);
     },
     addQuiz: function addQuiz() {
-      axios.post('https://glearning.com.co/quizzes', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/quizzes', {
         filas: this.questions,
         datos: this.datos
       }).then(function (response) {
         if (response.data == "") {
-          window.location = 'https://glearning.com.co/quizzes';
+          window.location = '/quizzes';
         } else {
           alert(response.data);
         }
@@ -21077,52 +21087,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    tiempoasignado: {
+      type: Number,
+      required: true
+    }
+  },
   data: function data() {
     return {
       finalTime: null,
       startTime: null,
-      diff: ''
+      diff: '',
+      remainingTime: null // Para almacenar el tiempo restante
     };
   },
-  mounted: function mounted() {
-    var _this = this;
-    this.startTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    setInterval(function () {
-      return _this.updatefinalTime();
-    }, 1 * 1000);
-    var minutes = 60 * this.tiempoasignado;
-    var display = document.querySelector('#time');
-    startTimer(minutes, display);
-    function startTimer(duration, display) {
-      var timer = duration,
-        minutes,
-        seconds;
-      setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-        display.textContent = minutes + ":" + seconds;
-        if (--timer < 0) {
-          timer = duration;
-        }
-      }, 1000);
+  computed: {
+    formattedTime: function formattedTime() {
+      var minutes = Math.floor(this.remainingTime / 60);
+      var seconds = this.remainingTime % 60;
+      return "".concat(minutes < 10 ? "0" : "").concat(minutes, ":").concat(seconds < 10 ? "0" : "").concat(seconds);
     }
+  },
+  mounted: function mounted() {
+    this.startTime = moment__WEBPACK_IMPORTED_MODULE_0___default()().format('YYYY-MM-DD HH:mm:ss');
+    this.remainingTime = this.tiempoasignado * 60; // Convertir minutos a segundos
+
+    // Inicia los intervalos para actualizar el tiempo restante
+    this.timerInterval = setInterval(this.updateTimer, 1000);
+  },
+  beforeDestroy: function beforeDestroy() {
+    // Limpia el intervalo para evitar fugas de memoria
+    clearInterval(this.timerInterval);
   },
   methods: {
-    updatefinalTime: function updatefinalTime() {
-      this.finalTime = moment().format('YYYY-MM-DD HH:mm:ss');
-      var a = moment(this.startTime);
-      var b = moment(this.finalTime);
-      this.diff = b.diff(a, 'minutes');
-      if (this.diff == this.tiempoasignado) {
-        window.location.href = "https://glearning.com.co/gameover";
-        console.log("GAME OVER");
+    updateTimer: function updateTimer() {
+      if (this.remainingTime > 0) {
+        this.remainingTime -= 1;
+      } else {
+        this.handleGameOver();
       }
+      this.finalTime = moment__WEBPACK_IMPORTED_MODULE_0___default()().format('YYYY-MM-DD HH:mm:ss');
+      var a = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.startTime);
+      var b = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.finalTime);
+      this.diff = b.diff(a, 'minutes');
+    },
+    handleGameOver: function handleGameOver() {
+      clearInterval(this.timerInterval); // Detén el intervalo
+      window.location.href = "/gameover";
+      console.log("GAME OVER");
     }
-  },
-  props: ['tiempoasignado']
+  }
 });
 
 /***/ }),
@@ -21318,152 +21336,190 @@ var _hoisted_5 = {
 };
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", null, "Seleccione un Tipo Reto", -1 /* HOISTED */);
 var _hoisted_7 = ["value"];
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "col-md-12"
-}, null, -1 /* HOISTED */);
-var _hoisted_9 = {
+var _hoisted_8 = {
   key: 0
 };
-var _hoisted_10 = {
+var _hoisted_9 = {
   "class": "col-md-3"
 };
-var _hoisted_11 = {
+var _hoisted_10 = {
   "class": "form-group"
 };
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "encuestas"
 }, "Encuestas", -1 /* HOISTED */);
-var _hoisted_13 = {
+var _hoisted_12 = {
   "class": "form-control",
   name: "encuestaelegida"
 };
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: ""
 }, "Seleccione Encuesta", -1 /* HOISTED */);
-var _hoisted_15 = ["value"];
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
-  href: "https://glearning.com.co/quizzes"
-}, " Ir a: Crear Quizzes", -1 /* HOISTED */);
-var _hoisted_17 = {
+var _hoisted_14 = ["value"];
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  href: "/quizzes"
+}, "Ir a: Crear Quizzes", -1 /* HOISTED */);
+var _hoisted_16 = {
   "class": "col-md-3"
 };
-var _hoisted_18 = {
+var _hoisted_17 = {
   "class": "form-group"
 };
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
-var _hoisted_20 = {
+var _hoisted_19 = {
   key: 1
 };
-var _hoisted_21 = {
+var _hoisted_20 = {
   "class": "col-md-3"
 };
-var _hoisted_22 = {
+var _hoisted_21 = {
   "class": "form-group"
 };
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "Ahorcado"
 }, "Palabra para ahorcado", -1 /* HOISTED */);
-var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 1);
-var _hoisted_25 = {
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 1);
+var _hoisted_24 = {
   "class": "col-md-3"
 };
-var _hoisted_26 = {
+var _hoisted_25 = {
   "class": "form-group"
 };
-var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
-var _hoisted_28 = {
+var _hoisted_27 = {
   key: 2
 };
-var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"urlvideo\">Subir Video</label><input type=\"file\" class=\"form-control\" name=\"video\" id=\"video\" accept=\"video/mp4,video/x-m4v,video/*\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 2);
-var _hoisted_31 = {
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"urlvideo\">Subir Video</label><input type=\"file\" class=\"form-control\" name=\"video\" id=\"video\" accept=\"video/mp4,video/x-m4v,video/*\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 2);
+var _hoisted_30 = {
   "class": "col-md-3"
 };
-var _hoisted_32 = {
+var _hoisted_31 = {
   "class": "form-group"
 };
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
-var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"panel panel-primary\"><div class=\"panel-heading\"><h3 class=\"panel-title\">Recomendacion Videos.</h3></div><div class=\"panel-body\"> Recuerda: La URL del video debe ser la que entrega el sistema de etiquetas de youtube, copiar la URL del navegador no funcionara.</div></div></div>", 1);
-var _hoisted_35 = {
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"panel panel-primary\"><div class=\"panel-heading\"><h3 class=\"panel-title\">Recomendacion Videos.</h3></div><div class=\"panel-body\"> Recuerda: La URL del video debe ser la que entrega el sistema de etiquetas de youtube, copiar la URL del navegador no funcionara.</div></div></div>", 1);
+var _hoisted_34 = {
   key: 3
 };
-var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 1);
-var _hoisted_37 = {
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 1);
+var _hoisted_36 = {
   "class": "col-md-3"
 };
-var _hoisted_38 = {
+var _hoisted_37 = {
   "class": "form-group"
 };
-var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
-var _hoisted_40 = {
+var _hoisted_39 = {
   key: 4
 };
-var _hoisted_41 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"urlvideo\">Subir Video</label><input type=\"file\" class=\"form-control\" name=\"video\" id=\"video\" accept=\"video/mp4,video/x-m4v,video/*\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"material\">Recursos</label><input type=\"file\" class=\"form-control\" name=\"material\" id=\"material\" placeholder=\"Recursos del Reto\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 3);
-var _hoisted_44 = {
+var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"urlvideo\">Subir Video</label><input type=\"file\" class=\"form-control\" name=\"video\" id=\"video\" accept=\"video/mp4,video/x-m4v,video/*\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"material\">Recursos</label><input type=\"file\" class=\"form-control\" name=\"material\" id=\"material\" placeholder=\"Recursos del Reto\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 3);
+var _hoisted_43 = {
   "class": "col-md-5"
 };
-var _hoisted_45 = {
+var _hoisted_44 = {
   "class": "form-group"
 };
-var _hoisted_46 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
-var _hoisted_47 = {
+var _hoisted_46 = {
   key: 5
 };
-var _hoisted_48 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"material\">Recursos</label><input type=\"file\" class=\"form-control\" name=\"material\" id=\"material\" placeholder=\"Recursos del Reto\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 2);
-var _hoisted_50 = {
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"material\">Recursos</label><input type=\"file\" class=\"form-control\" name=\"material\" id=\"material\" placeholder=\"Recursos del Reto\"></div></div><div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 2);
+var _hoisted_49 = {
   "class": "col-md-3"
 };
-var _hoisted_51 = {
+var _hoisted_50 = {
   "class": "form-group"
 };
-var _hoisted_52 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_51 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
-var _hoisted_53 = {
-  key: 6,
-  "class": "margin"
+var _hoisted_52 = {
+  key: 6
 };
+var _hoisted_53 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "col-md-3"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "form-group"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "material"
+}, "Archivo scorm en zip"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  type: "file",
+  "class": "form-control",
+  name: "scormarchivo",
+  id: "scormarchivo",
+  placeholder: "Recursos del Reto",
+  accept: ".zip"
+})])], -1 /* HOISTED */);
 var _hoisted_54 = {
-  "class": "col-md-12"
-};
-var _hoisted_55 = {
-  "class": "col-md-12"
-};
-var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-5\"><div class=\"panel panel-primary\"><div class=\"panel-heading\"><h3 class=\"panel-title\">NOTA IMPORTANTE.</h3></div><div class=\"panel-body\"> Recuerda: No Ingresar palabras de mas de 10 caracteres en modo facil y palabraas de mas de 12 caracteres en modo dificil.</div></div></div>", 1);
-var _hoisted_57 = {
-  "class": "col-xs-9"
-};
-var _hoisted_58 = {
-  "class": "row"
-};
-var _hoisted_59 = {
-  "class": "col-xs-12"
-};
-var _hoisted_60 = {
-  "class": "col-xs-4"
-};
-var _hoisted_61 = ["onUpdate:modelValue"];
-var _hoisted_62 = {
-  "class": "col-xs-1"
-};
-var _hoisted_63 = ["onClick"];
-var _hoisted_64 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 1);
-var _hoisted_65 = {
   "class": "col-md-3"
 };
-var _hoisted_66 = {
+var _hoisted_55 = {
   "class": "form-group"
 };
-var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "Ahorcado"
+}, "Código al final del reto", -1 /* HOISTED */);
+var _hoisted_57 = {
+  "class": "col-md-3"
+};
+var _hoisted_58 = {
+  "class": "form-group"
+};
+var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "time"
+}, "Tiempo - Minutos", -1 /* HOISTED */);
+var _hoisted_60 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "form-group"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  type: "hidden",
+  "class": "form-control",
+  name: "idtipo",
+  id: "idtipo",
+  value: "9"
+})], -1 /* HOISTED */);
+var _hoisted_61 = {
+  key: 7,
+  "class": "margin"
+};
+var _hoisted_62 = {
+  "class": "col-md-12"
+};
+var _hoisted_63 = {
+  "class": "col-md-12"
+};
+var _hoisted_64 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-5\"><div class=\"panel panel-primary\"><div class=\"panel-heading\"><h3 class=\"panel-title\">NOTA IMPORTANTE.</h3></div><div class=\"panel-body\"> Recuerda: No ingresar palabras de más de 10 caracteres en modo fácil y palabras de más de 12 caracteres en modo difícil.</div></div></div>", 1);
+var _hoisted_65 = {
+  "class": "col-xs-9"
+};
+var _hoisted_66 = {
+  "class": "row"
+};
+var _hoisted_67 = {
+  "class": "col-xs-4"
+};
+var _hoisted_68 = ["onUpdate:modelValue"];
+var _hoisted_69 = {
+  "class": "col-xs-1"
+};
+var _hoisted_70 = ["onClick"];
+var _hoisted_71 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-md-3\"><div class=\"form-group\"><label for=\"dificultad\">Dificultad</label><select class=\"form-control\" name=\"dificultad\"><option value=\"0\">Facil</option><option value=\"1\">Dificil</option></select></div></div>", 1);
+var _hoisted_72 = {
+  "class": "col-md-3"
+};
+var _hoisted_73 = {
+  "class": "form-group"
+};
+var _hoisted_74 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "time"
 }, "Tiempo - Minutos", -1 /* HOISTED */);
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -21478,12 +21534,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       value: tiposreto.id,
       key: tiposreto.id
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(tiposreto.name), 9 /* TEXT, PROPS */, _hoisted_7);
-  }), 128 /* KEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.key]])])]), _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" QUICCESS "), $data.key == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", _hoisted_13, [_hoisted_14, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.encuestas, function (encuesta) {
+  }), 128 /* KEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.key]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" QUICCESS "), $data.key === 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", _hoisted_12, [_hoisted_13, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.encuestas, function (encuesta) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       value: encuesta.id,
       key: encuesta.id
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(encuesta.name), 9 /* TEXT, PROPS */, _hoisted_15);
-  }), 128 /* KEYED_FRAGMENT */))]), _hoisted_16])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(encuesta.name), 9 /* TEXT, PROPS */, _hoisted_14);
+  }), 128 /* KEYED_FRAGMENT */))]), _hoisted_15])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
@@ -21492,7 +21548,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.tiempo = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" AHORCADO "), $data.key == 2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" AHORCADO "), $data.key === 2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     name: "ahorcado",
@@ -21500,7 +21556,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.palabra = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.palabra]])])]), _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [_hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.palabra]])])]), _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
@@ -21509,7 +21565,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.tiempo = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" VER VIDEOS "), $data.key == 5 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" OTRAS OPCIONES (VER VIDEOS, SUBIR FOTOS, LECTURA, ROMPECABEZAS Y SOPA DE LETRAS) "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" VER VIDEOS "), $data.key == 5 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [_hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
@@ -21518,7 +21574,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.tiempo = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])]), _hoisted_34])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SUBIR FOTOS "), $data.key == 6 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_35, [_hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [_hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])]), _hoisted_33])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SUBIR FOTOS "), $data.key == 6 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_34, [_hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [_hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
@@ -21527,7 +21583,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
       return $data.tiempo = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" LECTURA "), $data.key == 7 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_40, [_hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [_hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Repetir para cada tipo de reto, usando `v-if` con la clave `key` "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" LECTURA "), $data.key == 7 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_39, [_hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
@@ -21536,7 +21592,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
       return $data.tiempo = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ROMPECABEZAS Y SALIR A HACER "), $data.key == 4 || $data.key == 8 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_47, [_hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [_hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ROMPECABEZAS Y SALIR A HACER "), $data.key == 4 || $data.key == 8 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_46, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [_hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
@@ -21545,17 +21601,35 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
       return $data.tiempo = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SOPA DE LETRAS "), $data.key == 3 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Palabras Actuales: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.palabra), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [_hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("- RETO SCORM "), $data.key == 9 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_52, [_hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [_hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control",
+    name: "codigo",
+    id: "codigo",
+    maxlength: "100",
+    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+      return $data.palabra = $event;
+    })
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.palabra]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_58, [_hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "number",
+    "class": "form-control",
+    name: "time",
+    id: "time",
+    min: "1",
+    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+      return $data.tiempo = $event;
+    })
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("-identificar el tipo de reto"), _hoisted_60, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("-end")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" SOPA DE LETRAS "), $data.key === 3 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_61, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Palabras Actuales: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.palabra), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_63, [_hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     type: "submit",
     "class": "btn btn-success",
-    onClick: _cache[8] || (_cache[8] = function () {
+    onClick: _cache[10] || (_cache[10] = function () {
       return $options.addQuestion && $options.addQuestion.apply($options, arguments);
     })
-  }, " + Palabras "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.rows, function (row) {
+  }, " + Palabras "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.rows, function (row, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "row form-row",
-      key: row.id
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" palabras sopa de letras "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_58, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_59, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+      key: index
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_66, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_67, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "text",
       name: "sopaletras[]",
       "class": "form-control",
@@ -21563,19 +21637,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "onUpdate:modelValue": function onUpdateModelValue($event) {
         return row.name = $event;
       }
-    }, null, 8 /* PROPS */, _hoisted_61), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, row.name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    }, null, 8 /* PROPS */, _hoisted_68), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, row.name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_69, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
       "class": "btn btn-danger",
       onClick: function onClick($event) {
-        return $options.deleteRow(row);
+        return $options.deleteRow(index);
       }
-    }, " X ", 8 /* PROPS */, _hoisted_63)])])])])]);
-  }), 128 /* KEYED_FRAGMENT */))]), _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_66, [_hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, " X ", 8 /* PROPS */, _hoisted_70)])])])]);
+  }), 128 /* KEYED_FRAGMENT */))]), _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_72, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [_hoisted_74, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "number",
     "class": "form-control",
     name: "time",
     id: "time",
     min: "1",
-    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
       return $data.tiempo = $event;
     })
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.tiempo]])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
@@ -22196,14 +22270,12 @@ var _hoisted_1 = {
     "text-align": "center"
   }
 };
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
+var _hoisted_2 = {
   id: "time",
   style: {
     "color": "#7b0404"
   }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "fa fa-hourglass-end"
-})], -1 /* HOISTED */);
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "hidden",
@@ -22226,7 +22298,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.diff = $event;
     })
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.diff]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "TIENES: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.tiempoasignado) + " Minutos para completar el Reto", 1 /* TEXT */)])]);
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.diff]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formattedTime), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "TIENES: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.tiempoasignado) + " Minutos para completar el Reto", 1 /* TEXT */)])]);
 }
 
 /***/ }),
@@ -22235,49 +22307,46 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _components_ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue");
+/* harmony import */ var _components_PlayerChaptersComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/PlayerChaptersComponent.vue */ "./resources/js/components/PlayerChaptersComponent.vue");
+/* harmony import */ var _components_QuizCreationComponent_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/QuizCreationComponent.vue */ "./resources/js/components/QuizCreationComponent.vue");
+/* harmony import */ var _components_QuizUpdateComponent_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/QuizUpdateComponent.vue */ "./resources/js/components/QuizUpdateComponent.vue");
+/* harmony import */ var _components_QuizChallengeComponent_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/QuizChallengeComponent.vue */ "./resources/js/components/QuizChallengeComponent.vue");
+/* harmony import */ var _components_TiemposComponent_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/TiemposComponent.vue */ "./resources/js/components/TiemposComponent.vue");
+/* harmony import */ var _components_SelectAreaPositionComponent_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/SelectAreaPositionComponent.vue */ "./resources/js/components/SelectAreaPositionComponent.vue");
+/* harmony import */ var _components_PopupInsigniasComponent_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/PopupInsigniasComponent.vue */ "./resources/js/components/PopupInsigniasComponent.vue");
+/* harmony import */ var _components_SelectAreaPositionEditComponent_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/SelectAreaPositionEditComponent.vue */ "./resources/js/components/SelectAreaPositionEditComponent.vue");
 
-//require('./bootstrap');
-window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-window.moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <tiempos-component></tiempos-component>
- */
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue"));
-Vue.component('playerchapters-component', __webpack_require__(/*! ./components/PlayerChaptersComponent.vue */ "./resources/js/components/PlayerChaptersComponent.vue"));
-Vue.component('quizcreation-component', __webpack_require__(/*! ./components/QuizCreationComponent.vue */ "./resources/js/components/QuizCreationComponent.vue"));
-Vue.component('quizeupdate-component', __webpack_require__(/*! ./components/QuizUpdateComponent.vue */ "./resources/js/components/QuizUpdateComponent.vue"));
-Vue.component('quizchallenge-component', __webpack_require__(/*! ./components/QuizChallengeComponent.vue */ "./resources/js/components/QuizChallengeComponent.vue"));
-Vue.component('tiempos-component', __webpack_require__(/*! ./components/TiemposComponent.vue */ "./resources/js/components/TiemposComponent.vue"));
-Vue.component('selectregister-component', __webpack_require__(/*! ./components/SelectAreaPositionComponent.vue */ "./resources/js/components/SelectAreaPositionComponent.vue"));
-Vue.component('popupinsignias-component', __webpack_require__(/*! ./components/PopupInsigniasComponent.vue */ "./resources/js/components/PopupInsigniasComponent.vue"));
-Vue.component('selectregisterupdate-component', __webpack_require__(/*! ./components/SelectAreaPositionEditComponent.vue */ "./resources/js/components/SelectAreaPositionEditComponent.vue"));
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+
+
+
+
+
 window.onload = function () {
-  var app = new Vue({
-    el: '#app'
-  });
+  var app = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)({});
+
+  // Registrar los componentes
+  app.component('example-component', _components_ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  app.component('playerchapters-component', _components_PlayerChaptersComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  app.component('quizcreation-component', _components_QuizCreationComponent_vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
+  app.component('quizeupdate-component', _components_QuizUpdateComponent_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
+  app.component('quizchallenge-component', _components_QuizChallengeComponent_vue__WEBPACK_IMPORTED_MODULE_5__["default"]);
+  app.component('tiempos-component', _components_TiemposComponent_vue__WEBPACK_IMPORTED_MODULE_6__["default"]);
+  app.component('selectregister-component', _components_SelectAreaPositionComponent_vue__WEBPACK_IMPORTED_MODULE_7__["default"]);
+  app.component('popupinsignias-component', _components_PopupInsigniasComponent_vue__WEBPACK_IMPORTED_MODULE_8__["default"]);
+  app.component('selectregisterupdate-component', _components_SelectAreaPositionEditComponent_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
+
+  // Montar la aplicación en el elemento con id "app"
+  app.mount('#app');
 };
 
 /***/ }),
