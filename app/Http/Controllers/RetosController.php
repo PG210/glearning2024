@@ -83,7 +83,46 @@ class RetosController extends Controller
         }else {
             $rutavideo = "";            
         }
-        //end guardar video
+
+        //guardar archivo scorm
+        if ($request->idtipo == 9) {
+            $file = $request->file('scormarchivo');
+            
+            // Obtiene el nombre original y lo limpia
+            $name = $file->getClientOriginalName();
+            $limpiarnombre = str_replace(['#', '.', ';', ' '], '', $name);
+            $val = $limpiarnombre . "." . $file->guessExtension();
+            
+            // Define la ruta de destino para el archivo zip
+            $ruta = public_path("capsulas/" . $val);
+            
+            // Guarda el archivo zip en la ruta especificada
+            $file->move(public_path("capsulas"), $val);
+            
+            // Ruta de la carpeta donde se descomprimirá el archivo
+            $rutaDescompresion = public_path("capsulas/" . $limpiarnombre);
+            
+            // Crea la carpeta de destino si no existe
+            if (!file_exists($rutaDescompresion)) {
+                mkdir($rutaDescompresion, 0755, true);
+            }
+            
+            // Descomprime el archivo
+            $zip = new \ZipArchive();
+            if ($zip->open($ruta) === TRUE) {
+                $zip->extractTo($rutaDescompresion);
+                $zip->close();
+                
+                // Borra el archivo .zip después de descomprimir
+                unlink($ruta);
+            } else {
+                return back()->withErrors(['msg' => 'No se pudo descomprimir el archivo.']);
+            }
+            
+            // Guarda los datos en la base de datos
+            $pathmaterial = $limpiarnombre .'/story.html'; // Puedes guardar la ruta o el nombre del directorio descomprimido
+        }
+        
 
         //AHORCADO
         if(!$request->dificultad){
@@ -116,6 +155,10 @@ class RetosController extends Controller
         //SOPA DE LETRAS
         if($request->sopaletras){
             $retos->params = json_encode($request->sopaletras);
+        }
+        //archivo scorm
+        if($request->idtipo == 9){
+            $retos->params = $request->codigo;
         }
         $retos->save();
 
@@ -253,7 +296,11 @@ class RetosController extends Controller
         }else {
             $rutavideo = $retos->urlvideo;            
         }
-        $retos->material = $pathmaterial;
+
+        if($retos->challenge_type_id == 9)
+          $retos->material = $request->ruta; //recibe la ruta de los archivos scorm si desea cambiar
+        else 
+          $retos->material = $pathmaterial;
         $retos->challenge_type_id = $request->challenge_type_id;        
         $retos->subchapter_id = $request->subchapter_id; 
         

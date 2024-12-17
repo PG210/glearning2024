@@ -61,6 +61,13 @@
         </div>
       </div>
 
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Ruta de archivo:</label>
+          {{$retos->material}}
+        </div>
+      </div>
+
     </div>
     
     <div class="row">      
@@ -85,7 +92,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="row">        
       <div class="col-md-3">

@@ -30,7 +30,7 @@ class SubirArchivoController extends Controller
         //$request->file('archivo')->store('public');
         //dd("subido y guardado");
 
-            if($request->hasFile('uploadedfile')){
+        if($request->hasFile('uploadedfile')){
                 
                 $category = new Cargarchivo();
                
@@ -64,16 +64,8 @@ class SubirArchivoController extends Controller
     }
 
     public function cargar(){
-      // $rut = public_path('csv/usuarioscsv.txt');
-      // $lines = file($rut);
-       //$utf= array_map('utf8_encode', $lines);
-        //$array = array_map('str_getcsv', $utf); //datos normalizados
-       
-           // $msj='';
             $listado = Cargarchivo::all();
                 return view('admin.lista_archivos', compact('listado'));
-            
-        
     }
    
    //registrar los usuarios de la carga masiva
@@ -170,5 +162,4 @@ class SubirArchivoController extends Controller
     return back()->with('mensaje',$msj);
   }
        
-
 }

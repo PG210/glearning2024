@@ -103,24 +103,11 @@ class SubcapituloController extends Controller
      */
     public function edit($id)
     {
-
         //obtener datos relacionados
         $sunchaprelated = Subchapter::all();
 
-        $arraydatos[] = 0;
-        foreach($sunchaprelated as $subchap){
-            $datos = Subchapter::find($subchap->id);
-            foreach ($datos->users as $dato) {
-                $datosid = $dato->pivot->pivotParent;
-                $arraydatos[] = $datosid;            
-            }
-        }
-        $elarray = array_unique($arraydatos);
-        //limpiar el array le esta saliendo un item 0
-        $userselecteds = array_splice($elarray, 1);
-
         $subcapitulo = Subchapter::find($id);
-        return view('admin.subcapitulosUpdate')->with('subcapitulo', $subcapitulo)->with('userselecteds', $userselecteds);      
+        return view('admin.subcapitulosUpdate')->with('subcapitulo', $subcapitulo);      
     }
 
     /**

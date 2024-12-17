@@ -591,7 +591,8 @@
     </li>
     @endif
      <!--aqui item de retroalimentacion-->
-    <li><a href="/notificacion/100"><i class="fa fa-arrow-circle-right"></i> <span>Retroalimentación</span></a></li>
+     <li><a href="/informe/comentarios"><i class="fa fa-arrow-circle-right"></i> <span>Retroalimentación</span></a></li>
+    <!--<li><a href="/notificacion/100"><i class="fa fa-arrow-circle-right"></i> <span>Retroalimentación</span></a></li>-->
     <!--end fin item -->
     <!--======================================= end boton  =========================================-->
     <li><a href="{{ url('/recompensas') }}"><i class="fa fa-arrow-circle-right"></i> <span>Distinciones</span></a></li>
