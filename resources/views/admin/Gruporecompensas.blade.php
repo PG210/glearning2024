@@ -123,7 +123,9 @@
                     @endif
                     <td>{{$g->descrip}}</td>
                     <td>
-                    <a href="{{ route('gruporeconocimiento.destroy', ['id' => $g->id]) }}" class="text-center" style="font-size:24px; color:blue;"><i class="fa fa-pencil"></i>&nbsp;</a>
+                        <a href="{{ route('gruporeconocimiento.destroy', ['gruporeconocimiento' => $g->id]) }}" class="text-center" style="font-size:24px; color:blue;">
+                            <i class="fa fa-pencil"></i>&nbsp;
+                        </a>
                     </td>
                 </tr>
                 @endforeach

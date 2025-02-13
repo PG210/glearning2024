@@ -67,7 +67,9 @@ class CapitulosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {    
+    {   
+        $tem = 0; 
+        $capitulos = "";
         // ====================== PUNTAJES S EN CAPITULOS vs SUBCAPITULOS ==========================
         //cantidad puntos maximos de un capitulo
         $chapter = 100;
@@ -154,7 +156,10 @@ class CapitulosController extends Controller
                     ->where('subchapters.chapter_id', $id)
                     ->selectRaw('subchapters.chapter_id as cap,  challenges.id as idt, challenges.name')
                     ->get();
-           //tarea final
+        //return $tareasusu;
+
+        //return $tareacap;
+        //return $tareasusu;
         $final = $tareasusu->last();
         //fin retos pendientes
         if($final != NULL){
@@ -172,17 +177,21 @@ class CapitulosController extends Controller
          }else{
             $retp = [];
         }
-            
-         //###################################################
-        return view('player.capitulos')
-                    ->with('capitulos', $capitulos)
-                    ->with('mensaje', $mensaje)
-                    ->with('retp', $retp)
-                    ->with('tareacap', $tareacap)
-                    ->with('tareasusu', $tareasusu)
-                    ->with('tem', $tem)
-                    ->with('cap', $id);
 
+        $tareacap = collect($tareacap); // Convertir a colección para facilitar la manipulación
+        $tareasCompletadas = collect($tareasusu)->pluck('idt')->toArray(); // Obtener los idt de las actividades completadas
+        $activeTab = 0;
+        return view('player.capitulos', [
+            'capitulos' => $capitulos,
+            'mensaje'   => $mensaje,
+            'retp'      => $retp,
+            'tareacap'  => $tareacap,
+            'tareasusu' => $tareasusu,
+            'tem'       => $tem,
+            'cap'       => $id,
+            'tareasCompletadas' => $tareasCompletadas,
+            'activeTab' => $activeTab,
+        ]);
 
     }
 

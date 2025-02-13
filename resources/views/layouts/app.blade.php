@@ -10,6 +10,10 @@
 
     <title>@yield('pageTitle') Evolucion</title>
     <!-- Scripts -->
+    <script src="{{ asset('juegos/hangman/Build/UnityLoader.js') }}"></script>
+    <script>
+        var gameInstance = UnityLoader.instantiate("gameContainer", "{{ asset('juegos/hangman/Build/ahorcado.json') }} ");
+    </script>
     @if(Auth::user()->avatar_id !=9 ) 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -142,7 +146,23 @@
             $versuspendientes = null;
         }
         //=============== buscar las notificaciones =============
-        $notifi = DB::table('comentariocapitulo')->where('user_id', $userid)->where('estadonot', '=', '0')->get();
+        $notifyvideo = DB::table('videos')->where('id_user', $userid)->where('estado', '=', '0')
+                  ->join('challenges', 'videos.id_challenge', '=', 'challenges.id')
+                  ->select('videos.id', 'videos.estado', 'challenges.name')->get();
+        
+        $notifyread = DB::table('readings')->where('id_user', $userid)->where('estado', '=', '0')
+                  ->join('challenges', 'readings.id_challenge', '=', 'challenges.id')
+                  ->select('readings.id', 'readings.estado', 'challenges.name')->get();
+
+        $notifyout = DB::table('outdoors')->where('id_user', $userid)->where('estado', '=', '0')
+                  ->join('challenges', 'outdoors.id_challenge', '=', 'challenges.id')
+                  ->select('outdoors.id', 'outdoors.estado', 'challenges.name')->get();
+        
+        $notifpic = DB::table('pictures')->where('id_user', $userid)->where('estado', '=', '0')
+                  ->join('challenges', 'pictures.id_challenge', '=', 'challenges.id')
+                  ->select('pictures.id', 'pictures.estado', 'challenges.name')->get();
+
+        $tnotify = $notifyvideo->count() + $notifyread->count() + $notifyout->count() + $notifpic->count();
     ?>
 @endif
 <style>
@@ -160,7 +180,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 @if(Auth::user()->avatar_id !=9) 
 
-    <div id="app">
+<div id="app">
 
     <!-- Main Header -->
     <header class="main-header">
@@ -209,8 +229,8 @@
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-bell-o"></i>
-                    @if (!empty($notifi))
-                     <span class="label label-warning"> {{$notifi->count()}}</span>
+                    @if (!empty($tnotify))
+                     <span class="label label-warning"> {{$tnotify}}</span>
                     @endif
                     </a>
                     <ul class="dropdown-menu">
@@ -239,19 +259,70 @@
                                     </a>
                                 </li>
                             @endif
-                             @if (!empty($notifi))
-                              @foreach($notifi as $nc)
-                               <li>
-                                    <a href="/notificacion/{{$nc->id}}">
-                                        <i class="fa fa-users text-aqua"></i>Retroalimentación al capítulo: {{$nc->capitulo_id}}
-                                    </a>
-                                </li>
+                            <!---notificacion videos -->
+                              @if (!empty($notifyvideo))
+                                @foreach($notifyvideo as $ncvideo)
+                                    <form method="POST" action="{{ route('notivideos') }}" id="form{{$ncvideo->id}}">
+                                        @csrf
+                                        <input type="text" value="1" name="idnot" hidden>
+                                        <input type="text" value="{{ $ncvideo->id }}" name="idactividad" hidden>
+                                        <li style="padding-left:15px;">
+                                            <a href="#" onclick="document.getElementById('form{{$ncvideo->id}}').submit(); return false;">
+                                                <i class="fa fa-users text-aqua"></i> Nuevo comentario a la actividad: <p>{{ $ncvideo->name }}</p>
+                                            </a>
+                                        </li>
+                                    </form>
                                 @endforeach
-                            @endif
+                              @endif
+                              <!-- notificacion lecturas -->
+                              @if (!empty($notifyread))
+                              @foreach($notifyread as $ncread)
+                               <form method="POST" action="{{ route('notivideos') }}" id="formread{{$ncread->id}}">
+                                    @csrf
+                                    <input type="text" value="2" name="idnot" hidden>
+                                    <input type="text" value="{{ $ncread->id }}" name="idactividad" hidden>
+                                    <li style="padding-left:15px;">
+                                        <a href="#" onclick="document.getElementById('formread{{$ncread->id}}').submit(); return false;">
+                                            <i class="fa fa-users text-aqua"></i>Nuevo comentario a la actividad: <p>{{$ncread->name}}</p>
+                                        </a>
+                                    </li>
+                                </form>
+                                @endforeach
+                              @endif
+                            <!-- notificacion salidas -->
+                              @if (!empty($notifyout))
+                                @foreach($notifyout as $ncyout)
+                                <form method="POST" action="{{ route('notivideos') }}" id="formyout{{$ncyout->id}}">
+                                   @csrf
+                                   <input type="text" value="3" name="idnot" hidden>
+                                   <input type="text" value="{{ $ncyout->id }}" name="idactividad" hidden>
+                                   <li style="padding-left:15px;">
+                                        <a href="#" onclick="document.getElementById('formyout{{$ncyout->id}}').submit(); return false;">
+                                            <i class="fa fa-users text-aqua"></i>Nuevo comentario a la actividad: <p>{{$ncyout->name}}</p>
+                                        </a>
+                                    </li>
+                                </form>
+                                @endforeach
+                              @endif
+                            <!-- notificacion pictures -->
+                               @if (!empty($notifpic))
+                                @foreach($notifpic as $ncpic)
+                                <form method="POST" action="{{ route('notivideos') }}" id="formpic{{$ncpic->id}}">
+                                    @csrf
+                                    <input type="text" value="4" name="idnot" hidden>
+                                    <input type="text" value="{{ $ncpic->id }}" name="idactividad" hidden>
+                                    <li style="padding-left:15px;">
+                                        <a href="#" onclick="document.getElementById('formpic{{$ncpic->id}}').submit(); return false;">
+                                            <i class="fa fa-users text-aqua"></i>Nuevo comentario a la actividad: <p>{{$ncpic->name}}</p>
+                                        </a>
+                                    </li>
+                                </form>
+                                @endforeach
+                              @endif
                         <!-- end notification -->
                         </ul>
                     </li>
-                    <li class="footer"><a href="/notificacion/100">Ver Todos</a></li>
+                    <li class="footer"><a href="/informe/comentarios">Ver Todos</a></li>
                     </ul>
                 </li>
                 <!-- Tasks Menu -->
@@ -366,7 +437,9 @@
                         <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
                             style="z-index:1111111111111;"
                             onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">
+                                     document.getElementById('logout-form').submit();
+                                     localStorage.clear();
+                            ">
                             {{ __('Salir') }}
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -470,7 +543,9 @@
                 ->select('chapter_id')
                 ->distinct('chapter_id')
                 ->count();
-         $capsig = DB::table('capasig')->where('idusu', $userauth_id)->where('estado', '0')->orderBy('orden', 'asc')->get();
+         $capsig = DB::table('capasig')->where('idusu', $userauth_id)
+                    ->where('estado', '0')
+                    ->latest('created_at')->first();
          if($conta != 0){
            $subc = DB::table('subchapter_user')
                 ->join('chapters', 'subchapter_user.chapter_id', '=', 'chapters.id')
@@ -585,9 +660,9 @@
       
     </li>
     <!--======================================== boton seguir capitulo ==============================-->
-    @if(isset($capsig[0]->idcap))
+    @if(isset($capsig->idcap))
     <li style="padding:0px 15px 0px 15px;">
-       <a class="btn" href="/capitulos/{{$capsig[0]->idcap}}" style="color:white; background-color:#1C0C53; padding: 3px; margin-top:1em; margin-bottom:1em;">Continuar Capítulo {{$capsig[0]->idcap}}</a>
+       <a class="btn" href="/capitulos/{{$capsig->idcap}}" style="color:white; background-color:#1C0C53; padding: 3px; margin-top:1em; margin-bottom:1em;">Continuar Capítulo {{$capsig->idcap}}</a>
     </li>
     @endif
      <!--aqui item de retroalimentacion-->

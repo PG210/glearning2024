@@ -7,10 +7,10 @@
           @csrf
           <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne" style="color:black; background-color:#1bf9cd; border-radius:10px;">
+                    <div class="panel-heading" role="tab" id="headingOne" style="color:white; background-color:#1C0C53; border-radius:10px;">
                     <h4 class="panel-title">
                         <a style=" color: inherit;" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <h4> Datos Personales </h4>
+                        <h4> Datos Personales</h4>
                         </a>
                       </h4>
                     </div>
@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingTwo" style="color:black; background-color:#1bf9cd; border-radius:10px;">
+                    <div class="panel-heading" role="tab" id="headingTwo" style="color:white; background-color:#1C0C53; border-radius:10px;">
                     <h4 class="panel-title">
                         <a style=" color: inherit;" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                        <h4>Avatar Femenino </h4>
@@ -103,17 +103,14 @@
                                       </div><!-- /.col-lg-6 -->
                                           <div class="col-md-2">
                                             <br>
-                                          <label for="nombre"> Selecci√n</label>
+                                          <label for="nombre"> Selecci√≥n</label>
                                           <br><br> <br><br>
                                             @if($usu[0]->id == $a->id)
                                             <input type="radio" id="contactChoice1"
                                                 name="avat" value="{{$a->id}}"  checked>
                                                 <label for="contactChoice1"> </label>
                                             @else
-                                            {{--
-                                            <input type="radio" id="contactChoice1"
-                                                name="avat" value="{{$a->id}}">
-                                                <label for="contactChoice1"> </label>--}}
+                                  
                                             @endif
                                           </div><!-- /.col-lg-6 -->
                                   </div><!-- /.row -->
@@ -123,7 +120,7 @@
                     </div>
                 </div>
                 <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingTre"  style="color:black; background-color:#1bf9cd; border-radius:10px;">
+                    <div class="panel-heading" role="tab" id="headingTre"  style="color:white; background-color:#1C0C53; border-radius:10px;">
                     <h4 class="panel-title">
                         <a style=" color: inherit;" class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTre" aria-expanded="false" aria-controls="collapseTre">
                         <h4>Avatar Masculino</h4>
@@ -150,7 +147,7 @@
                                       </div><!-- /.col-lg-6 -->
                                       <div class="col-md-2">
                                         <br>
-                                      <label for="nombre"> Selecci√n</label>
+                                      <label for="nombre"> SelecciÔøΩn</label>
                                        <br><br> <br><br>
                                        @if($usu[0]->id == $m->id)
                                           <input type="radio" id="contactChoice1"
@@ -186,11 +183,5 @@
       </div>
       <br>
       <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Version</b> 1.1.2
-        </div>
-        <strong>Copyright &copy; 2018 <a href="#">Evoluci√≥n</a>.</strong> All rights
-        reserved.
-    </footer>
+      @include('layouts.footer')
 @endsection

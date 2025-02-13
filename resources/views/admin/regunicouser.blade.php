@@ -47,7 +47,7 @@
         <br>
         <form action="{{route('regunicousuario')}}" method="POST">
             @csrf
-            <div class="form-row">
+            <div class="">
                 <div class="form-group col-md-4">
                 <label for="nombre"><b>Nombre</b></label>
                 <input type="text" class="form-control" id="nombre" name="nombre" Required>
@@ -67,7 +67,7 @@
 
                 </div>
             </div>
-            <div class="form-row">
+            <div class="">
             <div class="form-group col-md-4">
                 <label for="correo"><b>Correo</b></label>
                 <input type="email" class="form-control" id="correo" name="correo"  Required>
@@ -89,7 +89,7 @@
             </div>
             <!--grupo-->
            </div>
-            <div class="form-row">
+            <div class="">
                 <div class="form-group col-md-5">
                 <label for="pass1"><b>Contraseña</b></label>
                 <input type="password" class="form-control" id="pass1" required>
@@ -138,7 +138,7 @@
                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                         <div class="card-body">
                         <!--imprime los avatars-->
-                        <div class="row form-row">
+                        <div class="row">
                         @foreach($avat as $p)
                                 <div style="margin: 15px;">
                                       <div class="col-md-7">

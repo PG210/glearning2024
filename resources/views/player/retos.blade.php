@@ -22,7 +22,10 @@
     <div class="col-md-12">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#retostab" data-toggle="tab">Reto</a></li>
+          
+          <h4>
+             <li class="active"><a href="#retostab" data-toggle="tab" style="padding: 1em;">Reto</a></li>
+          </h4> 
           {{-- <li><a href="#recursos" data-toggle="tab">Recursos</a></li> --}}
         </ul>
         <div class="tab-content">
@@ -47,9 +50,11 @@
                           </div>                      
 
                           <h4><strong>Descripción:</strong></h4>
-                          <p style="color: #730028; font-size: 16px; font-weight: 600;">
-                              {{ $quix->description }}.
-                          </p>                                                                                                
+                         
+                          <p style="color: #730028; font-weight: 600;">
+                            <blockquote>  {!! $quix->description !!} </blockquote>     
+                          </p>   
+                                                                                                                  
                           <hr>
                           @if( !empty($quix->material) )                              
                             <div class="col-md-12 col-sm-8 col-xs-12">
@@ -477,13 +482,7 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2024 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
+@include('layouts.footer')
 
 
 <!-- ./wrapper -->

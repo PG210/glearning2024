@@ -56,6 +56,7 @@ class PlayerChaptersController extends Controller
     //FUNCION INVOCADA AL SELECCIONAR UN SUBCAPITULO 
     public function pasarchallenge(Request $request, $id)
     {
+       
         /*Capturar las variables para validar si es el capitulo final */
         $validarSiguiente = 0;// validar el estado del capitulo siguiente
        
@@ -122,7 +123,11 @@ class PlayerChaptersController extends Controller
         if($tareaspendientes == 0 && $capsiguiente < $capmax){
             $capsiguiente = $cap + 1;
         }
-      
+
+        // información para retos
+        $tareacap = collect($tareacap); // Convertir a colección para facilitar la manipulación
+        $tareasCompletadas = collect($tareasusu)->pluck('idt')->toArray(); // Obtener los idt de las actividades completadas
+        $activeTab = 1;
         return view('player.capitulos')->with('retos', $retos)
                                         ->with('capitulos', $capitulos)
                                         ->with('subcapitulos', $subcapitulos)
@@ -135,6 +140,8 @@ class PlayerChaptersController extends Controller
                                         ->with('cap', $cap)
                                         ->with('capsiguiente', $capsiguiente)
                                         ->with('tareaspendientes', $tareaspendientes)
+                                        ->with('tareasCompletadas', $tareasCompletadas)
+                                        ->with('activeTab', $activeTab)
                                         ->with('tareacap', $tareacap);
     }
 

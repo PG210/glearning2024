@@ -31,7 +31,9 @@
     <div class="col-md-12">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#activity" data-toggle="tab">GAME OVER</a></li>
+          <li class="active">
+            <h4><a href="#activity" data-toggle="tab" style="padding: 1em;">GAME OVER</a></h4>
+          </li>
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="activity">
@@ -63,15 +65,7 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
-
-
+@include('layouts.footer')
 <!-- ./wrapper -->
 
 @endsection

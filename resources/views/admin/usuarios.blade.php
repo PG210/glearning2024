@@ -134,7 +134,7 @@
                         <thead>
                             <tr>
                                 <th>Nombres</th>
-                                <th>Nombre_Usuario</th>
+                                <th>Correo</th>
                                 <th>Estado</th>
                                 <th>Grupo</th>
                                 <th>Nivel</th>
@@ -147,8 +147,8 @@
                         <tbody id="tablaocu">
                             @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $user->firstname }} {{ $user->lastname }}</td>
-                                    <td>{{ $user->username }} </td>
+                                    <td class="text-md"> {{ ucwords(strtolower($user->firstname)) }} {{ ucwords(strtolower($user->lastname)) }} </td>
+                                    <td class="text-md">{{ $user->username }} </td>
                                     @if($user->estado != 0)
                                     <td>Activo</td>
                                     @else
@@ -186,18 +186,18 @@
                                     
                                     <div class="row">
                                         <div class="col-lg-4">
-                                          <a type="button" href="/home/perfil/admin/{{$user->id}}" class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                          <button onclick="window.location.href='/home/perfil/admin/{{ $user->id }}'" style="background-color:white; color:#5959D1; border-color:#5959D1; border-radius: 2px;"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                         </div>
-                                        @if($user->username != "admin")
+                                        @if($user->admin != 1)
                                             <!--desactivar usuario -->
                                         <div class="col-lg-4">
-                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#deshabilitar{{$user->id}}">
+                                            <button type="button" class="btn-md" data-toggle="modal" data-target="#deshabilitar{{$user->id}}" style="background-color:white; color:#FFBD03; border-color:#FFBD03; border-radius: 2px;">
                                                 <i class="fa fa-user-times" aria-hidden="true"></i>
                                             </button>
                                         </div>
                                         <!--eliminar usuario-->
                                         <div class="col-lg-4">
-                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#eliminar{{$user->id}}">
+                                            <button type="button" class=" btn-md" data-toggle="modal" data-target="#eliminar{{$user->id}}" style="background-color:white; color:#EC4857; border-color:#EC4857; border-radius: 2px;">
                                                 <span class="fa fa-fw fa-trash-o" aria-hidden="true"></span>
                                             </button>
                                         </div>

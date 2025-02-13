@@ -91,30 +91,21 @@
                    
         ?>
 
-        {{-- @foreach ($lastsubcapitulo as $lastsubcap)
-          <div class="form-group">                
-            <a type="button" style="font-size: 1.7rem; background-color:#af129c; border-color:#6bod2e; font-weight:800;" class="btn btn-block btn-danger" href="{{ route('profile.pasarchallenge', $lastsubcap->id) }} ">
-              COMENZAR: {{ $lastsubcap->name }}
-            </a>
-          </div>
-        @endforeach --}}
-        
-
         @foreach ($subcapitulos as $subcap)            
           <div class="box-body">
 
             @if($subcap->RETOS_SUBCAPITULO_REQUERIDO == $subcap-> RETOS_CAPITULO_COMPLETADOS)
               <!-- PlayerChaptersController@pasarchallenge --> 
               <div class="form-group">                
-                <a type="button" style="font-size: 15px; background-color:#868686!important; border-color:#2d2d2d!important; border-radius: 14px; padding: 12px 15px; box-shadow: 0 5px #000;" class="btn-block btn-primary" href="{{ route('profile.pasarchallenge', $subcap->id) }} ">
+                <a type="button" style="font-size: 15px; background-color:#868686!important; border-color:#2d2d2d!important; border-radius: 14px; padding: 12px 15px; box-shadow: 0 5px #000;" class="btn-block btn-primary" href="#tareas" data-toggle="tab">
                     <img src="{{ asset('dist/img/checked.png') }}" style="margin: -1% 1% -3% 0%; width: 17%;">                  
-                  {{ $subcap->name }}
+                  {{ $subcap->name }} 
                 </a>
               </div>
             @else                
-              <div class="form-group">                
-                <a type="button" style="font-size:15px; border-radius: 14px; padding: 12px 15px; box-shadow: 0 5px #999;" class="btn-block btn-danger" href="{{ route('profile.pasarchallenge', $subcap->id) }} ">
-                  COMENZAR: {{ $subcap->name }}
+              <div class="form-group"> 
+                <a type="button" style="font-size:15px; border-radius: 14px; padding: 12px 15px; box-shadow: 0 5px #999;" class="btn-block btn-danger" href="#tareas" data-toggle="tab">
+                 COMENZAR: {{ $subcap->name }} 
                 </a>
               </div>                                  
             @endif
@@ -134,85 +125,75 @@
     <div class="col-md-9">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#activity" data-toggle="tab"><b>
-             @if(isset($v))
-             Actividades Tema:<p>
-             {{$v}}
-             </p>
-             @else
-             {{ $capitulos->name }}
-            @endif
-            </b></a></li>
-           <li><a href="#tareas" data-toggle="tab" style="font-size:16px;"><b>Total de actividades</b></a></li>
+            {{-- <li class="active">
+              <h4>
+                @if(!isset($v))
+                  <a href="#activity" data-toggle="tab" style="color:black; padding: 1em;"> {{ $capitulos->name }} </a>
+                @endif
+              </h4>
+            </li> --}}
+            <li class="active">
+              <h4>
+                <a href="#tareas" data-toggle="tab" style="padding: 1em;">Retos del capítulo</a>
+              </h4>
+            </li>
         </ul>
         <div class="tab-content">
            <!--- item tareas -->
-            <div class="tab-pane fade" id="tareas">
+            <div class="tab-pane active"  id="tareas">
              <!--contenido-->
              <div style="height: 500px; overflow-y: scroll;">
              <br>
-             @if(isset($tareacap) && isset($tareasusu))
-             @foreach ($tareacap as $tar)
+            <!---imprimir las tareas si ya registra una actividad-->   
               @php
-                  $found = false;
+                  $siguienteDesbloqueada = false;
               @endphp
-               @foreach ($tareasusu as $tus)
-                  @if ($tus->idt == $tar->idt)
-                      @php
-                          $found = true;
-                          break;
-                      @endphp
-                  @endif
-              @endforeach
-                @if (!$found)
-                <div class="post">
-                <div class="user-block">
-                    <i aria-hidden="true"></i>
-                    @if(isset($retp->id))
-                     @if($tar->idt == $retp->id)
-                       <a href="{{ route('player.challenge', $retp->id) }}">
-                       <i class="fa fa-unlock blinking-lock" style="font-size:36px; margin-left:10px; color:#4b42bc;"></i>&nbsp;&nbsp;&nbsp;
-                      <span style="color:black;">EL RETO:</span> 
-                           <span style="color:green; font-size:15px;" >
-                             {{ $retp->name }}</span>
-                            <span class="blinking-lock"> CONTINUAR !!! </span>
-                      </a>
-                      @else
-                        <i class="fa fa-lock" style="font-size:36px; margin-left:10px;"></i>&nbsp;&nbsp;&nbsp;                    
-                        EL RETO, <span style="color:red; font-size:15px;" >{{ $tar->name }}</span> FALTA COMPLETAR.
-                      @endif
-                     @endif 
-                      <!-- </span> -->
+
+              @foreach ($tareacap as $tarea)
+                  @php
+                      $completada = in_array($tarea->idt, $tareasCompletadas);
+                  @endphp
+
+                  <!---aqui informacion datos-->
+                  <div class="post">
+                      <div class="user-block" style="margin-left: 2em;">
+                          <h4>{{ $tarea->name }}</h4>
+                          @if ($completada)
+                              <strong>                        
+                                <img src="{{ asset('dist/img/checked.png') }}" style="margin: -1% 1% -3% 0%;">
+                                 El reto,  ya ha sido completado!!!
+                              </strong>
+                          @elseif (!$siguienteDesbloqueada)
+                              <a href="{{ route('player.challenge', $tarea->idt) }}">
+                                <i class="fa fa-unlock blinking-lock" style="font-size:36px; margin: -1% 1% -3% 0%; color:#4b42bc;"></i>
+                                <strong class="blinking-lock" >Desbloqueado - ¡Puedes realizar este reto!</strong> 
+                              </a>
+                              @php $siguienteDesbloqueada = true; @endphp
+                          @else
+                            <i class="fa fa-lock" style="font-size:36px; margin-left:10px;"></i>&nbsp;&nbsp;&nbsp;                    
+                             <strong>Reto pendiente.</strong> 
+                          @endif
+                      </div>
                   </div>
-                </div>
-                @else
-              <div class="post">
-               <div class="user-block">
-                  <i aria-hidden="true"></i>
-                    <strong>                        
-                      <img src="{{ asset('dist/img/checked.png') }}" style="margin: -1% 1% -3% 0%;">
-                      EL RETO, <span style="color:blue; font-size:15px;">{{ $tar->name }}</span>  YA HA SIDO COMPLETADO!!!
-                    </strong>
-                    <!-- </span> -->
-                    </div>
-              </div>
-              @endif
-          @endforeach
-             @endif
+                  <!--end información--->
+              @endforeach
+              <br>
+             <!---end actividades-->
            </div>
              <!--end contenido-->
             </div>
         <!--end tareas-->
            <!--################################-->
+           {{-- 
           <div class="tab-pane fade in active"  id="activity">
 
             <?php
-              if (empty($videohidden)) {
-                $videodisplay = "visible";
-              } else {
-                $videodisplay = "hidden";
-                echo '<script>document.getElementById("videoIntro").pause();</script>';
-              }
+              #if (empty($videohidden)) {
+              #  $videodisplay = "visible";
+              #} else {
+              #  $videodisplay = "hidden";
+              #  echo '<script>document.getElementById("videoIntro").pause();</script>';
+              #}
             ?>            
 
             <div class="media">                
@@ -220,8 +201,6 @@
               @if (strpos($capitulos->videoIntro, 'http') !== false) 
                 <iframe src="{{$capitulos->videoIntro}}" id="framevideos" class="{{ $videodisplay }}" frameborder="0" style="width:100%; height:420px;" allowfullscreen></iframe>
               @else 
-               {{-- <iframe src="{{ asset('/storage/videos/' .$capitulos->videoIntro) }}" id="framevideos"
-                  class="{{$videodisplay}}"  frameborder="0" style="width:100%; height:420px;" allowfullscreen></iframe>--}}
                 <video src="{{ asset('/storage/videos/' .$capitulos->videoIntro) }}" id="videoIntro" class="{{$videodisplay}}" 
                      style="width:100%; height:auto; object-fit: cover; "  controls  allowfullscreen></video>
 
@@ -230,47 +209,9 @@
               </div>
             </div>
 
-            <!-- Retos -->
-            @if(!empty($retosfinish))                
-              @foreach ($retosfinish as $finish)                            
-              <div class="post">
-                <div class="user-block">
-                  <i aria-hidden="true"></i>
-                    <strong>                        
-                      <img src="{{ asset('dist/img/checked.png') }}" style="margin: -1% 1% -3% 0%;">
-                      EL RETO, <a href="">{{ $finish->name }} </a>  YA HA SIDO COMPLETADO!!!
-                    </strong>
-                    <!-- </span> -->
-                </div>
-                <!-- /.user-block -->
-              </div>
-              @endforeach
-            @endif
+          </div>--}}
 
-            @if(!empty($retospendientes))
-              <div class="post">
-                <hr>
-                  <div class="row" style="margin:4% 0% 0% 0%;text-align: -webkit-center;">
-                      <div class="col-md-12">
-                          <div class="form-group">
-                              <a href="{{ route('player.challenge', $retospendientes->id) }}" type="button" style="width:45%; white-space:normal;"  class="btn btn-block btn-primary" >
-                                <span style="font-weight:900;font-size:95%;">Comenzar:</span> {{ $retospendientes->name }}
-                              </a>
-                          </div>
-                          <span class="description"> 
-                            <h4>Descripcion:</h4>
-                            <p style="color: #730028; font-size: 16px; font-weight: 600;">
-                              {{ $retospendientes->description }} 
-                            </p>
-                          </span>
-                      </div>
-                  </div>
-                <hr>
-            
-              </div>                
-              @endif
 
-          </div>
           <!-- /.tab-pane -->
           <div class="tab-pane" id="timeline">
             <!-- The timeline -->
@@ -313,15 +254,7 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
-
-
+@include('layouts.footer')
 <!-- ./wrapper -->
 
 @endsection

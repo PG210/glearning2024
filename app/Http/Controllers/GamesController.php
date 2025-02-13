@@ -158,7 +158,8 @@ class GamesController extends Controller
     public function scorm($id){
         $cap = $this->eval($id); //se valida el capitulo
         $retos = Challenge::find($id);
-        return view('games.scorm')->with('retos', $retos)->with('cap', $cap);
+        $idavat = Auth::user()->avatar_id;
+        return view('games.scorm')->with('retos', $retos)->with('cap', $cap)->with('idavat', $idavat);
     }
     //==============================================================================================================///
     //============================  GUARDAR resultados en cada juego  TERMINADO de unity  ===========================//
@@ -474,8 +475,8 @@ class GamesController extends Controller
         }
         else{
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
-       
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
         DB::table('videos')->insert([
             'evidence'     => $evidencia,
             'id_user'      => $usuario,
@@ -787,7 +788,8 @@ class GamesController extends Controller
         }
         else{
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
 
         DB::table('pictures')->insert([
             'evidence'     => $evidencia,
@@ -1081,7 +1083,8 @@ class GamesController extends Controller
         else{
 
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
 
         DB::table('readings')->insert([
             'evidence'     => $evidencia,
@@ -1391,7 +1394,8 @@ class GamesController extends Controller
         else{
         
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
 
         DB::table('outdoors')->insert([
             'evidence'     => $evidencia,

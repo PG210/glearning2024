@@ -87,7 +87,7 @@
                           <div class="modal-body scrollable-container">
                            <!--filtro-->
                                   @csrf
-                                  <div class="form-row">
+                                  <div class="">
                                     <div class="col-md-12">
                                       <!--end seleccionar campos-->
                                     <div class="table-responsive">
@@ -131,15 +131,15 @@
                     <a href="{{route('porcentaje')}}" type="button" class="btn btn-warning">Porcentajes</a>
                   <!--end boton -->
                </div>  
-                <div class="col-md-4" >
+                <div class="col-md-2 col-lg-2" >
                 </div> 
-                <div class="col-md-4" >
+                <div class="col-md-6 col-lg-6" >
                 <!--buscar-->
                 <form action="{{route('consultarter')}}" method="POST">
                  @csrf
-                    <div class="form-row">
+                    <div class="">
                         <div class="col-md-8">
-                        <input type="text" class="form-control" placeholder="Correo, Nombre, Apellido" id="dato" name="dato" required>
+                        <input type="text" class="form-control" placeholder="Correo, Nombre, Apellido" id="dato" name="dato" required style="border-color:black;">
                         </div>
                         <div class="col-md-4">
                         <button class="btn btn-success float-right" type="submit">Buscar</button>

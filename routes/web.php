@@ -402,6 +402,11 @@ Route::get('/forprueba', function () {
 Route::get('/upload/capsule', [Capsula::class, 'formularioZip'])->name('formularioZip');
 Route::post('/upload/capsule/zip', [Capsula::class, 'subirFile'])->name('subirFile');
 
+//========================= ruta para ver la notificaciones =================
+Route::post('/informe/comentarios/detalle', [ReportcompletosController::class, 'notivideos'])->name('notivideos')->middleware('redirectIfSessionExpired');
+Route::post('/informe/comentarios/estado', [ReportcompletosController::class, 'camestado'])->name('camestado')->middleware('redirectIfSessionExpired');
+
+
 
 
 

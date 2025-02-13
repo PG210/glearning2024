@@ -432,7 +432,7 @@
           <div class="modal-footer header-color">
         @endif
         <!--- formulario de reto -->
-        <form action="{{ url('/playerchallenge/' . $subcapitulo) }}" method="POST">
+        <form action="{{ url('playerchallenge/' . $subcapitulo) }}" method="POST">
             @csrf
             <input type="hidden" name="validarSiguiente" value="{{$validarSiguiente}}">
             <input type="hidden" name="capsiguiente" value="{{$capsiguiente}}">
@@ -445,12 +445,6 @@
 </div>
 @endif
 <!--=================== Pantallas de elular ======================-->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 0.1
-  </div>
-  <strong>Copyright &copy; 2024 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
+@include('layouts.footer')
 <!-- ./wrapper -->
 @endsection

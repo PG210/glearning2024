@@ -22,6 +22,7 @@ class CreateVideosTable extends Migration
             $table->unsignedInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users'); 
             $table->text('comentario')->nullable();
+            $table->integer('estado')->default(0);
         });
     }
 

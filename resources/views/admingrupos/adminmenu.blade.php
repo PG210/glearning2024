@@ -197,13 +197,7 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-<footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 0.1
-    </div>
-    <strong>Copyright &copy; 2023 <a href="#">EVOLUCION</a>.</strong> All rights
-    reserved.
-  </footer>
+  @include('layouts.footer')
 </div>
 <!-- ./wrapper -->
 
@@ -218,17 +212,6 @@
 
 
 <script>
-  // function selectAll(selectBox, selectAll){
-  //   if (typeof selectBox == "string") {
-  //     selectBox = document.getElementById(selectBox);      
-  //   }
-  //   if (selectBox.type == "select-multiple") {
-  //     for (var i = 0; i < selectBox.options.length; i++) {
-  //       selectBox.options[i].selected = selectAll;        
-  //     }
-  //   }
-  // }
-
 
   $(document).ready(function() {
     $('#example').DataTable();
