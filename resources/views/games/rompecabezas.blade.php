@@ -55,8 +55,9 @@
     <div class="col-md-12" style="float:inherit">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#activity" data-toggle="tab">Reto</a></li>
-
+          <li class="active">
+            <h4><a href="#activity" data-toggle="tab" style="padding: 1em;">Reto</a></h4>
+          </li>
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="activity">
@@ -65,8 +66,15 @@
               <div class="user-block">
 
                 <h1>COMENZANDO EL RETO - ROMPECABEZAS</h1>
-                <h3>{{ $retos->description }}</h3>
                 
+                <div class="container-fluid">     
+                  <blockquote>
+                    <p style="color: #730028; font-weight: 600; text-align: justify;">
+                    {!! $retos->description !!}
+                    </p>
+                  </blockquote>
+                </div>  
+                    
                 <p>Tienes {{ $retos->time }} minutos para terminar</p>
                 <tiempos-component tiempoasignado="{{ $retos->time }}"></tiempos-component>
 
@@ -105,13 +113,7 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
+@include('layouts.footer')
 <!-- ./wrapper -->
 
 @endsection

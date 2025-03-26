@@ -1,5 +1,6 @@
 @extends('layouts.ahorcado')
 
+
 @section('content')
     <!-- /.sidebar-menu -->
   </section>
@@ -58,7 +59,9 @@ function codeBD(){
     <div class="col-md-12">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#activity" data-toggle="tab">Reto</a></li>          
+          <li class="active">
+            <h4><a href="#activity" data-toggle="tab" style="padding: 1em;">Reto</a></h4>
+          </li>          
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="activity">
@@ -66,7 +69,14 @@ function codeBD(){
             <div class="post">
               <div class="user-block">
               <h1>COMENZANDO EL RETO - AHORCADO</h1>
-              <p>{{ $retos->description }}</p>
+        
+              <div class="container-fluid">     
+              <blockquote>
+                <p style="color: #730028; font-weight: 600; text-align: justify;">
+                {!! $retos->description !!}
+                </p>
+              </blockquote>
+              </div>  
 
               <h5>Tienes {{ $retos->time }} minutos para terminar</h5>
               <tiempos-component tiempoasignado="{{ $retos->time }}"></tiempos-component>
@@ -166,13 +176,7 @@ function codeBD(){
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
+@include('layouts.footer')
 
 <!-- ./wrapper -->
 @endsection

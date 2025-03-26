@@ -18,10 +18,9 @@ class CreateQuizQuestionsTable extends Migration
             $table->string('question')->unique();
             $table->integer('dificulty');
             $table->integer('multianswer');            
-            $table->timestamps();
-
             $table->unsignedInteger('quiz_id');
             $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

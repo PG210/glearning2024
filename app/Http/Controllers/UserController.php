@@ -29,7 +29,7 @@ class UserController extends Controller
         //$users = User::all();
          $users = DB::table('users')
                    ->join('grupos', 'users.id_grupo', '=', 'grupos.id')
-                   ->select('users.id', 'firstname', 'lastname', 'username', 'email', 'level', 's_point', 'i_point', 'g_point', 'users.created_at', 'estado', 'grupos.descrip')
+                   ->select('users.id', 'firstname', 'lastname', 'username', 'email', 'level', 's_point', 'i_point', 'g_point', 'users.created_at', 'estado', 'grupos.descrip', 'admin')
                    ->orderBy('users.id', 'ASC')->get(); //aqui hace la paginacion de usuarios
 
         $grupos = DB::table('grupos')->where('descrip', '!=', 'Default')->get();
@@ -160,6 +160,7 @@ class UserController extends Controller
         $insigcap = DB::table('insigcap_user')->where('userid', '=', $id)->delete();
         $incap = DB::table('capasig')->where('idusu', $id)->delete();
         $comentarios = DB::table('comentariocapitulo')->where('user_id', $id)->delete();
+        $gadmin =DB::table('grupadmin')->where('idusu', $id)->delete();
         $users ->delete();
         Session::flash('eliminado', 'Usuario eliminado con éxito!');
         return back();

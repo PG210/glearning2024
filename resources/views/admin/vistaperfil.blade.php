@@ -41,7 +41,7 @@
                     <div class="panel-heading" role="tab" id="headingOne" style="border-radius:20px; color:black; background-color:#1bf9cd">
                     <h4 class="panel-title">
                         <a style="text-decoration: none;" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <h3> Datos Personales </h3>
+                        <h3> Datos Personales</h3>
                         </a>
                       </h4>
                     </div>

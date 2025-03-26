@@ -21,14 +21,19 @@
 
 </style>
 
+
+<div style="text-align:center;">
+   <img src="{{asset('dist/img/evolucion-2018.png')}}" alt="cargando imagen ..." width="20%">
+</div>
+
 <!--<div class="container">-->
     <div class="row justify-content-center">
 
-        <div class="formi" style="margin-top:15%;">
+        <div class="formi" style="margin-top:1%;">
             <div class="card">
-                <!-- <div class="card-header">{{ __('Iniciar') }}</div> -->
-                <div class="title m-b-md">
-                    Inicia Sesión en <strong>EVO</strong>LUCIÓN
+                <div class="card-header"></div>
+                <div class="m-b-md" style="text-align:center;">
+                    <h3><strong>Iniciar Sesión</strong></h3>
                 </div>
                 <!--mensaje-->
                @if(Session::has('errorInicio'))

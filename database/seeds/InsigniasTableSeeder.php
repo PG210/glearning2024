@@ -12,6 +12,7 @@ class InsigniasTableSeeder extends Seeder
     public function run()
     {
         //
+        /*
         DB::table('insignias')->insert([
             ['name' => 'CREATIVIDAD BRONCE.', 'imagen' => 'storage/CREATIVIDAD_BRONCE.PNG', 's_point' => '10', 'i_point' => '10', 'g_point' => '10', 'description' => 'edite la descripcion'],
             ['name' => 'CREATIVIDAD ORO.', 'imagen' => 'storage/CREATIVIDAD_ORO.PNG', 's_point' => '40', 'i_point' => '40', 'g_point' => '40', 'description' => 'edite la descripcion'],
@@ -40,6 +41,6 @@ class InsigniasTableSeeder extends Seeder
             ['name' => 'ORIENTACION AL LOGRO BRONCE.', 'imagen' => 'storage/ORIENTACION_AL_LOGRO_BRONCE.png', 's_point' => '55', 'i_point' => '55', 'g_point' => '55', 'description' => 'edite la descripcion'],            
             ['name' => 'ORIENTACION AL LOGRO ORO.', 'imagen' => 'storage/ORIENTACION_AL_LOGRO_ORO.png', 's_point' => '3000', 'i_point' => '3000', 'g_point' => '3000', 'description' => 'edite la descripcion'],        
             ['name' => 'ORIENTACION AL LOGRO PLATA.', 'imagen' => 'storage/ORIENTACION_AL_LOGRO_PLATA.png', 's_point' => '640', 'i_point' => '640', 'g_point' => '640', 'description' => 'edite la descripcion'],            
-        ]);
+        ]);*/
     }
 }

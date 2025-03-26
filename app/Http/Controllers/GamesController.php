@@ -17,6 +17,7 @@ use Auth;
 Use App\ModingCap; //se agrego para reg insignias por capitulo
 use Intervention\Image\Facades\Image; // optimizar las imagenes
 use Illuminate\Support\Facades\Http; //solicitudes 
+use App\Models\CapsulaModel;
 
 class GamesController extends Controller
 {
@@ -158,7 +159,24 @@ class GamesController extends Controller
     public function scorm($id){
         $cap = $this->eval($id); //se valida el capitulo
         $retos = Challenge::find($id);
-        return view('games.scorm')->with('retos', $retos)->with('cap', $cap);
+        $iduser = Auth::user()->id;
+        $idgrupo = Auth::user()->id_grupo; //grupo del usuario al que pertenece
+
+        $info = DB::table('users')->where('users.id', '=', $iduser)
+                ->join('avatars','users.avatar_id', '=', 'avatars.id')
+                ->select('users.id as iduser', 'users.firstname as nombre', 'users.lastname as apellido', 'avatars.name as nomavat', 'avatars.id as idavat')->first();
+        
+        //obtener datos aleatorios para los usuarios
+        $datrandom = DB::table('users')
+                ->join('avatars', 'users.avatar_id', '=', 'avatars.id')
+                ->where('users.id_grupo', '=', $idgrupo)
+                ->where('users.id', '!=', $iduser)
+                ->select('users.id as iduser', 'users.firstname as nombre', 'users.lastname as apellido', 'avatars.name as nomavat', 'avatars.id as idavat')
+                ->inRandomOrder() // Orden aleatorio
+                ->limit(2)        // Obtener solo 2 usuarios
+                ->get();
+    
+        return view('games.scorm')->with('retos', $retos)->with('cap', $cap)->with('info', $info)->with('datrandom', $datrandom);
     }
     //==============================================================================================================///
     //============================  GUARDAR resultados en cada juego  TERMINADO de unity  ===========================//
@@ -474,8 +492,8 @@ class GamesController extends Controller
         }
         else{
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
-       
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
         DB::table('videos')->insert([
             'evidence'     => $evidencia,
             'id_user'      => $usuario,
@@ -787,7 +805,8 @@ class GamesController extends Controller
         }
         else{
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
 
         DB::table('pictures')->insert([
             'evidence'     => $evidencia,
@@ -1081,7 +1100,8 @@ class GamesController extends Controller
         else{
 
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
 
         DB::table('readings')->insert([
             'evidence'     => $evidencia,
@@ -1391,7 +1411,8 @@ class GamesController extends Controller
         else{
         
         //llamada a la funcion
-        $resp = $this->apiQuery($request->evidence);
+        //$resp = $this->apiQuery($request->evidence);
+        $resp = '';
 
         DB::table('outdoors')->insert([
             'evidence'     => $evidencia,
@@ -1993,5 +2014,29 @@ class GamesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function saveDatos(Request $request){
+         // Obtener los datos enviados desde localStorage
+         $userid = Auth::user()->id;
+         $data = $request->input('data');
+         $idreto = $request->input('idreto');
+         
+        if (!empty($data) && !empty($idreto) && !empty($userid)) {
+        try {
+
+            $Cap = New CapsulaModel();
+            $Cap->id_challenge = $idreto;
+            $Cap->id_user = $userid;
+            $Cap->respuesta = $data;
+            $Cap->save();
+
+         } catch (\Exception $e) {
+            Log::error("Error al guardar en capsula: " . $e->getMessage());
+        }
+
+        }
+         
+         return response()->json(["status" => "success", "message" => "Datos guardados correctaente"]);
     }
 }

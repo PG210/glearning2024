@@ -20,14 +20,12 @@ class CreateSubchaptersTable extends Migration
             $table->integer('order');            
             $table->text('description');
             $table->integer('s_point')->default('0');
-            $table->integer('time');
-            $table->timestamps();
-            
+            $table->integer('time');            
             $table->unsignedInteger('chapter_id');
             $table->foreign('chapter_id')->references('id')->on('chapters');
-            
             $table->unsignedInteger('competence_id');
             $table->foreign('competence_id')->references('id')->on('competences');
+            $table->timestamps();
         });
     }
 

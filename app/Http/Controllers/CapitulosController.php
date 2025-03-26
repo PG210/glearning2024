@@ -67,7 +67,9 @@ class CapitulosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {    
+    {   
+        $tem = 0; 
+        $capitulos = "";
         // ====================== PUNTAJES S EN CAPITULOS vs SUBCAPITULOS ==========================
         //cantidad puntos maximos de un capitulo
         $chapter = 100;
@@ -149,12 +151,17 @@ class CapitulosController extends Controller
                     ->where('challenge_user.user_id', '=', $user)
                     ->selectRaw('subchapters.chapter_id as cap, subchapters.id as ids, challenges.id as idt,  challenges.name')
                     ->get();
+
          $tareacap = DB::table('challenges')
                     ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
                     ->where('subchapters.chapter_id', $id)
-                    ->selectRaw('subchapters.chapter_id as cap,  challenges.id as idt, challenges.name')
+                    ->selectRaw('subchapters.chapter_id as cap,  challenges.id as idt, challenges.name, challenges.orden')
+                    ->orderBy('challenges.orden', 'ASC')
                     ->get();
-           //tarea final
+        //return $tareasusu;
+
+        //return $tareacap;
+        //return $tareasusu;
         $final = $tareasusu->last();
         //fin retos pendientes
         if($final != NULL){
@@ -172,17 +179,22 @@ class CapitulosController extends Controller
          }else{
             $retp = [];
         }
-            
-         //###################################################
-        return view('player.capitulos')
-                    ->with('capitulos', $capitulos)
-                    ->with('mensaje', $mensaje)
-                    ->with('retp', $retp)
-                    ->with('tareacap', $tareacap)
-                    ->with('tareasusu', $tareasusu)
-                    ->with('tem', $tem)
-                    ->with('cap', $id);
 
+        $tareacap = collect($tareacap); // Convertir a colección para facilitar la manipulación
+        $tareasCompletadas = collect($tareasusu)->pluck('idt')->toArray(); // Obtener los idt de las actividades completadas
+        $activeTab = 0;
+        $cap = $id;
+
+       //return $tareacap;
+        return view('player.capitulos', compact('capitulos',  'mensaje',
+            'retp',
+            'tareacap',
+            'tareasusu',
+            'tem',
+            'cap',
+            'tareasCompletadas',
+            'activeTab'
+        ));
 
     }
 

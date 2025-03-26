@@ -206,8 +206,9 @@ if ($retospending == 0) {
             }
            
              //## Aqui se obtiene todo el rango de los capitulos y se debe ordenarlos por el orden 
-            $capitulos = CapModel::where('idusu', $userauth_id)->where('estado', '0')->orderBy('orden', 'asc')->get();
-             //obtener las tareas totales del capitulo 
+            $capitulos = CapModel::where('idusu', $userauth_id)->where('estado', '0')->orderBy('orden', 'ASC')->get();
+           
+            //obtener las tareas totales del capitulo 
             $tarcapi = "";
             $tarea = "";
             $capconsul = "";
@@ -216,7 +217,8 @@ if ($retospending == 0) {
             $tarcapi = DB::table('challenges')
                       ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
                       ->where('subchapters.chapter_id', $capitulos[0]->idcap)
-                      ->select('challenges.id')
+                      ->select('challenges.id', 'challenges.orden')
+                      ->orderBy('challenges.orden', 'ASC')
                       ->get();
             
             //tareas realizadas por el usuario
@@ -225,27 +227,34 @@ if ($retospending == 0) {
                       ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
                       ->where('challenge_user.user_id', $userauth_id)
                        ->where('subchapters.chapter_id', $capitulos[0]->idcap)
-                      ->select('challenge_id as id')
+                      ->select('challenge_id as id', 'challenges.orden')
+                      ->orderBy('challenges.orden', 'ASC')
                       ->get();
-            //aqui se calcula para ver loscapitulos
-             $capconsul = $capitulos[0]->idcap;
+           
              // validar en que parte va
 
             $tarea1 = json_decode($tarcapi);
             $tarea2 = json_decode($tarea);
-             function compararIds($a, $b) {
-                return $a->id - $b->id;
+
+            if (!function_exists('compararId')) {
+             function compararId($a, $b) {
+                return ($a->id - $b->id);
+            }
             }
             //contar para saber si dirije al inicio o a tareas
             $contar1 = count($tarea1);
             $contar2 = count($tarea2);
             //#####
-            $diferentes = array_udiff($tarea1, $tarea2, 'compararIds');
+
+            $diferentes = array_udiff($tarea1, $tarea2, 'compararId');
+           
             $vec = [];
             foreach($diferentes as $d){
               $vec[] = $d->id;
             }
-            
+
+            //calcular para avanzar de capitulo
+            //==============
             }
              //validacion de los puntajes, barras de progreso
           if(isset($capitulos[0]->idcap)){
@@ -479,6 +488,7 @@ if ($retospending == 0) {
 <!-- /.content-wrapper -->
 
 <!-- Main Footer -->
+{{--
 <div  class="visible-xs" style="background-color:#ecf0f5; padding-top: 20em; ">
 <footer class="main-footer">
   <div class="pull-right hidden-xs">
@@ -490,7 +500,7 @@ if ($retospending == 0) {
 </div>
 
 <!---footer--para web-->
-<div  class=" hidden-xs">
+{{-- <div  class=" hidden-xs">
 <footer class="main-footer">
   <div class="pull-right hidden-xs">
     <b>Version</b> 1.1.2
@@ -498,7 +508,8 @@ if ($retospending == 0) {
   <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
   reserved.
 </footer>
-</div>
+</div>--}}
 <!--end footer-->
+@include('layouts.footer')
 
 @endsection

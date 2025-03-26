@@ -18,10 +18,10 @@ class CreateQuizParticipantAnswersTable extends Migration
             $table->time('timeQuestionStart');
             $table->time('timeQuestionEnd');
             $table->integer('user_id'); 
-            $table->timestamps();
-            
             $table->unsignedInteger('quizquestionanswer_id');
             $table->foreign('quizquestionanswer_id')->references('id')->on('quiz_question_answers')->onDelete('cascade');
+            $table->timestamps();
+            
         });
     }
 

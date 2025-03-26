@@ -22,7 +22,11 @@
     <div class="col-md-12">
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#activity" data-toggle="tab">Reto</a></li>
+          <li class="active">
+            <h4>
+             <a href="#activity" data-toggle="tab" style="padding: 1em;">Reto</a>
+            </h4>
+          </li>
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="activity">
@@ -36,9 +40,13 @@
             <div class="post">
               <div class="user-block">
             <h1>COMENZANDO EL RETO </h1>            
-            <p style="color: #730028; font-size: 16px; font-weight: 600; text-align: center;">
-              {{ $retos->description }}
-            </p>
+            <div class="container-fluid">     
+              <blockquote>
+                <p style="color: #730028; font-weight: 600; text-align: justify;">
+                {!! $retos->description !!}
+                </p>
+              </blockquote>
+            </div>  
             <tiempos-component tiempoasignado="{{ $retos->time }}"></tiempos-component>
 
                 <div class="row" style="margin:4% 0% 0% 0%;text-align: -webkit-center;">
@@ -56,7 +64,7 @@
                                 <div id="collapse1" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     <iframe src="{{ asset('capsulas/' . $retos->material) }}" width="100%" height="500px"></iframe>
-                                </div>
+                                  </div>
                                 </div>
                             </div>
                             </div>
@@ -70,7 +78,7 @@
                 <!-- Small modal -->
                 <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalscorm">
-                      Terminar
+                      Terminar  
                     </button>
 
                     <!-- Modal -->
@@ -121,15 +129,26 @@
   </section>
   <!-- /.content -->
 </div>
+
+<script>
+  // save token 1
+   let tok1 = "{{ csrf_token() }}";
+   localStorage.setItem("tok1", JSON.stringify(tok1));
+
+  /*guarda el nombre del avatar */
+  let info = @json($info);
+  localStorage.setItem("userData", JSON.stringify(info));
+
+  /*guardar avatars aleatorios*/
+  let datrandom = @json($datrandom);
+  localStorage.setItem("datrandom", JSON.stringify(datrandom));
+
+  /* guardar el id del reto */
+  let idreto = "{{ $retos->id }}";
+  localStorage.setItem("idreto", JSON.stringify(idreto));
+  //console.log('idreto de scorm:', idreto);
+</script>
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2024 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
-
-
+@include('layouts.footer')
 <!-- ./wrapper -->
 @endsection

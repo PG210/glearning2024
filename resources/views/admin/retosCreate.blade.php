@@ -79,6 +79,15 @@
             <!-- /.row -->
 
             <div class="row">
+              <div class="col-md-12">
+               <div class="form-group">
+                    <label for="g_pts">ORDEN</label>
+                    <input type="number" min="1" class="form-control" name="orden" id="orden" value="{{ old('orden') }}">           
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                         <div id="app">

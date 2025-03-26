@@ -8,10 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CapsulaModel extends Model
 {
     protected $table = 'capsula';
-
-    protected $fillable = [
-        'ruta',
-        'descripcion',
-    ];
+    
+    protected $primarykey = 'id';
 
 }

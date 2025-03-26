@@ -99,15 +99,7 @@
 <!--end reto fallido-->
 
 <!-- /.content-wrapper -->
-<footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 1.1.2
-  </div>
-  <strong>Copyright &copy; 2018 <a href="#">Evolución</a>.</strong> All rights
-  reserved.
-</footer>
-
-
+@include('layouts.footer')
 <!-- ./wrapper -->
 
 @endsection

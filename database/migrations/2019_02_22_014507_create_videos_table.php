@@ -16,12 +16,13 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->increments('id');
             $table->text('evidence');
-            $table->timestamps();
             $table->unsignedInteger('id_challenge');
             $table->foreign('id_challenge')->references('id')->on('challenges')->unique();        
             $table->unsignedInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users'); 
             $table->text('comentario')->nullable();
+            $table->integer('estado')->default(0);
+            $table->timestamps();
         });
     }
 

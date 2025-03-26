@@ -43,7 +43,7 @@
                 <div class="row">
                     <div class="col-md-3" >
                         <a href="{{ route('retos.pasarsubcapitulo', $subcapitulos->id ) }}" class="btn btn-block btn-success btn-md">
-                        <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar Retos</a>
+                        <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar Retos </a>
                     </div>
                 </div>
 
@@ -53,6 +53,7 @@
                             <tr> 
                                 <th>Codigo Reto</th>
                                 <th>Nombre</th>
+                                <th>Orden</th>
                                 <th>Puntos I</th>
                                 <th>Puntos G</th>
                                 <th>Descripcion</th>
@@ -62,11 +63,13 @@
                             </tr> 
                         </thead> 
                     
-                        <tbody>        
-                            @foreach($retos as $reto)       
+                        <tbody> 
+                           
+                            @foreach($retos->sortBy('orden') as $reto)       
                                 <tr> 
                                     <td>{{ $reto->id }}</td>
                                     <td>{{ $reto->name }}</td> 
+                                    <td>{{ $reto->orden }}</td> 
                                     <td>{{ $reto->i_point}}</td>
                                     <td>{{ $reto->g_point}}</td>
                                     <td>{{ $reto->description }}</td>
@@ -89,7 +92,7 @@
                                             <button type="submit" class="btn btn-default" aria-label="Left Align">
                                                 <span class="fa fa-fw fa-trash-o" aria-hidden="true"></span>
                                             </button>
-                                        </form>
+                                      </form>
                                     </td>
                                 </tr> 
                             @endforeach       

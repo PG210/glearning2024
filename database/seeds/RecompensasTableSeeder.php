@@ -11,7 +11,7 @@ class RecompensasTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        /*
         DB::table('gifts')->insert([
             ['name' => 'MEMOREX ACC01.', 'imagen' => 'storage/MEMOREX_ACC01.png', 'avatarchange' => 'storage/SELEC-MEMOREX-H-002.jpg', 's_point' => '10', 'i_point' => '10', 'g_point' => '10', 'description' => 'edite la descripcion', 'avatar_id' => '1'],
             ['name' => 'MEMOREX ACC02.', 'imagen' => 'storage/MEMOREX_ACC02.png', 'avatarchange' => 'storage/SELEC-MEMOREX-H-001.jpg', 's_point' => '10', 'i_point' => '10', 'g_point' => '10', 'description' => 'edite la descripcion', 'avatar_id' => '1'],
@@ -46,6 +46,6 @@ class RecompensasTableSeeder extends Seeder
             ['name' => 'SABIUS ACC02.', 'imagen' => 'storage/SABIUS_ACC02.png', 'avatarchange' => 'storage/SELEC-SABIUS-M-002.jpg', 's_point' => '10', 'i_point' => '10', 'g_point' => '10', 'description' => 'edite la descripcion', 'avatar_id' => '8'],
             ['name' => 'SABIUS ACC03.', 'imagen' => 'storage/SABIUS_ACC03.png', 'avatarchange' => 'storage/SELEC-SABIUS-M.jpg', 's_point' => '10', 'i_point' => '10', 'g_point' => '10', 'description' => 'edite la descripcion', 'avatar_id' => '8'],
 
-        ]);
+        ]);*/
     }
 }

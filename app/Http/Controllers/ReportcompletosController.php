@@ -724,16 +724,15 @@ class ReportcompletosController extends Controller
                 ->join('challenges', 'readings.id_challenge', '=', 'challenges.id')
                 ->where('readings.id_user',  $user->id)
                 ->where('readings.comentario', '!=', 'Null')
-                ->select('readings.id_challenge', 'readings.id_user', 'readings.evidence as respuesta', 'readings.id as idlectura', 'readings.comentario', 'challenges.description as des')
+                ->select('readings.id_challenge', 'readings.id_user', 'readings.evidence as respuesta', 'readings.id as idlectura', 'readings.comentario', 'challenges.description as des', 'readings.estado')
                 ->distinct('id_challenge')
                 ->get();
-   
     //obtener los videos
     $videos = DB::table("videos")
                 ->join('challenges', 'videos.id_challenge', '=', 'challenges.id')
                 ->where('videos.id_user',  $user->id)
                 ->where('videos.comentario', '!=', 'Null')
-                ->select('videos.id_challenge', 'videos.id_user', 'videos.evidence as respuesta', 'videos.id as idvideo', 'videos.comentario', 'challenges.description as des')
+                ->select('videos.id_challenge', 'videos.id_user', 'videos.evidence as respuesta', 'videos.id as idvideo', 'videos.comentario', 'challenges.description as des', 'videos.estado')
                 ->distinct('id_challenge')
                 ->get();
     // obtener los outdoors
@@ -741,7 +740,7 @@ class ReportcompletosController extends Controller
                 ->join('challenges', 'outdoors.id_challenge', '=', 'challenges.id')
                 ->where('outdoors.id_user', $user->id)
                 ->where('outdoors.comentario', '!=', 'Null')
-                ->select('outdoors.id_challenge', 'outdoors.id_user', 'outdoors.evidence as respuesta', 'outdoors.image as img', 'outdoors.video', 'outdoors.id as idout', 'outdoors.comentario', 'challenges.description as des')
+                ->select('outdoors.id_challenge', 'outdoors.id_user', 'outdoors.evidence as respuesta', 'outdoors.image as img', 'outdoors.video', 'outdoors.id as idout', 'outdoors.comentario', 'challenges.description as des', 'outdoors.estado')
                 ->distinct('id_challenge')
                 ->get();
     //obtener subir foto
@@ -750,7 +749,7 @@ class ReportcompletosController extends Controller
                     ->where('pictures.id_user', $user->id)
                     ->where('challenges.challenge_type_id', 6)
                     ->where('pictures.comentario', '!=', 'Null')
-                    ->select('pictures.id_challenge', 'pictures.id_user', 'pictures.video', 'pictures.evidence as respuesta', 'pictures.image as img', 'challenges.description as des', 'pictures.comentario')
+                    ->select('pictures.id_challenge', 'pictures.id_user', 'pictures.video', 'pictures.evidence as respuesta', 'pictures.image as img', 'pictures.id as idpicture', 'challenges.description as des', 'pictures.comentario', 'pictures.estado')
                     ->distinct('id_challenge')
                     ->get();
     //filtrar los retos por capitulos 
@@ -777,7 +776,7 @@ class ReportcompletosController extends Controller
 
     }
    //========================================================
-     public function modals($id){
+    public function modals($id){
         $user = Auth::user();
         if($id != 100){
             $com = ComentarioCapModel::where('id', $id)->get();
@@ -789,5 +788,71 @@ class ReportcompletosController extends Controller
         }
      return view('retroalimentacion.modals')->with('com', $com);
     }
+  //================================================================
+   public function notivideos(Request $request){
+    $user = Auth::user();
+    if($request->idnot == 1){ //informacion para videos
+
+       $info = DB::table('videos')->where('videos.id', $request->idactividad)
+               ->join('challenges', 'videos.id_challenge', '=', 'challenges.id')
+               ->select('videos.id', 'videos.estado', 'videos.comentario', 'videos.evidence', 'challenges.name', 'challenges.description as descrip')->get();
+       DB::table('videos')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }elseif($request->idnot == 2){ //informacion lecturas
+
+        $info = DB::table('readings')->where('readings.id', $request->idactividad)
+               ->join('challenges', 'readings.id_challenge', '=', 'challenges.id')
+               ->select('readings.id', 'readings.estado', 'readings.comentario', 'readings.evidence', 'challenges.name', 'challenges.description as descrip')->get();
+
+        DB::table('readings')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }elseif($request->idnot == 3){ //informacion salidas
+
+        $info = DB::table('outdoors')->where('outdoors.id', $request->idactividad)
+                ->join('challenges', 'outdoors.id_challenge', '=', 'challenges.id')
+                ->select('outdoors.id', 'outdoors.estado', 'outdoors.comentario', 'outdoors.evidence', 'outdoors.image as imagen', 'challenges.name', 'challenges.description as descrip')->get();
+        
+        DB::table('outdoors')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+
+    }elseif($request->idnot == 4){ //informacion pictures
+        
+        $info = DB::table('pictures')->where('pictures.id', $request->idactividad)
+                ->join('challenges', 'pictures.id_challenge', '=', 'challenges.id')
+                ->select('pictures.id', 'pictures.estado', 'pictures.comentario', 'pictures.evidence', 'pictures.image as imagen', 'challenges.name', 'challenges.description as descrip')->get();
+        
+        DB::table('pictures')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }
+    
+    return view('retroalimentacion.onecomentario')->with('info', $info);
+      
+   }
+
+
+   public function camestado(Request $request){
+    if($request->idnot == 1){ //informacion para videos
+
+        DB::table('videos')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }elseif($request->idnot == 2){ //informacion lecturas
+
+        DB::table('readings')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }elseif($request->idnot == 3){ //informacion salidas
+
+        DB::table('outdoors')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }elseif($request->idnot == 4){ //informacion pictures
+        
+        DB::table('pictures')->where('id', $request->idactividad)->update(['estado' => 1]);
+
+    }
+    
+    return back();
+      
+   }
+
+   
   //================================================================
 }

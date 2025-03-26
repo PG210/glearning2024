@@ -433,12 +433,6 @@
               </span>
           </a>
     
-          <ul class="treeview-menu">
-              @foreach($capitulos as $capitulo)
-                <li><a href="{{ route('capitulos.show', $capitulo->id) }} ">{{ $capitulo->name }}</a></li>
-              @endforeach
-          </ul>
-    
         </li>
         <li><a href="{{ url('/recompensas') }}"><i class="fa fa-arrow-circle-right"></i> <span>Distinciones</span></a></li>
     
