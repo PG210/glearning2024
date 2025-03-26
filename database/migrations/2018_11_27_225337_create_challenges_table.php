@@ -33,7 +33,9 @@ class CreateChallengesTable extends Migration
             $table->foreign('subchapter_id')->references('id')->on('subchapters');
             
             $table->unsignedInteger('challenge_type_id');
-            $table->foreign('challenge_type_id')->references('id')->on('challenge_types');            
+            $table->foreign('challenge_type_id')->references('id')->on('challenge_types');    
+            
+           
         });
     }
 

@@ -70,6 +70,15 @@
                 </div>
                 @endif
                 <!---end ruta -->
+               
+                  <div class="col-md-12">
+                  <div class="form-group">
+                        <label for="g_pts">Orden</label>
+                        <input type="number" min="1" class="form-control" name="orden" id="orden" value="{{ $retos->orden }}">           
+                    </div>
+                  </div>
+               
+
                 <div class="col-md-12">
                   <div id="app">
                   

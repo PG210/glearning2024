@@ -50,6 +50,8 @@ class PlayerChaptersController extends Controller
 
         //volver a la vista presentando los subcapitulos del capitulo
         $capitulos = Chapter::find($id);
+
+       
         return view('player.capitulos')->with('capitulos', $capitulos);
     }
 
@@ -105,8 +107,10 @@ class PlayerChaptersController extends Controller
            $tareacap = DB::table('challenges')
                     ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
                     ->where('subchapters.chapter_id', $capitulos->id)
-                    ->selectRaw('subchapters.chapter_id as cap, challenges.id as idt, challenges.name')
+                    ->selectRaw('subchapters.chapter_id as cap, challenges.id as idt, challenges.name, challenges.orden')
+                    ->orderBy('challenges.orden', 'ASC')
                     ->get();
+       
            // return $tareacap->count(); //total de tareas por capitulo
 
         $v = $subcapitulos->name;
@@ -128,6 +132,8 @@ class PlayerChaptersController extends Controller
         $tareacap = collect($tareacap); // Convertir a colección para facilitar la manipulación
         $tareasCompletadas = collect($tareasusu)->pluck('idt')->toArray(); // Obtener los idt de las actividades completadas
         $activeTab = 1;
+
+        
         return view('player.capitulos')->with('retos', $retos)
                                         ->with('capitulos', $capitulos)
                                         ->with('subcapitulos', $subcapitulos)

@@ -26,6 +26,7 @@ class CreateChallengeUserTable extends Migration
             $table->foreign('challenge_id')->references('id')->on('challenges')->unique();        
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->text('comentario')->nullable();
         });
     }
 

@@ -144,6 +144,8 @@ class RetosController extends Controller
         $retos->material = $pathmaterial;
         $retos->challenge_type_id = $request->challenge_type_id;        
         $retos->subchapter_id = $request->subchapter_id; 
+
+        $retos->orden = $request->orden; //orden de los retos
         
        //$retos->urlvideo = $request->urlvideo;
         $retos->urlvideo = $rutavideo;
@@ -178,6 +180,7 @@ class RetosController extends Controller
         $status="";
         //volver a la ruta de los retos listados
         $subcapitulos = Subchapter::find($request->subchapter_id);
+       
         return view('admin.retos')->with('subcapitulos', $subcapitulos)
                                 ->with('status', $status);
 
@@ -218,7 +221,7 @@ class RetosController extends Controller
                  ->join('insignias', 'id_insignia', '=', 'insignias.id')
                  ->join('nivelcate', 'insignias.id_nivel', '=', 'nivelcate.id')
                  ->join('caterecompensas', 'insignias.id_cate', '=', 'caterecompensas.id')
-                 ->select('challenges.id', 'challenges.name', 'challenges.description', 'time', 'dificult', 'material', 'urlvideo',
+                 ->select('challenges.id', 'challenges.orden',  'challenges.name', 'challenges.description', 'time', 'dificult', 'material', 'urlvideo',
                          'params', 'challenges.s_point', 'challenges.i_point', 'challenges.g_point', 'gametype', 'subchapter_id', 'challenge_type_id',
                          'id_grupo', 'gruprecompensas.nombre', 'gruprecompensas.tipo', 'gruprecompensas.descrip', 'id_nivel', 'id_cate', 'insignias.name as nominsig', 'nivelcate.nombre as nomnivel', 'caterecompensas.nombre as nomcat')
                  ->where('challenges.id', $id)
@@ -277,6 +280,8 @@ class RetosController extends Controller
         $retos->i_point = $request->i_pts;
         $retos->g_point = $request->g_pts;
         $retos->gametype = $request->gametype;
+
+        $retos->orden = $request->orden; //orden de los retos
         //se agrego este campo 
         $retos->id_grupo = $request->tipor;
         $retos->id_insignia = $insig->id; //se agrego este item
@@ -325,6 +330,7 @@ class RetosController extends Controller
         $status="";
         //volver a la ruta de los retos listados
         $subcapitulos = Subchapter::find($request->subchapter_id);
+       
         return view('admin.retos')->with('subcapitulos', $subcapitulos)
                                 ->with('status', $status);
 

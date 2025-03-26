@@ -21,7 +21,7 @@ class CreateInsigniasTable extends Migration
             $table->integer('i_point')->default('0');
             $table->integer('g_point')->default('0');
             $table->text('description');
-            
+
             $table->timestamps();
         });
     }

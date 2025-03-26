@@ -129,13 +129,25 @@
   </section>
   <!-- /.content -->
 </div>
-{{-- 
+
 <script>
-  var valor = @json($idavat);
-  window.valor=valor;
+  // save token 1
+   let tok1 = "{{ csrf_token() }}";
+   localStorage.setItem("tok1", JSON.stringify(tok1));
+
+  /*guarda el nombre del avatar */
+  let info = @json($info);
+  localStorage.setItem("userData", JSON.stringify(info));
+
+  /*guardar avatars aleatorios*/
+  let datrandom = @json($datrandom);
+  localStorage.setItem("datrandom", JSON.stringify(datrandom));
+
+  /* guardar el id del reto */
+  let idreto = "{{ $retos->id }}";
+  localStorage.setItem("idreto", JSON.stringify(idreto));
+  //console.log('idreto de scorm:', idreto);
 </script>
-<script src="{{ asset('capsulas/Pruebazip/story_content/user.js') }}"></script>
---}}
 <!-- /.content-wrapper -->
 @include('layouts.footer')
 <!-- ./wrapper -->

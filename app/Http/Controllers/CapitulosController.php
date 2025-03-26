@@ -151,10 +151,12 @@ class CapitulosController extends Controller
                     ->where('challenge_user.user_id', '=', $user)
                     ->selectRaw('subchapters.chapter_id as cap, subchapters.id as ids, challenges.id as idt,  challenges.name')
                     ->get();
+
          $tareacap = DB::table('challenges')
                     ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
                     ->where('subchapters.chapter_id', $id)
-                    ->selectRaw('subchapters.chapter_id as cap,  challenges.id as idt, challenges.name')
+                    ->selectRaw('subchapters.chapter_id as cap,  challenges.id as idt, challenges.name, challenges.orden')
+                    ->orderBy('challenges.orden', 'ASC')
                     ->get();
         //return $tareasusu;
 
@@ -181,17 +183,18 @@ class CapitulosController extends Controller
         $tareacap = collect($tareacap); // Convertir a colección para facilitar la manipulación
         $tareasCompletadas = collect($tareasusu)->pluck('idt')->toArray(); // Obtener los idt de las actividades completadas
         $activeTab = 0;
-        return view('player.capitulos', [
-            'capitulos' => $capitulos,
-            'mensaje'   => $mensaje,
-            'retp'      => $retp,
-            'tareacap'  => $tareacap,
-            'tareasusu' => $tareasusu,
-            'tem'       => $tem,
-            'cap'       => $id,
-            'tareasCompletadas' => $tareasCompletadas,
-            'activeTab' => $activeTab,
-        ]);
+        $cap = $id;
+
+       //return $tareacap;
+        return view('player.capitulos', compact('capitulos',  'mensaje',
+            'retp',
+            'tareacap',
+            'tareasusu',
+            'tem',
+            'cap',
+            'tareasCompletadas',
+            'activeTab'
+        ));
 
     }
 

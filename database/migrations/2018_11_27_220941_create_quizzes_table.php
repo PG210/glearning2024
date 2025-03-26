@@ -18,7 +18,6 @@ class CreateQuizzesTable extends Migration
             $table->string('name')->unique();
             $table->text('description');
             $table->integer('dificulty');
-            
             $table->timestamps();
         }); 
     }

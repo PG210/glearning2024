@@ -17,10 +17,9 @@ class CreateQuizQuestionAnswersTable extends Migration
             $table->increments('id');
             $table->string('answer')->unique();
             $table->text('correct');            
-            $table->timestamps();
-
             $table->unsignedInteger('quizquestion_id');
             $table->foreign('quizquestion_id')->references('id')->on('quiz_questions')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

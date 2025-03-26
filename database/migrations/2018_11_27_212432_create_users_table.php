@@ -29,14 +29,19 @@ class CreateUsersTable extends Migration
             $table->integer('i_point')->default('0');
             $table->integer('g_point')->default('0');
             $table->timestamp('email_verified_at')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
-
+           
             $table->unsignedInteger('avatar_id');
             $table->foreign('avatar_id')->references('id')->on('avatars');
-                    
-            // $table->unsignedInteger('level_id');
-            // $table->foreign('level_id')->references('id')->on('levels');
+             
+            $table->integer('estado')->default('1')->nullable();
+
+            $table->string('cedula')->nullable();
+
+            $table->text('imgavat')->nullable();
+
+            $table->rememberToken();
+            $table->timestamps();
+ 
 
         });
     }

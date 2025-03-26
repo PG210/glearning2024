@@ -17,16 +17,13 @@ class CreateSubchapterUserTable extends Migration
             $table->increments('id');
             $table->string('order');
             $table->integer('chapter_id');
-            
-            $table->timestamps();
-
             $table->unsignedInteger('subchapter_id');
             $table->foreign('subchapter_id')->references('id')->on('subchapters');
-            
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-
-
+            $table->integer('estado')->nullable();
+            $table->timestamps();
+ 
         });
     }
 

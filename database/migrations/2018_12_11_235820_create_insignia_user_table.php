@@ -15,13 +15,15 @@ class CreateInsigniaUserTable extends Migration
     {
         Schema::create('insignia_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-
+           
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             
             $table->unsignedInteger('insignia_id');
             $table->foreign('insignia_id')->references('id')->on('insignias');
+             
+            $table->timestamps();
+
         });
     }
 

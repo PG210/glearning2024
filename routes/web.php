@@ -15,6 +15,7 @@ use App\Http\Controllers\Perfil\PorcentajeAdmin;//se agrego este controlador
 use App\Http\Controllers\RegController\SesController;
 use App\Http\Controllers\CapsulaController\Capsula;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\GamesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -405,6 +406,10 @@ Route::post('/upload/capsule/zip', [Capsula::class, 'subirFile'])->name('subirFi
 //========================= ruta para ver la notificaciones =================
 Route::post('/informe/comentarios/detalle', [ReportcompletosController::class, 'notivideos'])->name('notivideos')->middleware('redirectIfSessionExpired');
 Route::post('/informe/comentarios/estado', [ReportcompletosController::class, 'camestado'])->name('camestado')->middleware('redirectIfSessionExpired');
+
+// ruta para guardar datos del javascript capsula 
+Route::post('/saveDatos', [GamesController::class, 'saveDatos'])->name('saveDatos')->middleware('redirectIfSessionExpired');
+
 
 
 

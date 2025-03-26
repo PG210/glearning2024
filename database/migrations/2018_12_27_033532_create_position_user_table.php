@@ -16,14 +16,13 @@ class CreatePositionUserTable extends Migration
         Schema::create('position_user', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->timestamps();
-
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->unsignedInteger('position_id');
             $table->foreign('position_id')->references('id')->on('positions');
-
+            
+            $table->timestamps();
         });
     }
 

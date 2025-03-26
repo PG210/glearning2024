@@ -17,13 +17,14 @@ class CreatePicturesTable extends Migration
             $table->increments('id');
             $table->text('evidence');
             $table->text('image');
-            $table->timestamps();
             $table->unsignedInteger('id_challenge');
             $table->foreign('id_challenge')->references('id')->on('challenges')->unique();        
             $table->unsignedInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users'); 
+            $table->string('video')->nullable();
             $table->text('comentario')->nullable();
             $table->integer('estado')->default(0);
+            $table->timestamps();
         });
     }
 
