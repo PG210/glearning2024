@@ -161,7 +161,8 @@ class UserController extends Controller
         $incap = DB::table('capasig')->where('idusu', $id)->delete();
         $comentarios = DB::table('comentariocapitulo')->where('user_id', $id)->delete();
         $gadmin =DB::table('grupadmin')->where('idusu', $id)->delete();
-        $users ->delete();
+        $cap =DB::table('capsula')->where('id_user', $id)->delete();
+        $users->delete();
         Session::flash('eliminado', 'Usuario eliminado con éxito!');
         return back();
         //$puser->delete();

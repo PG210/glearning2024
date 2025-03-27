@@ -11,6 +11,7 @@ use App\PosUsuModel\GruposModel;
 use App\Chapter;
 use App\PosUsuModel\SubcapUser;
 use Illuminate\Support\Facades\Session;
+use App\PosUsuModel\CapModel;
 
 class GruposController extends Controller
 {
@@ -189,15 +190,20 @@ class GruposController extends Controller
     public function eliminarvincap($id, $id1){
        //$id es el capitulo
       //$id1 es el grupo
-      $usuarios = $ver = SubcapUser::join('users', 'user_id', '=', 'users.id')
+      $users = User::where('users.id_grupo', '=', $id1)->select('id')->pluck('id');
+
+      $subchapter =  SubcapUser::join('users', 'user_id', '=', 'users.id')
                    ->where('users.id_grupo', '=', $id1)
                    ->where('chapter_id', '=', $id)
-                   ->select('user_id', 'subchapter_user.id')
+                   ->select('subchapter_user.id')
                    ->distinct()
-                   ->get();
-         //eliminarlos
-       for($i=0; $i<Count($usuarios); $i++){
-           SubcapUser::findOrFail($usuarios[$i]->id)->delete();
+                   ->pluck('id');
+     
+       SubcapUser::whereIn('id', $subchapter)->delete();
+
+       //elimar tambien de capasig
+       if (!empty($users)) {
+         CapModel::whereIn('idusu', $users)->where('idcap', $id)->delete();
        }
        return back();
       

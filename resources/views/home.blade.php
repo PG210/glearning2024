@@ -232,7 +232,8 @@ if ($retospending == 0) {
                       ->get();
            
              // validar en que parte va
-
+            $capconsul = $capitulos[0]->idcap;
+            
             $tarea1 = json_decode($tarcapi);
             $tarea2 = json_decode($tarea);
 

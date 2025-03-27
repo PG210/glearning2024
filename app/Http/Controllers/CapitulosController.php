@@ -18,6 +18,12 @@ class CapitulosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    //permiso para las funciones
+    public function __construct()
+    {
+        $this->middleware('admin')->only(['index']);
+    }
     public function index()
     {
         //

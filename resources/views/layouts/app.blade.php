@@ -546,6 +546,7 @@
          $capsig = DB::table('capasig')->where('idusu', $userauth_id)
                     ->where('estado', '0')
                     ->latest('created_at')->first();
+                    
          if($conta != 0){
            $subc = DB::table('subchapter_user')
                 ->join('chapters', 'subchapter_user.chapter_id', '=', 'chapters.id')
