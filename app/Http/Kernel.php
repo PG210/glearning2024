@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'adminsgo' => \App\Http\Middleware\soloadmins::class,
         'redirectIfSessionExpired' => \App\Http\Middleware\RedirectIfSessionExpired::class,
+        'admin' => \App\Http\Middleware\IsAdmin::class,
 
     ];
 

@@ -119,14 +119,14 @@ Route::get('/quizzesquestionsupdate/{id}', ['uses' =>'QuizController@quizzesques
 Route::get('/quizzesquestionanswerssupdate/{id}', ['uses' =>'QuizController@quizzesquestionanswerssupdate', 'as'=>'retos.quizzesquestionanswerssupdate'])->middleware('redirectIfSessionExpired');
 
 
-Route::get('/usuario', 'UserController@index')->middleware('redirectIfSessionExpired');
-Route::resource('usuario', 'UserController')->middleware('redirectIfSessionExpired');
+Route::get('/usuario', 'UserController@index')->middleware('redirectIfSessionExpired')->middleware('admin');
+Route::resource('usuario', 'UserController')->middleware('redirectIfSessionExpired')->middleware('admin');
 
 Route::get('/insignias', 'InsigniasController@index')->middleware('auth')->middleware('redirectIfSessionExpired');
 Route::resource('insignias', 'InsigniasController')->middleware('auth')->middleware('redirectIfSessionExpired');
 
-Route::get('/reportcompletos', 'ReportcompletosController@index')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::resource('reportcompletos', 'ReportcompletosController')->middleware('auth')->middleware('redirectIfSessionExpired');
+Route::get('/reportcompletos', 'ReportcompletosController@index')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::resource('reportcompletos', 'ReportcompletosController')->middleware('admin')->middleware('redirectIfSessionExpired');
 Route::post('/reportcompletosinfo/{id}', ['uses' =>'ReportcompletosController@more', 'as'=>'reportcompletos.more'])->middleware('auth')->middleware('redirectIfSessionExpired');
 
 Route::get('/reportjugados', 'ReportjugadosController@index')->middleware('auth')->middleware('redirectIfSessionExpired');
@@ -267,15 +267,15 @@ Route::get('/admin/registro/unico', [RegunicoController::class, 'index'])->name(
 Route::post('/admin/reg/usu', [RegunicoController::class, 'regunico'])->name('regunicousuario')->middleware('auth')->middleware('redirectIfSessionExpired');
 
 //grupos
-Route::get('/admin/vista/grupos', [GruposController::class, 'index'])->name('gruposvis')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::post('/admin/reg/grupos', [GruposController::class, 'reg'])->name('guardargrupo')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::post('/admin/actu/grupos/{id}', [GruposController::class, 'actu'])->name('actualizargrupo')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::get('/admin/eliminar/grupos/{id}', [GruposController::class, 'eliminar'])->name('gruposelim')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::get('/admin/usuarios/grupos', [GruposController::class, 'usuarios'])->name('usuariosgrupos')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::post('/admin/vincular/grupo/usu', [GruposController::class, 'vingrupo'])->name('vingrupo')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::get('/admin/capitulos/grupos/{id}', [GruposController::class, 'vincap'])->name('vincap')->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::get('/admin/capitulos/vin/usu/{id}/{id1}', [GruposController::class, 'vinculocap'])->middleware('auth')->middleware('redirectIfSessionExpired');
-Route::get('/admin/capitulos/eliminar/usu/{id}/{id1}', [GruposController::class, 'eliminarvincap'])->middleware('auth')->middleware('redirectIfSessionExpired');
+Route::get('/admin/vista/grupos', [GruposController::class, 'index'])->name('gruposvis')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::post('/admin/reg/grupos', [GruposController::class, 'reg'])->name('guardargrupo')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::post('/admin/actu/grupos/{id}', [GruposController::class, 'actu'])->name('actualizargrupo')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::get('/admin/eliminar/grupos/{id}', [GruposController::class, 'eliminar'])->name('gruposelim')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::get('/admin/usuarios/grupos', [GruposController::class, 'usuarios'])->name('usuariosgrupos')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::post('/admin/vincular/grupo/usu', [GruposController::class, 'vingrupo'])->name('vingrupo')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::get('/admin/capitulos/grupos/{id}', [GruposController::class, 'vincap'])->name('vincap')->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::get('/admin/capitulos/vin/usu/{id}/{id1}', [GruposController::class, 'vinculocap'])->middleware('admin')->middleware('redirectIfSessionExpired');
+Route::get('/admin/capitulos/eliminar/usu/{id}/{id1}', [GruposController::class, 'eliminarvincap'])->middleware('admin')->middleware('redirectIfSessionExpired');
 //end grupos
 //Route::get('/generar/respuestas/nuevo/{id}', [ReportcompletosController::class, 'nuevoid'])->middleware('redirectIfSessionExpired');
 Route::post('/generar/respuestas/nuevo', [ReportcompletosController::class, 'nuevoid'])->name('generatequest')->middleware('redirectIfSessionExpired');
@@ -342,7 +342,7 @@ Route::POST('/formulario/editcat/registro', [GruposInsignias::class, 'regisEditC
 Route::get('/evolucion/insignia/win/{id}', [PerfilController::class, 'insigniaVisu']);
 
 //porcentajes
-Route::get('/reporte/view/porcentaje', [PorcentajeController::class, 'index'])->name('porcentaje')->middleware('redirectIfSessionExpired');
+Route::get('/reporte/view/porcentaje', [PorcentajeController::class, 'index'])->name('porcentaje')->middleware('redirectIfSessionExpired')->middleware('admin');
 //filtrarpor grupos
 Route::post('/reporte/view/filtrar', [PorcentajeController::class, 'filtrar'])->name('valFormuPorcentaje')->middleware('redirectIfSessionExpired');
 
