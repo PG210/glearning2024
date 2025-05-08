@@ -38,6 +38,7 @@ class User extends Authenticatable
         'position_id', 
         'areas_id', 
         'avatar_id', 
+        'last_login'
     ];
     /**
      * The attributes that should be hidden for arrays.

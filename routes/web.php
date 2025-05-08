@@ -16,6 +16,7 @@ use App\Http\Controllers\RegController\SesController;
 use App\Http\Controllers\CapsulaController\Capsula;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\GamesController;
+use App\Http\Controllers\NotiController\NotifyController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,7 +42,7 @@ Route::post('logout', [SesController::class, 'logout'])->name('logout');
 Route::get('/password/forgot', [SesController::class, 'forgotPassword'])->name('forgotPassword');
 
 Route::post('/password/forgot',  [SesController::class, 'sendemail']); 
-Route::get('/password/reset/{id}', [SesController::class, 'resetPassword']);
+Route::get('/password/reset/{token}/{email}', [SesController::class, 'resetPassword'])->name('resetpass');
 Route::post('/password/update',  [SesController::class, 'passupdate'])->name('password.update');
 
 
@@ -410,8 +411,13 @@ Route::post('/informe/comentarios/estado', [ReportcompletosController::class, 'c
 // ruta para guardar datos del javascript capsula 
 Route::post('/saveDatos', [GamesController::class, 'saveDatos'])->name('saveDatos')->middleware('redirectIfSessionExpired');
 
+//rutas para notificaciones
+Route::get('/notificaciones', [NotifyController::class, 'index'])->middleware('auth')->middleware('redirectIfSessionExpired');
 
-
+Route::post('/notificaciones/reg', [NotifyController::class, 'recordatorio'])->middleware(['auth', 'admin'])->name('recordatorio');
+Route::post('/notificaciones/delete', [NotifyController::class, 'deleteMensaje'])->middleware(['auth', 'admin'])->name('deleteMensaje');
+Route::post('/notificaciones/active', [NotifyController::class, 'activeMensaje'])->middleware(['auth', 'admin'])->name('activeMensaje');
+Route::post('/notificaciones/update', [NotifyController::class, 'upRecordatorio'])->middleware(['auth', 'admin'])->name('upRecordatorio');
 
 
 

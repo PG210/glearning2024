@@ -6,17 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 Use Session;
 use DB;
+use App\User;
+
+use App\Services\MicrosoftGraphService; 
 
 
 
 class SesController extends Controller
 {
+
     protected $tokenGlobal;
+
+    protected $graphService;
+
+    public function __construct(MicrosoftGraphService $graphService)
+    {
+        $this->graphService = $graphService;
+    }
 
     public function index(){
         return view('auth.login');
@@ -78,13 +88,15 @@ class SesController extends Controller
 
     // enviar correo de recuperacion
     public function sendemail(Request $request){
+        //return $request;
         
-        $validar = DB::table('users')->where('email', $request->email)->count();
+      $validar = DB::table('users')->where('email', $request->email)->count();
         if($validar != 0){
             $request->validate(['email' => 'required|email']);
+            $user = User::where('email', $request->email)->first();
 
             // Enviar el correo de recuperación de contraseña
-            $status = Password::sendResetLink(
+           /* $status = Password::sendResetLink(
                 $request->only('email')
             );
 
@@ -92,7 +104,26 @@ class SesController extends Controller
             
                 Session::flash('errorInicio','¡Revisa tu correo! Recibiras un link para cambiar tu contraseña.');
                 return back();
-            }
+            }*/
+
+              // Generar token
+            $token = Password::broker()->createToken($user);
+
+            $link = url(route('resetpass', ['token' => $token, 'email' => $user->email], false));
+           
+            $subject = 'Restablece tu contraseña';
+            $content = "
+                Hola {$user->firstname},<br><br>
+                Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para continuar:<br><br>
+                <a href='{$link}'>Restablecer contraseña</a><br><br>
+                Si no solicitaste este cambio, puedes ignorar este mensaje.
+            ";
+
+            // Enviar con Microsoft Graph
+            $result = $this->graphService->sendMail($subject, $content, $user->email);
+           
+            Session::flash('errorInicio','¡Revisa tu correo! Recibiras un link para cambiar tu contraseña.');
+            return back();
         }
 
         Session::flash('errorInicio','¡Lo sentimos! Dirección de correo no encontrada.');
@@ -101,10 +132,10 @@ class SesController extends Controller
     }
 
     //cambiar contraseña
-    public function resetPassword($token){
+    public function resetPassword($token, $email){
         $this->tokenGlobal = $token;
-       
-        return view('auth.passwords.reset')->with('token', $token);
+        
+        return view('auth.passwords.reset')->with('token', $token)->with('email', $email);
     }
 
     public function passupdate(Request $request){
