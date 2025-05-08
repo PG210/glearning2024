@@ -188,6 +188,7 @@
                     <li><a href="{{ url('jefes') }} "><i class="fa fa-legal text-green"></i> <span>Jefes</span></a></li>
                     <li><a href="{{ url('cargos') }} "><i class="fa fa-suitcase text-aqua"></i> <span>Cargos</span></a></li>
                     <li><a href="{{ url('areas') }}"><i class="fa fa-sitemap text-aqua"></i> <span>Areas</span></a></li>
+                    <li><a href="{{ url('notificaciones') }}"><i class="fa fa-bell text-aqua"></i> <span>Notificaciones</span></a></li>
                 </ul>
               </li>
               <li class="treeview">
