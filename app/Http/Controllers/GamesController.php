@@ -55,7 +55,7 @@ class GamesController extends Controller
         return $cap;
     }
     //############################################
-      public function valinsig($cap, $userauthid){
+    public function valinsig($cap, $userauthid){
               $tarealizadas = DB::table('challenge_user')
                         ->join('challenges', 'challenge_user.challenge_id', '=', 'challenges.id')
                         ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
@@ -86,7 +86,7 @@ class GamesController extends Controller
                 }
     }
      //validar mensaje
-     public function mensaje($cap, $userauthid){
+    public function mensaje($cap, $userauthid){
             $tarfin = DB::table('challenge_user')
                         ->join('challenges', 'challenge_user.challenge_id', '=', 'challenges.id')
                         ->join('subchapters', 'challenges.subchapter_id', '=', 'subchapters.id')
@@ -187,6 +187,13 @@ class GamesController extends Controller
         $capsiguiente = 0;
 
         $userauthid = Auth::user()->id;
+
+        //validar si ya se registro los juegos
+        $enc = DB::table('challenge_user')->where('challenge_id', $request->idretoactual)->where('user_id', $userauthid)->exists();
+        
+        if($enc)
+            return redirect('/home');
+        
         $datetime = Carbon::now();  
         
         //obtener los datos del jugador
@@ -458,8 +465,14 @@ class GamesController extends Controller
 
 
     public function playseevideos(Request $request, $id){
-         
-       
+        
+        $userauthid = Auth::user()->id;
+        //validar si el reto ya esta completado por el usuario
+        $enc = DB::table('videos')->where('id_user', $userauthid)->where('id_challenge', $request->reto)->exists();
+        
+        if($enc)
+           return redirect('/home');
+        
         $validarSiguiente = 0; // validar el estado del capitulo siguiente
         $capsiguiente = 0;
 
@@ -472,7 +485,6 @@ class GamesController extends Controller
         ];         
         $this->validate($request, $rules, $messages);
 
-        $userauthid = Auth::user()->id;
         $datetime = Carbon::now();   
         
         //obtener los datos del jugador
@@ -492,8 +504,10 @@ class GamesController extends Controller
         }
         else{
         //llamada a la funcion
-        //$resp = $this->apiQuery($request->evidence);
         $resp = '';
+        if($cap != 1)
+           $resp = $this->apiQuery($request->evidence);
+        
         DB::table('videos')->insert([
             'evidence'     => $evidencia,
             'id_user'      => $usuario,
@@ -752,6 +766,14 @@ class GamesController extends Controller
         $validarSiguiente = 0; // validar el estado del capitulo siguiente
         $capsiguiente = 0;
 
+        $userauthid = Auth::user()->id;
+
+         //validar si el reto ya esta completado por el usuario
+        $enc = DB::table('pictures')->where('id_user', $userauthid)->where('id_challenge', $request->reto)->exists();
+
+        if($enc)
+            return redirect('/home');
+
         $rules = [
             'evidence' => 'required|min:120',           
             'image' => 'required',           
@@ -763,7 +785,6 @@ class GamesController extends Controller
         ];         
         $this->validate($request, $rules, $messages);
 
-        $userauthid = Auth::user()->id;
         $datetime = Carbon::now();       
 
         //obtener los datos del jugador
@@ -805,8 +826,9 @@ class GamesController extends Controller
         }
         else{
         //llamada a la funcion
-        //$resp = $this->apiQuery($request->evidence);
         $resp = '';
+        if($cap != 1)
+           $resp = $this->apiQuery($request->evidence);
 
         DB::table('pictures')->insert([
             'evidence'     => $evidencia,
@@ -1070,6 +1092,14 @@ class GamesController extends Controller
         $validarSiguiente = 0; // validar el estado del capitulo siguiente
         $capsiguiente = 0;
 
+        $userauthid = Auth::user()->id;
+
+        //validar si el reto ya esta completado por el usuario
+        $enc = DB::table('readings')->where('id_user', $userauthid)->where('id_challenge', $request->reto)->exists();
+
+        if($enc)
+            return redirect('/home');
+
         $rules = [
             'evidence' => 'required|min:120',           
         ];         
@@ -1079,7 +1109,6 @@ class GamesController extends Controller
         ];         
         $this->validate($request, $rules, $messages);
 
-        $userauthid = Auth::user()->id;
         $datetime = Carbon::now();       
 
         //obtener los datos del jugador
@@ -1100,8 +1129,9 @@ class GamesController extends Controller
         else{
 
         //llamada a la funcion
-        //$resp = $this->apiQuery($request->evidence);
         $resp = '';
+        if($cap != 1)
+           $resp = $this->apiQuery($request->evidence);
 
         DB::table('readings')->insert([
             'evidence'     => $evidencia,
@@ -1358,6 +1388,13 @@ class GamesController extends Controller
         $validarSiguiente = 0; // validar el estado del capitulo siguiente
         $capsiguiente = 0;
 
+        $userauthid = Auth::user()->id;
+        //validar si ya esta registrado el reto
+        $enc = DB::table('outdoors')->where('id_user', $userauthid)->where('id_challenge', $request->reto)->exists();
+
+        if($enc)
+            return redirect('/home');
+
         $rules = [
             'evidence' => 'required|min:120',           
         ];         
@@ -1367,7 +1404,6 @@ class GamesController extends Controller
         ];         
         $this->validate($request, $rules, $messages);
 
-        $userauthid = Auth::user()->id;
         $datetime = Carbon::now(); 
         
         //obtener los datos del jugador
@@ -1411,8 +1447,9 @@ class GamesController extends Controller
         else{
         
         //llamada a la funcion
-        //$resp = $this->apiQuery($request->evidence);
         $resp = '';
+        if($cap != 1)
+           $resp = $this->apiQuery($request->evidence);
 
         DB::table('outdoors')->insert([
             'evidence'     => $evidencia,
@@ -1668,14 +1705,20 @@ class GamesController extends Controller
         $id = $request->idtipo;
         $idreto = $request->reto;
         $codigo = $request->codigo;
+
+        $userauthid = Auth::user()->id;
+        //validar si el reto ya esta completado por el usuario
+        $enc = DB::table('readings')->where('id_user', $userauthid)->where('id_challenge', $idreto)->exists();
+        
+        if($enc)
+           return redirect('/home');
         //validar si el codigo es correcto
         $validarcode = Challenge::where('id', $idreto)->where('params', $codigo)->first(); //distinge entre mayusculas y minusculas
         if($validarcode){ //existe información
            //=======================================================================================
            $validarSiguiente = 0; // validar el estado del capitulo siguiente
            $capsiguiente = 0;
-   
-           $userauthid = Auth::user()->id;
+
            $datetime = Carbon::now();       
    
            //obtener los datos del jugador
