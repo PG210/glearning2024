@@ -30,7 +30,7 @@
 <p class="letra">{{$mensaje}}</p>
         <p class="letra">Te invito a revisar el mensaje para obtener más detalles sobre tu progreso <a class="btn letra" href="https://glearning.com.co/" target="_blank">Continuar</a> </p>
         <br>
-        <p class="letra">Si presentas inconvenientes, escribe a: pedro@evolucion.co </p>
+        <p class="letra">Si presentas inconvenientes, escribe a: info@evolucion.co </p>
         <p class="letra" style="text-center">¡Nunca dejes de aprender!</p>
         <br>
 </body>

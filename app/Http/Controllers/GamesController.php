@@ -19,6 +19,10 @@ use Intervention\Image\Facades\Image; // optimizar las imagenes
 use Illuminate\Support\Facades\Http; //solicitudes 
 use App\Models\CapsulaModel;
 
+//instanciar el envio de correos 
+use App\Services\MicrosoftGraphService;
+use App\Jobs\SendMailJob; // Importa el job
+
 class GamesController extends Controller
 {
     /**
@@ -26,6 +30,29 @@ class GamesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $graphService;
+
+    public function __construct(MicrosoftGraphService $graphService)
+    {
+        $this->graphService = $graphService;
+    }
+    
+    /*Enviar plantilla de correo */
+    private function sendMail($destino, $nombre, $mensaje)
+    {
+        $descrip = "Notificación";
+        // Renderiza la vista Blade con el contenido HTML
+        $content = view('mails.retroalimentacion', [
+            'nombre' => $nombre, // valores para la vista de correo
+            'mensaje' => $mensaje
+        ])->render();
+
+        // Despacha el job a la cola
+        SendMailJob::dispatch($descrip, $content, $destino);
+        return true; 
+    }
+
+
     public function index()
     {
         //
@@ -175,7 +202,7 @@ class GamesController extends Controller
                 ->inRandomOrder() // Orden aleatorio
                 ->limit(2)        // Obtener solo 2 usuarios
                 ->get();
-    
+       
         return view('games.scorm')->with('retos', $retos)->with('cap', $cap)->with('info', $info)->with('datrandom', $datrandom);
     }
     //==============================================================================================================///
@@ -505,9 +532,12 @@ class GamesController extends Controller
         else{
         //llamada a la funcion
         $resp = '';
-        if($cap != 1)
+        if($cap != 1){
            $resp = $this->apiQuery($request->evidence);
-        
+           $respuesta = $this->sendMail($userplayer->email, $userplayer->firstname, $resp); //llamar a la funcion para enviar mensajes
+
+        }
+          
         DB::table('videos')->insert([
             'evidence'     => $evidencia,
             'id_user'      => $usuario,
@@ -827,9 +857,11 @@ class GamesController extends Controller
         else{
         //llamada a la funcion
         $resp = '';
-        if($cap != 1)
+        if($cap != 1){
            $resp = $this->apiQuery($request->evidence);
-
+           $respuesta = $this->sendMail($userplayer->email, $userplayer->firstname, $resp);
+        }
+          
         DB::table('pictures')->insert([
             'evidence'     => $evidencia,
             'image'        => $pathmaterial,
@@ -1130,8 +1162,10 @@ class GamesController extends Controller
 
         //llamada a la funcion
         $resp = '';
-        if($cap != 1)
+        if($cap != 1){
            $resp = $this->apiQuery($request->evidence);
+           $respuesta = $this->sendMail($userplayer->email, $userplayer->firstname, $resp);
+        }
 
         DB::table('readings')->insert([
             'evidence'     => $evidencia,
@@ -1448,8 +1482,10 @@ class GamesController extends Controller
         
         //llamada a la funcion
         $resp = '';
-        if($cap != 1)
-           $resp = $this->apiQuery($request->evidence);
+        if($cap != 1){
+            $resp = $this->apiQuery($request->evidence);
+            $respuesta = $this->sendMail($userplayer->email, $userplayer->firstname, $resp);
+        }
 
         DB::table('outdoors')->insert([
             'evidence'     => $evidencia,
