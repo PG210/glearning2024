@@ -6,7 +6,7 @@
     <style>
          .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 15px;
             background-color: blue; /* Azul claro */
             border: none;
             border-radius: 5px;
@@ -15,6 +15,7 @@
             text-align: center;
             text-decoration: none;
             font-size: 16px;
+            margin-top: 5px;
         }
       .letra{
             font-family: 'Roboto', sans-serif;
@@ -29,11 +30,11 @@
     <p class="letra">¡Espero que te encuentres muy bien! Queremos informarte que has recibido una nueva retroalimentación sobre tu respuesta.</p>
 
     <p class="letra"><b>Mensaje:</b></p>
-    <p class="letra">{{ $mensaje }}</p>
+    <p class="letra" style="text-align: justify; line-height: 1.5;">{{ $mensaje }}</p>
 
     <p class="letra">
-      Puedes revisar todos tus mensajes en el siguiente enlace: 
-    <a class="btn letra" href="https://glearning.com.co/informe/comentarios" target="_blank">Clic aquí</a>
+      Puedes revisar todos tus mensajes en el siguiente enlace: <br>
+      <a class="btn letra" href="https://glearning.com.co/informe/comentarios" target="_blank">Clic aquí</a>
     </p>
 
     <br>
