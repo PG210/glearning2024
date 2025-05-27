@@ -24,14 +24,21 @@
     </style>
 </head>
 <body>
-<p class="letra">Hola, {{ $nombre }},</p>
-        <p class="letra">¡Espero que te encuentres my bien! Quería informarte que acabo de compartir la retroalimentación sobre tu avance en el Capítulo {{$cap}} de nuestro curso de liderazgo.</p>
-        <p class="letra"><b>Retroalimentación:</b></p>
-<p class="letra">{{$mensaje}}</p>
-        <p class="letra">Te invito a revisar el mensaje para obtener más detalles sobre tu progreso <a class="btn letra" href="https://glearning.com.co/" target="_blank">Continuar</a> </p>
-        <br>
-        <p class="letra">Si presentas inconvenientes, escribe a: info@evolucion.co </p>
-        <p class="letra" style="text-center">¡Nunca dejes de aprender!</p>
-        <br>
+    <p class="letra">Hola, {{ $nombre }},</p> 
+
+    <p class="letra">¡Espero que te encuentres muy bien! Queremos informarte que has recibido una nueva retroalimentación sobre tu respuesta.</p>
+
+    <p class="letra"><b>Mensaje:</b></p>
+    <p class="letra">{{ $mensaje }}</p>
+
+    <p class="letra">
+      Puedes revisar todos tus mensajes en el siguiente enlace: 
+    <a class="btn letra" href="https://glearning.com.co/informe/comentarios" target="_blank">Clic aquí</a>
+    </p>
+
+    <br>
+    <p class="letra" style="text-align: center;">¡Nunca dejes de aprender!</p>
+    <br>
+
 </body>
 </html>
